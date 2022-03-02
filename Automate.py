@@ -33,7 +33,7 @@ def get_driver():
 
 def main():
     driver = get_driver()
-    driver.get("https://app.getnabis.com/sign-in")
+    driver.get("https://app.getnabis.com/nabione-inc-deliveries/app/dashboard")
 
     driver.find_element_by_xpath(
         '//*[@id="sign-in"]/div[1]/div/div[1]/input'
@@ -44,7 +44,6 @@ def main():
     ).send_keys("Nabis123!")
 
     driver.find_element_by_xpath('//*[@id="sign-in"]/button[2]').click()
-    driver.find_element_by_class_name("ui button").click()
 
     # Get on Admin Shipments Tracker Page
     driver.get(

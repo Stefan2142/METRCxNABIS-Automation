@@ -1,10 +1,6 @@
-import requests
-import json
+import requests, json
+from creds import GARDEN_OF_WEEDEN, NABITWO
 
-GARDEN_OF_WEEDEN = (
-    "TGljZW5zZWRMb2NhdGlvbjo0MWRiMDk0Ny1kMWYzLTQ5NTUtYWYyMC1kODkyZjE4NjAxMDk="
-)
-NABITWO = "TGljZW5zZWRMb2NhdGlvbjowY2VkY2Y2ZC04Nzg0LTRiNzYtYmU5Yy0wZTEwMmU1MjQ1Zjk="
 WAREHOUSE = NABITWO
 ORDERS = []
 DATE_FILTER = None

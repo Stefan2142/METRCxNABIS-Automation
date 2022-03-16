@@ -10,6 +10,19 @@ from creds import credentials
 from api_calls import upload_manifest_pdf, upload_manifest_id, view_metrc_transfer
 
 
+def waiting_fnc(driver, path):
+    """Fnc utilizing while loop which gives a correctly waiting function
+    (waiting for an element to appear). Selenium's waiting methods arent reliable enough;
+    
+
+    Args:
+        driver (webdriver): driver for browser
+        path (str): path 
+    """
+
+def check_prices():
+    pass
+    
 def update_log_sheet(log_dict):
     # Update logging gsheet file
     gc = gspread.service_account(filename="./emailsending-325211-e5456e88f282.json")

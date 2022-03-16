@@ -18,7 +18,7 @@ headers = {
 }
 
 
-def find_template(order_id, api_token, cookie):
+def find_template(order_id, api_token, cookie, metrc_lic):
 
     url = "https://ca.metrc.com/api/transfers/templates?slt=Licensed"
 
@@ -45,7 +45,7 @@ def find_template(order_id, api_token, cookie):
     )
     headers = {
         "ApiVerificationToken": api_token,
-        "X-Metrc-LicenseNumber": WAREHOUSE,
+        "X-Metrc-LicenseNumber": metrc_lic,
         "sec-ch-ua-mobile": "?0",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36",
         "Content-Type": "application/json",

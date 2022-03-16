@@ -1,14 +1,13 @@
+import datetime as dt
+from bs4 import BeautifulSoup
+import time
+import re
+import json
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 import selenium.common.exceptions
-import datetime as dt
-from bs4 import BeautifulSoup
-import pandas as pd
-import time
-import re
-import json
-import gspread
+from selenium.webdriver.support.ui import Select
 from api_calls import (
     get_tracker_shipments,
     get_order_data,
@@ -32,7 +31,7 @@ from creds import credentials
 GARDEN_OF_WEEDEN_METRC = "C11-0000340-LIC"
 NABITWO_METRC = "C11-0001274-LIC"
 
-WAREHOUSE = GARDEN_OF_WEEDEN_METRC
+WAREHOUSE = NABITWO_METRC
 routes = []
 
 
@@ -87,7 +86,7 @@ def find_metrc_order(
 
     # If search result is empty
     # If <list> results is empty, there are no results for a given order
-    results = driver.find_elements_by_class_name("k-grid-norecords.grid-no-data")
+    results = driver.find_elements(by=By.CLASS_NAME, value= "k-grid-norecords.grid-no-data")
     if len(results) > 0:
         print(f"Results not found for order {nabis_order_id}, {len(results)} {results}")
         return False
@@ -131,6 +130,8 @@ def find_metrc_order(
 def proc_template(
     driver, nabis_order_id, nabis_order_line_items, nabis_order, nabis_shipment
 ):
+    from creds import matching_attrs
+
     soup = BeautifulSoup(driver.page_source, "html.parser")
     script_element = soup.find(text=re.compile("repeaterData"))
     raw_json = script_element[
@@ -140,21 +141,13 @@ def proc_template(
     json_str = json_str + "}"
     json_dict = json.loads(json_str[12:])
 
-    wrongs = {}
     log_dict = {}
-    log_dict.update({"Order": str(nabis_order_id)})
-    log_dict.update(
-        {
-            "Date": dt.datetime.strftime(
-                dt.datetime.now(dt.datetime.now().astimezone().tzinfo),
-                "%Y-%m-%dT%H:%M%z",
-            )
-        }
-    )
 
     metrc_packages = [
         x for x in json_dict["Packages"] if str(nabis_order_id) in x["Note"]
     ]
+
+    # Add wholesale price for tags on Metrc side
     for tag in metrc_packages:
         if any(
             [
@@ -180,239 +173,275 @@ def proc_template(
         }
         for x in nabis_order_line_items
     }
+    try:
+        metrc_transfer_type = Select(
+            driver.find_element(
+                By.XPATH, value='//*[@ng-model="destination.TransferTypeId"]'
+            )
+        ).first_selected_option.text
+    except:
+        metrc_transfer_type = ""
 
-    if any([None == x for x in list(nabis_packages.keys())]):
-        wrongs.update({"PackageMissing": "One line item doesnt have metrc tag"})
-        log_dict.update({"PackageMissing": "One line item doesnt have metrc tag"})
-
-    matching_attrs = {
-        "license": {
-            "metrc_xpath": '//*[@ng-model="destination.RecipientId"]',
-            "nabis_key": "siteLicenseNum",
-        }
-    }
-    metrc_destination_license = driver.find_element(
-        by=By.XPATH, value='//*[@ng-model="destination.RecipientId"]'
+    
+    def update_log(key,error_msg):
+        nonlocal log_dict
+        log_dict.update(
+            {
+                matching_attrs[key][error_msg]: matching_attrs[
+                    key
+                ][error_msg].format(
+                    matching_attrs[key]["metrc"]["data"],
+                    matching_attrs[key]["nabis"]["data"],
+                )
+            }
+        )
+    
+    matching_attrs["license"]["metrc"]["data"] = driver.find_element(
+        by=By.XPATH, value=matching_attrs["license"]["metrc_key"]
     ).get_attribute("value")
-    nabis_destination_license = nabis_order["siteLicenseNum"]
+    matching_attrs["license"]["nabis"]["data"] = nabis_order["siteLicenseNum"]
 
-    if metrc_destination_license.strip() != nabis_destination_license.strip():
-        """C11-0001274-LIC - Nabitwo
+    """C11-0001274-LIC - Nabitwo
         C11-0000340-LIC - Garden of Weeden
         C11-0000825-LIC - Cannex / 4Front"""
-
-        if metrc_destination_license.strip() not in [
+    if (
+        matching_attrs["license"]["metrc"]["data"].strip()
+        != matching_attrs["license"]["nabis"]["data"].strip()
+    ):
+        if matching_attrs["license"]["metrc"]["data"].strip() not in [
             "C11-0001274-LIC",
             "C11-0000340-LIC",
             "C11-0000825-LIC",
         ]:
-            wrongs.update(
-                {
-                    "IncorrectLicense": f"Licenses doesnt match metrc: {metrc_destination_license} vs nabis: {nabis_destination_license}"
-                }
-            )
             log_dict.update(
                 {
-                    "IncorrectLicense": f"Licenses doesnt match metrc: {metrc_destination_license} vs nabis: {nabis_destination_license}"
+                    matching_attrs["license"]["error_incorrect_key"]: matching_attrs[
+                        "license"
+                    ]["error_incorrect_msg"].format(
+                        matching_attrs["license"]["metrc"]["data"],
+                        matching_attrs["license"]["nabis"]["data"],
+                    )
                 }
             )
 
-    metrc_planned_route = driver.find_element(
-        by=By.NAME, value="model[0][Destinations][0][PlannedRoute]"
+    matching_attrs["route"]["metrc"]["data"] = driver.find_element(
+        by=By.NAME, value=matching_attrs["route"]["metrc_key"]
     ).get_attribute("value")
 
-    # OVO MORA BITI +1 dand od TRENUTNOG
-
-    metrc_est_departure = dt.datetime.strptime(
+    # DATE MATCHING
+    matching_attrs["est_departure_date"]["metrc"]["data"] = dt.datetime.strptime(
         json_dict["Details"][0]["Destinations"][0]["EstimatedDepartureDateTime"],
         "%Y-%m-%dT%H:%M:%S.%f",
     )
 
-    metrc_est_arrival = dt.datetime.strptime(
+    matching_attrs["est_arrival_date"]["metrc"]["data"] = dt.datetime.strptime(
         json_dict["Details"][0]["Destinations"][0]["EstimatedArrivalDateTime"],
         "%Y-%m-%dT%H:%M:%S.%f",
     )
 
-    if metrc_est_departure.date() != metrc_est_arrival.date():
-        wrongs.update(
-            {
-                "IncorrectDates": f"Metrc depart. and arrival dates are different; Depart: {metrc_est_departure.date()}, Arrival: {metrc_est_arrival.date()}"
-            }
-        )
+    if (
+        matching_attrs["est_departure_date"]["metrc"]["data"].date()
+        != matching_attrs["est_arrival_date"]["metrc"]["data"].date()
+    ):
         log_dict.update(
             {
-                "IncorrectDates": f"Metrc depart. and arrival dates are different; Depart: {metrc_est_departure.date()}, Arrival: {metrc_est_arrival.date()}"
+                "IncorrectDates": "Metrc dep. and arr. dates are different; Depart: {}, Arrival: {}".format(
+                    matching_attrs["est_departure_date"]["metrc"]["data"].date(),
+                    matching_attrs["est_arrival_date"]["metrc"]["data"].date(),
+                )
             }
         )
+
     dt.datetime.now().date()
-    metrc_est_departure.date() - dt.timedelta(days=1)
+    matching_attrs["est_departure_date"]["metrc"]["data"].date() - dt.timedelta(days=1)
 
-    ### DRIVER
-    metrc_driver = json_dict["Details"][0]["Destinations"][0]["Transporters"][0][
-        "DriverName"
-    ]
+    # DRIVER MATCHING
+    matching_attrs["driver"]["metrc"]["data"] = json_dict["Details"][0]["Destinations"][
+        0
+    ]["Transporters"][0]["DriverName"]
     try:
-        nabis_driver = (
-            f"{nabis_order['driver']['firstName']} {nabis_order['driver']['lastName']}"
-        )
+        matching_attrs["driver"]["nabis"][
+            "data"
+        ] = f"{nabis_order['driver']['firstName']} {nabis_order['driver']['lastName']}"
     except TypeError:
-        nabis_driver = f""
-        wrongs.update(
-            {
-                "MissingDriverNabis": f"Driver name is missing; Metrc: {''.join(metrc_driver.split()).lower()}, Nabis: {nabis_driver}"
-            }
-        )
+        matching_attrs["driver"]["nabis"]["data"] = f""
         log_dict.update(
             {
-                "MissingDriverNabis": f"Driver name is missing; Metrc: {''.join(metrc_driver.split()).lower()}, Nabis: {nabis_driver}"
+                matching_attrs["driver"]["error_missing_key"]: matching_attrs["driver"][
+                    "error_missing_msg"
+                ].format(
+                    matching_attrs["driver"]["metrc"]["data"],
+                    matching_attrs["driver"]["nabis"]["data"],
+                )
             }
         )
 
-    if "".join(metrc_driver.split()).lower() != "".join(nabis_driver.split()).lower():
-        wrongs.update(
-            {
-                "IncorrectDriver": f"Driver name incorrect; Metrc: {''.join(metrc_driver.split()).lower()}, Nabis: {''.join(nabis_driver.split()).lower()}"
-            }
-        )
+    if (
+        "".join(matching_attrs["driver"]["metrc"]["data"].split()).lower()
+        != "".join(matching_attrs["driver"]["nabis"]["data"].split()).lower()
+    ):
+        update_log('driver', 'error_incorrect_key')
         log_dict.update(
             {
-                "IncorrectDriver": f"Driver name incorrect; Metrc: {''.join(metrc_driver.split()).lower()}, Nabis: {''.join(nabis_driver.split()).lower()}"
+                matching_attrs["driver"]["error_incorrect_key"]: matching_attrs[
+                    "driver"
+                ]["error_incorrect_msg"].format(
+                    "".join(matching_attrs["driver"]["metrc"]["data"].split()).lower(),
+                    "".join(matching_attrs["driver"]["nabis"]["data"].split()).lower(),
+                )
             }
         )
 
-    metrc_driver_id = driver.find_element(
+    # DRIVER'S ID matching
+    matching_attrs["driver_id"]["metrc"]["data"] = driver.find_element(
         by=By.XPATH,
-        value='//*[@ng-model="transporterDetail.DriverOccupationalLicenseNumber"]',
-    ).get_attribute("value")
-    try:
-        nabis_driver_id = nabis_order["driver"]["driversLicense"]
-    except TypeError:
-        nabis_driver_id = ""
-        wrongs.update(
-            {
-                "MissingDriverIdNabis": f"Driver ID missing; Metrc: {metrc_driver_id}, Nabis: {nabis_driver_id}"
-            }
-        )
-        log_dict.update(
-            {
-                "MissingDriverIdNabis": f"Driver ID missing; Metrc: {metrc_driver_id}, Nabis: {nabis_driver_id}"
-            }
-        )
-
-    if metrc_driver_id != nabis_driver_id:
-        wrongs.update(
-            {
-                "IncorrectDriverId": f"Driver ID incorrect; Metrc: {metrc_driver_id}, Nabis: {nabis_driver_id}"
-            }
-        )
-        log_dict.update(
-            {
-                "IncorrectDriverId": f"Driver ID incorrect; Metrc: {metrc_driver_id}, Nabis: {nabis_driver_id}"
-            }
-        )
-
-    # metrc_driver_drivers_lic = driver.find_element(
-    #     by=By.XPATH, value='//*[@ng-model="transporterDetail.DriverLicenseNumber"]'
-    # ).get_attribute("value")
-
-    ### VEHICLE
-    metrc_vehicle_make = driver.find_element(
-        by=By.XPATH, value='//*[@ng-model="transporterDetail.VehicleMake"]'
-    ).get_attribute("value")
-    try:
-        nabis_vehicle_make = nabis_order["vehicle"]["make"]
-    except TypeError:
-        nabis_vehicle_make = ""
-        wrongs.update(
-            {
-                "MissingVehicleMake(Nabis)": f"Missing vehicle maker; Metrc {metrc_vehicle_make}, Nabis: {nabis_vehicle_make}"
-            }
-        )
-        log_dict.update(
-            {
-                "MissingVehicleMake(Nabis)": f"Missing vehicle maker; Metrc {metrc_vehicle_make}, Nabis: {nabis_vehicle_make}"
-            }
-        )
-
-    if metrc_vehicle_make.strip() != nabis_vehicle_make.strip():
-        wrongs.update(
-            {
-                "IncorrectVehicleMake": f"Incorrect vehicle maker; Metrc {metrc_vehicle_make}, Nabis: {nabis_vehicle_make}"
-            }
-        )
-        log_dict.update(
-            {
-                "IncorrectVehicleMake": f"Incorrect vehicle maker; Metrc {metrc_vehicle_make}, Nabis: {nabis_vehicle_make}"
-            }
-        )
-
-    metrc_vehicle_model = driver.find_element(
-        by=By.XPATH, value='//*[@ng-model="transporterDetail.VehicleModel"]'
+        value=matching_attrs["driver_id"]["metrc_key"],
     ).get_attribute("value")
 
     try:
-        nabis_vehicle_model = nabis_order["vehicle"]["name"]
+        matching_attrs["driver_id"]["nabis"]["data"] = nabis_order["driver"][
+            "driversLicense"
+        ]
     except TypeError:
-        nabis_vehicle_model = ""
-        wrongs.update(
-            {
-                "MissingVehicleMake": f"Missing vehicle maker; Metrc {metrc_vehicle_model}, Nabis: {nabis_vehicle_model}"
-            }
-        )
+        matching_attrs["driver_id"]["nabis"]["data"] = ""
         log_dict.update(
             {
-                "MissingVehicleMake": f"Missing vehicle maker; Metrc {metrc_vehicle_model}, Nabis: {nabis_vehicle_model}"
+                matching_attrs["driver_id"]["error_missing_key"]: matching_attrs[
+                    "driver_id"
+                ]["error_missing_msg"].format(
+                    matching_attrs["driver_id"]["metrc"]["data"],
+                    matching_attrs["driver_id"]["nabis"]["data"],
+                )
             }
         )
 
-    if nabis_vehicle_model not in metrc_vehicle_model:
-        wrongs.update(
-            {
-                "IncorrectVehicleModel": f"Incorrect vehicle model; Metrc {metrc_vehicle_model}, Nabis: {nabis_vehicle_model}"
-            }
-        )
+    if (
+        matching_attrs["driver_id"]["metrc"]["data"]
+        != matching_attrs["driver_id"]["nabis"]["data"]
+    ):
         log_dict.update(
             {
-                "IncorrectVehicleModel": f"Incorrect vehicle model; Metrc {metrc_vehicle_model}, Nabis: {nabis_vehicle_model}"
+                matching_attrs["driver_id"]["error_incorrect_key"]: matching_attrs[
+                    "driver_id"
+                ]["error_incorrect_msg"].format(
+                    matching_attrs["driver_id"]["metrc"]["data"],
+                    matching_attrs["driver_id"]["nabis"]["data"],
+                )
             }
         )
 
-    metrc_license_plate = driver.find_element(
+    # VEHICLE MAKE
+    matching_attrs["vehicle_make"]["metrc"]["data"] = driver.find_element(
+        by=By.XPATH, value=matching_attrs["vehicle_make"]["metrc_key"]
+    ).get_attribute("value")
+    try:
+        matching_attrs["vehicle_make"]["nabis"]["data"] = nabis_order["vehicle"]["make"]
+    except TypeError:
+        matching_attrs["vehicle_make"]["nabis"]["data"] = ""
+        log_dict.update(
+            {
+                matching_attrs["vehicle_make"]["error_missing_key"]: matching_attrs[
+                    "vehicle_make"
+                ]["error_missing_msg"].format(
+                    matching_attrs["vehicle_make"]["metrc"]["data"],
+                    matching_attrs["vehicle_make"]["nabis"]["data"],
+                )
+            }
+        )
+
+    if (
+        matching_attrs["vehicle_make"]["metrc"]["data"].strip()
+        != matching_attrs["vehicle_make"]["nabis"]["data"].strip()
+    ):
+        log_dict.update(
+            {
+                matching_attrs["vehicle_make"]["error_incorrect_key"]: matching_attrs[
+                    "vehicle_make"
+                ]["error_incorrect_msg"].format(
+                    matching_attrs["vehicle_make"]["metrc"]["data"],
+                    matching_attrs["vehicle_make"]["nabis"]["data"],
+                )
+            }
+        )
+
+    # VEHICLE MODEL
+    matching_attrs["vehicle_model"]["metrc"]["data"] = driver.find_element(
+        by=By.XPATH, value=matching_attrs["vehicle_model"]["metrc_key"]
+    ).get_attribute("value")
+
+    try:
+        matching_attrs["vehicle_model"]["nabis"]["data"] = nabis_order["vehicle"][
+            "name"
+        ]
+    except TypeError:
+        matching_attrs["vehicle_model"]["nabis"]["data"] = ""
+        log_dict.update(
+            {
+                matching_attrs["vehicle_model"]["error_missing_key"]: matching_attrs[
+                    "vehicle_model"
+                ]["error_missing_msg"].format(
+                    matching_attrs["vehicle_model"]["metrc"]["data"],
+                    matching_attrs["vehicle_model"]["nabis"]["data"],
+                )
+            }
+        )
+
+    if (
+        matching_attrs["vehicle_model"]["nabis"]["data"]
+        not in matching_attrs["vehicle_model"]["metrc"]["data"]
+    ):
+        log_dict.update(
+            {
+                matching_attrs["vehicle_model"]["error_incorrect_key"]: matching_attrs[
+                    "vehicle_model"
+                ]["error_incorrect_msg"].format(
+                    matching_attrs["vehicle_model"]["metrc"]["data"],
+                    matching_attrs["vehicle_model"]["nabis"]["data"],
+                )
+            }
+        )
+
+    # License plate
+    matching_attrs["vehicle_plate"]["metrc"]["data"] = driver.find_element(
         by=By.XPATH,
-        value='//*[@ng-model="transporterDetail.VehicleLicensePlateNumber"]',
+        value=matching_attrs["vehicle_plate"]["metrc_key"],
     ).get_attribute("value")
     try:
-        nabis_license_plate = nabis_order["vehicle"]["licensePlate"]
+        matching_attrs["vehicle_plate"]["nabis"]["data"] = nabis_order["vehicle"][
+            "licensePlate"
+        ]
     except TypeError:
-        nabis_license_plate = ""
-        wrongs.update(
-            {
-                "MissingVehicleMake": f"Missing vehicle plate; Metrc: {metrc_license_plate}, Nabis: {nabis_license_plate}"
-            }
-        )
+        matching_attrs["vehicle_plate"]["nabis"]["data"] = ""
         log_dict.update(
             {
-                "MissingVehicleMake": f"Missing vehicle plate; Metrc: {metrc_license_plate}, Nabis: {nabis_license_plate}"
+                matching_attrs["vehicle_plate"]["error_missing_key"]: matching_attrs[
+                    "vehicle_plate"
+                ]["error_missing_msg"].format(
+                    matching_attrs["vehicle_plate"]["metrc"]["data"],
+                    matching_attrs["vehicle_plate"]["nabis"]["data"],
+                )
             }
         )
 
-    if metrc_license_plate != nabis_license_plate:
-        wrongs.update(
-            {
-                "IncorrectVehicleMake": f"Incorrect vehicle plate; Metrc: {metrc_license_plate}, Nabis: {nabis_license_plate}"
-            }
-        )
+    if (
+        matching_attrs["vehicle_plate"]["metrc"]["data"]
+        != matching_attrs["vehicle_plate"]["nabis"]["data"]
+    ):
         log_dict.update(
             {
-                "IncorrectVehicleMake": f"Incorrect vehicle plate; Metrc: {metrc_license_plate}, Nabis: {nabis_license_plate}"
+                matching_attrs["vehicle_plate"]["error_incorrect_key"]: matching_attrs[
+                    "vehicle_plate"
+                ]["error_incorrect_msg"].format(
+                    matching_attrs["vehicle_plate"]["metrc"]["data"],
+                    matching_attrs["vehicle_plate"]["nabis"]["data"],
+                )
             }
         )
 
-    if wrongs:
-        print(f"WRONGS : {wrongs}")
-
+    # Address & route parsing
     addresses = (
-        metrc_planned_route.replace(str(nabis_order_id), "")
+        matching_attrs["route"]["metrc"]["data"]
+        .replace(str(nabis_order_id), "")
         .replace("NABIS", "")
         .split("via")[0]
         .replace(" to ", ";")
@@ -424,24 +453,26 @@ def proc_template(
     route_addr_dest = addresses[-1].split(", ")[0].strip()
     route_search_str = f"{route_addr_origin} to {route_addr_dest}"
     if any([route_search_str in x for x in routes]):
-        route = [x for x in routes if route_search_str in x][0]
+        matching_attrs["route"]["metrc"]["data"] = [
+            x for x in routes if route_search_str in x
+        ][0]
 
     else:
-        wrongs.update(
-            {
-                "CantFindRoute": f"Cant find route in the sheet for planned route (metrc): {metrc_planned_route}"
-            }
-        )
+
         log_dict.update(
             {
-                "CantFindRoute": f"Cant find route in the sheet for planned route (metrc): {metrc_planned_route}"
+                "CantFindRoute": f"Cant find route in the sheet for planned route (metrc): {matching_attrs['route']['metrc']['data']}"
             }
         )
 
-    # metrc_only_tags = {
-    #     x["Label"]: {"quantity": x["Quantity"], "WholesalePrice": x["WholesalePrice"]}
-    #     for x in metrc_packages
-    # }
+    # If there is missing child package tag msg in the extension,
+    # this is the same.
+
+    if any([None == x for x in list(nabis_packages.keys())]):
+        log_dict.update(
+            {"MissingChildPackageTag": "One line item doesnt have metrc tag"}
+        )
+
     metrc_only_tags = {}
     for x in metrc_packages:
         d = {}
@@ -457,13 +488,11 @@ def proc_template(
 
         metrc_only_tags[x["Label"]] = d
 
+    # del nabis_packages['SKIP]
     if len(nabis_packages) != len(metrc_only_tags):
+        # SKIP tags are nc (non cannabis items)
         if "SKIP" not in nabis_packages.keys():
-            wrongs.update(
-                {
-                    "IncorrectPkgNbr": f"Mismatch of number of packages between metrc and nabis; Metrc: {len(metrc_only_tags)}, Nabis: {len(nabis_packages)}"
-                }
-            )
+
             log_dict.update(
                 {
                     "IncorrectPkgNbr": f"Mismatch of number of packages between metrc and nabis; Metrc: {len(metrc_only_tags)}, Nabis: {len(nabis_packages)}"
@@ -477,24 +506,15 @@ def proc_template(
         if i != "SKIP":
             if not metrc_only_tags.get(i):
                 # tag is missing
-                wrongs.update(
-                    {
-                        "MissingPackageTag": f"Tag exists in nabis but not in metrc template. TagId: '{i}'"
-                    }
-                )
                 log_dict.update(
                     {
-                        "MissingPackageTag": f"Tag exists in nabis but not in metrc template. TagId: '{i}'"
+                        "MissingPackageTag": f"Tag exists in nabis but not in metrc template. NabisTagId: '{i}'"
                     }
                 )
 
             else:
                 if nabis_packages[i]["quantity"] != metrc_only_tags[i]["quantity"]:
-                    wrongs.update(
-                        {
-                            "WrongQuantity": f"Incorrect quantity; Metrc: {metrc_only_tags[i]['quantity']}, Nabis: {nabis_packages[i]['quantity']}"
-                        }
-                    )
+
                     log_dict.update(
                         {
                             "WrongQuantity": f"Incorrect quantity; Metrc: {metrc_only_tags[i]['quantity']}, Nabis: {nabis_packages[i]['quantity']}"
@@ -503,19 +523,23 @@ def proc_template(
                 else:
                     print("Quantities good;")
 
+                ### AKO JE TRANSFER A NE WHOLESALE MANIFEST
+
                 if nabis_packages[i]["total"] != metrc_only_tags[i]["WholesalePrice"]:
-                    wrongs.update(
-                        {
-                            "WrongPrice": f"Incorrect price ; Metrc: {metrc_only_tags[i]['WholesalePrice']}, Nabis: {nabis_packages[i]['total']}"
-                        }
-                    )
-                    log_dict.update(
-                        {
-                            "WrongPrice": f"Incorrect price; Metrc: {metrc_only_tags[i]['WholesalePrice']}, Nabis: {nabis_packages[i]['total']}"
-                        }
-                    )
+                    if metrc_transfer_type != "Transfer":
+                        log_dict.update(
+                            {
+                                "WrongPrice": f"Incorrect price; Metrc: {metrc_only_tags[i]['WholesalePrice']}, Nabis: {nabis_packages[i]['total']}"
+                            }
+                        )
+                    else:
+                        print(
+                            "Price missing on metrc side but template type is Transfer"
+                        )
                 else:
                     print("Prices good;")
+        else:
+            pass
 
     # CHECK FOR TEMP VALUES
     """Temp values are present in these fields:
@@ -545,18 +569,37 @@ def proc_template(
 
     driver.find_element(
         by=By.NAME, value="model[0][Destinations][0][PlannedRoute]"
-    ).send_keys(route)
+    ).send_keys(matching_attrs["route"]["metrc"]["data"])
     time.sleep(1)
 
-    if wrongs:
-        print(json.dumps(wrongs, indent=2))
+    if log_dict:
+        print(json.dumps(log_dict, indent=2))
         log_dict.update({"ALL_GOOD": "FALSE"})
-        finish_template_get_manifest(driver, WAREHOUSE, nabis_order)
+        # finish_template_get_manifest(driver, WAREHOUSE, nabis_order)
     else:
         print("---All good!---")
         log_dict.update({"ALL_GOOD": "TRUE"})
         finish_template_get_manifest(driver, WAREHOUSE, nabis_order)
 
+    log_dict.update({"Order": str(nabis_order_id)})
+    log_dict.update(
+        {
+            "Shipment": list(
+                filter(
+                    lambda word: word[0] == "#",
+                    nabis_order["shipment_template"].split(),
+                )
+            )[0]
+        }
+    )
+    log_dict.update(
+        {
+            "Date": dt.datetime.strftime(
+                dt.datetime.now(dt.datetime.now().astimezone().tzinfo),
+                "%Y-%m-%dT%H:%M%z",
+            )
+        }
+    )
     update_log_sheet(log_dict)
 
     # o = get_order_data(nabis_order["orderNumber"])
@@ -655,7 +698,10 @@ def main():
     ###        --          ###
     for nabis_order in nabis_orders:
         template_req = find_template(
-            str(nabis_order["orderNumber"]), metrc_api_verification_token, metrc_cookie
+            str(nabis_order["orderNumber"]),
+            metrc_api_verification_token,
+            metrc_cookie,
+            WAREHOUSE,
         )
         if template_req["Data"] == []:
             print(f'Couldnt find metrc template for {nabis_order["orderNumber"]}')

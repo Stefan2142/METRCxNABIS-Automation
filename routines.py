@@ -13,16 +13,18 @@ from api_calls import upload_manifest_pdf, upload_manifest_id, view_metrc_transf
 def waiting_fnc(driver, path):
     """Fnc utilizing while loop which gives a correctly waiting function
     (waiting for an element to appear). Selenium's waiting methods arent reliable enough;
-    
+
 
     Args:
         driver (webdriver): driver for browser
-        path (str): path 
+        path (str): path
     """
+
 
 def check_prices():
     pass
-    
+
+
 def update_log_sheet(log_dict):
     # Update logging gsheet file
     gc = gspread.service_account(filename="./emailsending-325211-e5456e88f282.json")
@@ -35,6 +37,10 @@ def update_log_sheet(log_dict):
     df_dict = pd.DataFrame([log_dict])
     output = pd.concat([sheet_df, df_dict], ignore_index=True)
     output.fillna("", inplace=True)
+    output["WrongPrice"] = output["WrongPrice"].apply(str)
+    output["WrongQuantity"] = output["WrongQuantity"].apply(str)
+    output["MissingPackageTag"] = output["MissingPackageTag"].apply(str)
+
     wks.update([output.columns.values.tolist()] + output.values.tolist())
 
 
@@ -59,6 +65,11 @@ def finish_template_get_manifest(driver, WAREHOUSE, nabis_order):
             pass
     ### AFTER SUBMITTING A TEMPLATE
     # For licensed transfer (not the same as templates for transfer), this is 2nd step
+    # Remove Template
+    driver.find_element(by=By.XPATH, value="//*[@title='Discontinue']").click()
+    alert_obj = driver.switch_to.alert
+    alert_obj.accept()
+    time.sleep(1)
     driver.get(f"https://ca.metrc.com/industry/{WAREHOUSE}/transfers/licensed")
 
     driver.find_element_by_id("outgoing-tab").click()
@@ -97,7 +108,7 @@ def finish_template_get_manifest(driver, WAREHOUSE, nabis_order):
             # Here we wait when the file gets downloaed
             while current_files == len(get_cwd_files()):
                 pass
-
+            time.sleep(1)
             list_of_pdf = get_cwd_files()
             list_of_pdf = filter(lambda pdf: ".pdf" in pdf, list_of_pdf)
             list_of_pdf = list(list_of_pdf)
@@ -109,10 +120,20 @@ def finish_template_get_manifest(driver, WAREHOUSE, nabis_order):
                 for x in transfer["data"]["getMetrcTransfers"]
                 if nabis_order["shipment_template"] == x["metrcTransferTemplateName"]
             ][0]
+            print(f"list_of_pdfs: {list_of_pdf}")
+            print(f"File to be uploaded {list_of_pdf[0]}")
+            pdf_response = upload_manifest_pdf(transfer_id, list_of_pdf[0])
+            id_response = upload_manifest_id(transfer_id, manifest_id)
+            if "errors" in pdf_response:
+                print(
+                    f'Error while uploading manifest pdf {transfer_id}, order: {nabis_order["id"]}'
+                )
+            if "errors" in id_response:
+                print(
+                    f'Error while uploading manifest id number {transfer_id}, order {nabis_order["id"]}'
+                )
 
-            upload_manifest_pdf(transfer_id, list_of_pdf[0])
-            upload_manifest_id(transfer_id, manifest_id)
-            return True
+            return manifest_id
             # For the last part, Nabis (pdf upload)
             o = get_order_data(142358)
             transfer = view_metrc_transfer(o["id"])
@@ -173,6 +194,7 @@ def get_driver():
     chrome_options.add_experimental_option("prefs", prefs)
     chrome_options.add_argument("--start-maximized")
     # chrome_options.add_argument("--headless")
+    # chrome_options.add_argument("--window-size=1536,865")
 
     driver = webdriver.Chrome(
         executable_path="./chromedriver.exe", chrome_options=chrome_options

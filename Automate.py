@@ -27,13 +27,9 @@ from routines import (
     define_default_logger,
     empty_prices_checker,
 )
-from creds import credentials
+from creds import credentials, WAREHOUSE
 
 
-GARDEN_OF_WEEDEN_METRC = "C11-0000340-LIC"
-NABITWO_METRC = "C11-0001274-LIC"
-
-WAREHOUSE = GARDEN_OF_WEEDEN_METRC
 routes = []
 logger = define_default_logger()
 
@@ -629,7 +625,7 @@ def proc_template(
         log_dict.update({"ALL_GOOD": "FALSE"})
         log_dict.update({"ManifestId": ""})
 
-        # finish_template_get_manifest(driver, WAREHOUSE, nabis_order)
+        # finish_template_get_manifest(driver, WAREHOUSE['license'], nabis_order)
     else:
         if empty_prices_checker(driver):
             logger.info(f"Log for order: {nabis_order_id}:")
@@ -641,7 +637,7 @@ def proc_template(
             log_dict.update({"ALL_GOOD": "TRUE"})
 
             manifest_id = finish_template_get_manifest(
-                driver, WAREHOUSE, nabis_order, logger
+                driver, WAREHOUSE['license'], nabis_order, logger
             )
             if manifest_id == False:
                 log_dict.update(
@@ -676,7 +672,7 @@ def proc_template(
     # upload_manifest_pdf(transfer_id, "name.pdf")
 
     driver.get(
-        f"https://ca.metrc.com/industry/{WAREHOUSE}/transfers/licensed/templates"
+        f"https://ca.metrc.com/industry/{WAREHOUSE['license']}/transfers/licensed/templates"
     )
     return log_dict
 
@@ -693,7 +689,7 @@ def main():
 
     ### Login directives for METRC ###
     driver.get(
-        f"https://ca.metrc.com/industry/{WAREHOUSE}/transfers/licensed/templates"
+        f"https://ca.metrc.com/industry/{WAREHOUSE['license']}/transfers/licensed/templates"
     )
     try:
         driver.find_element(by=By.XPATH, value='//*[@id="username"]').send_keys(
@@ -708,7 +704,7 @@ def main():
     )
     driver.find_element(by=By.XPATH, value='//*[@id="login_button"]').click()
     driver.get(
-        f"https://ca.metrc.com/industry/{WAREHOUSE}/transfers/licensed/templates"
+        f"https://ca.metrc.com/industry/{WAREHOUSE['license']}/transfers/licensed/templates"
     )
 
     cookie_list = driver.get_cookies()
@@ -774,7 +770,7 @@ def main():
             str(nabis_order["orderNumber"]),
             metrc_api_verification_token,
             metrc_cookie,
-            WAREHOUSE,
+            WAREHOUSE['license'],
         )
 
         if template_req["Data"] == []:

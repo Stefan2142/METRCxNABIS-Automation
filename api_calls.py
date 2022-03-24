@@ -1,9 +1,8 @@
 import requests, json
-from creds import GARDEN_OF_WEEDEN, NABITWO, bearer
+from creds import WAREHOUSE, bearer
 import time
 import copy
 
-WAREHOUSE = GARDEN_OF_WEEDEN
 ORDERS = []
 DATE_FILTER = None
 
@@ -224,7 +223,7 @@ def get_tracker_shipments(tomorrow, page=1):
                 "variables": {
                     "ShipmentTrackerQueryInput": {
                         "departureTime": tomorrow,
-                        "origin": [WAREHOUSE],
+                        "origin": [WAREHOUSE["id"]],
                         "metrcStatus": ["COMPLETE"],
                         "orderStatus": ["SCHEDULED", "TRANSFERRING", "UNSCHEDULED"],
                         "metrcManifestCreated": False,

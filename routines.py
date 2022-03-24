@@ -6,6 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 import pandas as pd
 import os, time
+import re
 import logging
 import logging.handlers
 from pythonjsonlogger import jsonlogger
@@ -54,6 +55,36 @@ def waiting_fnc(driver, path):
 
 def check_prices():
     pass
+
+
+def get_cookie_and_token(driver):
+
+    cookie_list = driver.get_cookies()
+    soup = BeautifulSoup(driver.page_source, "html.parser")
+    metrc_api_verification_token = (
+        str(soup(text=re.compile(r"ApiVerificationToken")))
+        .split("X-Metrc-LicenseNumber")[0]
+        .split("ApiVerificationToken")[-1]
+        .split("'")[2]
+    )
+    metrc_cookie = "".join(
+        [
+            f"MetrcRequestToken={x['value']}"
+            for x in cookie_list
+            if x["name"] == "MetrcRequestToken"
+        ]
+    )
+    metrc_cookie += "".join(
+        [
+            f";MetrcSessionTime={x['value']}"
+            for x in cookie_list
+            if x["name"] == "MetrcSessionTime"
+        ]
+    )
+    metrc_cookie += "".join(
+        [f";MetrcAuth={x['value']}" for x in cookie_list if x["name"] == "MetrcAuth"]
+    )
+    return {"cookie": metrc_cookie, "token": metrc_api_verification_token}
 
 
 def empty_prices_checker(driver):

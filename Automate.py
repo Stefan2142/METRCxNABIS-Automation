@@ -26,6 +26,7 @@ from routines import (
     update_log_sheet,
     define_default_logger,
     empty_prices_checker,
+    get_cookie_and_token,
 )
 from creds import credentials, WAREHOUSE
 
@@ -637,7 +638,7 @@ def proc_template(
             log_dict.update({"ALL_GOOD": "TRUE"})
 
             manifest_id = finish_template_get_manifest(
-                driver, WAREHOUSE['license'], nabis_order, logger
+                driver, WAREHOUSE["license"], nabis_order, logger
             )
             if manifest_id == False:
                 log_dict.update(
@@ -707,32 +708,7 @@ def main():
         f"https://ca.metrc.com/industry/{WAREHOUSE['license']}/transfers/licensed/templates"
     )
 
-    cookie_list = driver.get_cookies()
-    soup = BeautifulSoup(driver.page_source, "html.parser")
-    metrc_api_verification_token = (
-        str(soup(text=re.compile(r"ApiVerificationToken")))
-        .split("X-Metrc-LicenseNumber")[0]
-        .split("ApiVerificationToken")[-1]
-        .split("'")[2]
-    )
-    metrc_cookie = "".join(
-        [
-            f"MetrcRequestToken={x['value']}"
-            for x in cookie_list
-            if x["name"] == "MetrcRequestToken"
-        ]
-    )
-    metrc_cookie += "".join(
-        [
-            f";MetrcSessionTime={x['value']}"
-            for x in cookie_list
-            if x["name"] == "MetrcSessionTime"
-        ]
-    )
-    metrc_cookie += "".join(
-        [f";MetrcAuth={x['value']}" for x in cookie_list if x["name"] == "MetrcAuth"]
-    )
-
+    metrc_auth = get_cookie_and_token(driver)
     ###             --             ###
     ### Get list of orders ###
     # Passing a tomorrow's date (month-day-year): '03-04-2022"'
@@ -768,19 +744,32 @@ def main():
         start_time = time.perf_counter()
         template_req = find_template(
             str(nabis_order["orderNumber"]),
-            metrc_api_verification_token,
-            metrc_cookie,
-            WAREHOUSE['license'],
+            metrc_auth["token"],
+            metrc_auth["cookie"],
+            WAREHOUSE["license"],
         )
-
-        if template_req["Data"] == []:
-            logger.info(
-                f'Couldnt find metrc template for order: {nabis_order["orderNumber"]}, shipment: {nabis_order["shipmentNumber"]}'
+        try:
+            if template_req["Data"] == []:
+                logger.info(
+                    f'Couldnt find metrc template for order: {nabis_order["orderNumber"]}, shipment: {nabis_order["shipmentNumber"]}'
+                )
+                continue
+            else:
+                # We always want the first result(0th) from the template search
+                nabis_template_name = template_req["Data"][0]["Name"]
+        except KeyError:
+            metrc_auth = get_cookie_and_token(driver)
+            template_req = find_template(
+                str(nabis_order["orderNumber"]),
+                metrc_auth["token"],
+                metrc_auth["cookie"],
+                WAREHOUSE["license"],
             )
-            continue
-        else:
-            # We always want the first result(0th) from the template search
-            nabis_template_name = template_req["Data"][0]["Name"]
+            if template_req["Data"] == []:
+                logger.info(
+                    f'Couldnt find metrc template for order: {nabis_order["orderNumber"]}, shipment: {nabis_order["shipmentNumber"]}'
+                )
+                continue
 
         if str(nabis_order["shipmentNumber"]) not in nabis_template_name:
             logger.info(

@@ -1,6 +1,7 @@
 import requests, json
-from creds import GARDEN_OF_WEEDEN, NABITWO
+from creds import GARDEN_OF_WEEDEN, NABITWO, bearer
 import time
+import copy
 
 WAREHOUSE = GARDEN_OF_WEEDEN
 ORDERS = []
@@ -8,11 +9,12 @@ DATE_FILTER = None
 
 url = "https://api.getnabis.com/graphql/admin"
 
+
 # "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36",
 headers = {
     "authority": "api.getnabis.com",
     "accept": "*/*",
-    "authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2NDc1NDc2OTQsImlzQWRtaW4iOnRydWUsImlzRHJpdmVyIjpmYWxzZSwiaWF0IjoxNjQ2MjUxNjk0LCJhdWQiOiJhZG1pbiIsImlzcyI6Imh0dHBzOi8vZ2V0bmFiaXMuY29tIiwic3ViIjoiZDI0NDczZDctNzBjZS00N2M4LTg1OTItOWVlY2Q0NzgzMDQ0In0.NtpfYpR5ALSiOc4FeWuIxVshfRtdpGZ4A6TcthtVwt0",
+    "authorization": bearer,
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36",
     "content-type": "application/json",
 }
@@ -58,7 +60,7 @@ def find_template(order_id, api_token, cookie, metrc_lic):
         time.sleep(1)
         response = requests.request("POST", url, headers=headers, data=payload)
 
-    print(response.text)
+    # print(response.text)
     return response.json()
 
 
@@ -112,28 +114,48 @@ def get_vehicles():
 
 
 def upload_manifest_id(transfer_id, manifest_id):
-    pdf_header = headers
-    del pdf_header["content-type"]
+    # try:
+    #     del pdf_header["content-type"]
+    # except:
+    #     pass
+    custom_header = copy.deepcopy(headers)
+    custom_header.update(
+        {
+            "sec-gpc": "1",
+            "origin": "https://app.getnabis.com",
+            "sec-fetch-site": "same-site",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "https://app.getnabis.com/",
+            "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
+        }
+    )
+
     payload = json.dumps(
         [
             {
                 "operationName": "updateMetrcTransfer",
                 "variables": {
                     "id": transfer_id,
-                    "metrcManifestId": manifest_id,
+                    "metrcManifestId": int(manifest_id),
                 },
                 "query": "mutation updateMetrcTransfer($id: ID!, $metrcManifestId: Int, $metrcTransferTemplateName: String, $metrcManifestS3FileLink: String, $metrcOrderNotes: String, $metrcManifestFile: Upload) {\n  updateMetrcTransfer(id: $id, metrcManifestId: $metrcManifestId, metrcTransferTemplateName: $metrcTransferTemplateName, metrcManifestS3FileLink: $metrcManifestS3FileLink, metrcOrderNotes: $metrcOrderNotes, metrcManifestFile: $metrcManifestFile) {\n    ...metrcTransferFragment\n    __typename\n  }\n}\n\nfragment metrcTransferFragment on MetrcTransfer {\n  id\n  orderId\n  order {\n    id\n    metrcWarehouseLicenseNumber\n    __typename\n  }\n  originLicensedLocationId\n  originLicensedLocation {\n    ...licensedLocationFragment\n    __typename\n  }\n  destinationLicensedLocationId\n  destinationLicensedLocation {\n    ...licensedLocationFragment\n    __typename\n  }\n  metrcManifestId\n  metrcTransferTemplateName\n  metrcManifestS3FileLink\n  metrcOrderNotes\n  shipmentId\n  shipment {\n    ...shipmentFragment\n    __typename\n  }\n  creatorId\n  creator {\n    id\n    email\n    __typename\n  }\n  createdAt\n  updatedAt\n  __typename\n}\n\nfragment licensedLocationFragment on LicensedLocation {\n  id\n  name\n  address1\n  address2\n  city\n  state\n  zip\n  siteCategory\n  lat\n  lng\n  billingAddress1\n  billingAddress2\n  billingAddressCity\n  billingAddressState\n  billingAddressZip\n  warehouseId\n  isArchived\n  doingBusinessAs\n  noExciseTax\n  phoneNumber\n  printCoas\n  hoursBusiness\n  hoursDelivery\n  deliveryByApptOnly\n  specialProtocol\n  schedulingSoftwareRequired\n  schedulingSoftwareLink\n  centralizedPurchasingNotes\n  payByCheck\n  collectionNotes\n  deliveryNotes\n  collect1PocFirstName\n  collect1PocLastName\n  collect1PocTitle\n  collect1PocNumber\n  collect1PocEmail\n  collect1PocAllowsText\n  collect1PreferredContactMethod\n  collect2PocFirstName\n  collect2PocLastName\n  collect2PocTitle\n  collect2PocNumber\n  collect2PocEmail\n  collect2PocAllowsText\n  collect2PreferredContactMethod\n  delivery1PocFirstName\n  delivery1PocLastName\n  delivery1PocTitle\n  delivery1PocNumber\n  delivery1PocEmail\n  delivery1PocAllowsText\n  delivery1PreferredContactMethod\n  delivery2PocFirstName\n  delivery2PocLastName\n  delivery2PocTitle\n  delivery2PocNumber\n  delivery2PocEmail\n  delivery2PocAllowsText\n  delivery2PreferredContactMethod\n  unmaskedId\n  qualitativeRating\n  creditRating\n  trustLevelNabis\n  trustLevelInEffect\n  isOnNabisTracker\n  locationNotes\n  infoplus\n  w9Link\n  taxIdentificationNumber\n  sellerPermitLink\n  nabisMaxTerms\n  __typename\n}\n\nfragment shipmentFragment on Shipment {\n  id\n  orderId\n  originLicensedLocationId\n  destinationLicensedLocationId\n  status\n  stagingAreaId\n  isUnloaded\n  unloaderId\n  isLoaded\n  loaderId\n  arrivalTime\n  departureTime\n  isShipped\n  vehicleId\n  driverId\n  previousShipmentId\n  nextShipmentId\n  infoplusOrderId\n  infoplusAsnId\n  infoplusOrderInventoryStatus\n  infoplusAsnInventoryStatus\n  createdAt\n  updatedAt\n  shipmentNumber\n  queueOrder\n  isStaged\n  isPrinted\n  arrivalTimeAfter\n  arrivalTimeBefore\n  fulfillability\n  pickers\n  shipmentType\n  intaken\n  outtaken\n  metrcWarehouseLicenseNumber\n  __typename\n}\n",
             }
         ]
     )
 
-    response = requests.request("POST", url, headers=pdf_header, data=payload)
+    response = requests.request("POST", url, headers=headers, data=payload)
     return response.json()
 
 
 def upload_manifest_pdf(transfer_id, pdf_fl):
-    pdf_header = headers
-    del pdf_header["content-type"]
+    global bearer
+    pdf_header = {
+        "authority": "api.getnabis.com",
+        "accept": "*/*",
+        "authorization": bearer,
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36",
+    }
 
     payload = {
         "operations": '{"operationName":"updateMetrcTransfer","variables":{"id":"%s","metrcManifestFile":null},"query":"mutation updateMetrcTransfer($id: ID!, $metrcManifestId: Int, $metrcTransferTemplateName: String, $metrcManifestS3FileLink: String, $metrcOrderNotes: String, $metrcManifestFile: Upload) {\\n  updateMetrcTransfer(id: $id, metrcManifestId: $metrcManifestId, metrcTransferTemplateName: $metrcTransferTemplateName, metrcManifestS3FileLink: $metrcManifestS3FileLink, metrcOrderNotes: $metrcOrderNotes, metrcManifestFile: $metrcManifestFile) {\\n    ...metrcTransferFragment\\n    __typename\\n  }\\n}\\n\\nfragment metrcTransferFragment on MetrcTransfer {\\n  id\\n  orderId\\n  order {\\n    id\\n    metrcWarehouseLicenseNumber\\n    __typename\\n  }\\n  originLicensedLocationId\\n  originLicensedLocation {\\n    ...licensedLocationFragment\\n    __typename\\n  }\\n  destinationLicensedLocationId\\n  destinationLicensedLocation {\\n    ...licensedLocationFragment\\n    __typename\\n  }\\n  metrcManifestId\\n  metrcTransferTemplateName\\n  metrcManifestS3FileLink\\n  metrcOrderNotes\\n  shipmentId\\n  shipment {\\n    ...shipmentFragment\\n    __typename\\n  }\\n  creatorId\\n  creator {\\n    id\\n    email\\n    __typename\\n  }\\n  createdAt\\n  updatedAt\\n  __typename\\n}\\n\\nfragment licensedLocationFragment on LicensedLocation {\\n  id\\n  name\\n  address1\\n  address2\\n  city\\n  state\\n  zip\\n  siteCategory\\n  lat\\n  lng\\n  billingAddress1\\n  billingAddress2\\n  billingAddressCity\\n  billingAddressState\\n  billingAddressZip\\n  warehouseId\\n  isArchived\\n  doingBusinessAs\\n  noExciseTax\\n  phoneNumber\\n  printCoas\\n  hoursBusiness\\n  hoursDelivery\\n  deliveryByApptOnly\\n  specialProtocol\\n  schedulingSoftwareRequired\\n  schedulingSoftwareLink\\n  centralizedPurchasingNotes\\n  payByCheck\\n  collectionNotes\\n  deliveryNotes\\n  collect1PocFirstName\\n  collect1PocLastName\\n  collect1PocTitle\\n  collect1PocNumber\\n  collect1PocEmail\\n  collect1PocAllowsText\\n  collect1PreferredContactMethod\\n  collect2PocFirstName\\n  collect2PocLastName\\n  collect2PocTitle\\n  collect2PocNumber\\n  collect2PocEmail\\n  collect2PocAllowsText\\n  collect2PreferredContactMethod\\n  delivery1PocFirstName\\n  delivery1PocLastName\\n  delivery1PocTitle\\n  delivery1PocNumber\\n  delivery1PocEmail\\n  delivery1PocAllowsText\\n  delivery1PreferredContactMethod\\n  delivery2PocFirstName\\n  delivery2PocLastName\\n  delivery2PocTitle\\n  delivery2PocNumber\\n  delivery2PocEmail\\n  delivery2PocAllowsText\\n  delivery2PreferredContactMethod\\n  unmaskedId\\n  qualitativeRating\\n  creditRating\\n  trustLevelNabis\\n  trustLevelInEffect\\n  isOnNabisTracker\\n  locationNotes\\n  infoplus\\n  w9Link\\n  taxIdentificationNumber\\n  sellerPermitLink\\n  nabisMaxTerms\\n  __typename\\n}\\n\\nfragment shipmentFragment on Shipment {\\n  id\\n  orderId\\n  originLicensedLocationId\\n  destinationLicensedLocationId\\n  status\\n  stagingAreaId\\n  isUnloaded\\n  unloaderId\\n  isLoaded\\n  loaderId\\n  arrivalTime\\n  departureTime\\n  isShipped\\n  vehicleId\\n  driverId\\n  previousShipmentId\\n  nextShipmentId\\n  infoplusOrderId\\n  infoplusAsnId\\n  infoplusOrderInventoryStatus\\n  infoplusAsnInventoryStatus\\n  createdAt\\n  updatedAt\\n  shipmentNumber\\n  queueOrder\\n  isStaged\\n  isPrinted\\n  arrivalTimeAfter\\n  arrivalTimeBefore\\n  fulfillability\\n  pickers\\n  shipmentType\\n  intaken\\n  outtaken\\n  metrcWarehouseLicenseNumber\\n  __typename\\n}\\n"}'
@@ -188,7 +210,6 @@ def view_metrc_transfer(order_id):
 
     #                                  | -> this is a list of how many transfer templates there are
     # We can use directly this template name to search it on the metrc site
-    res[0]["data"]["getMetrcTransfer"][0]["metrcTransferTemplateName"]
 
 
 def get_tracker_shipments(tomorrow, page=1):
@@ -205,6 +226,7 @@ def get_tracker_shipments(tomorrow, page=1):
                         "departureTime": tomorrow,
                         "origin": [WAREHOUSE],
                         "metrcStatus": ["COMPLETE"],
+                        "orderStatus": ["SCHEDULED", "TRANSFERRING", "UNSCHEDULED"],
                         "metrcManifestCreated": False,
                         "pageInfo": {
                             "numItemsPerPage": 25,
@@ -226,14 +248,20 @@ def get_tracker_shipments(tomorrow, page=1):
     response.json()
     json_res = response.json()
 
+    if "errors" in json_res:
+        print("Couldnt get any shipment result from Nabis, exiting.")
+        print(json.dumps(json_res, indent=2))
+        exit(1)
     total_nbr_of_resulting_orders = json_res[0]["data"]["getTrackerShipments"][
         "pageInfo"
     ]["totalNumItems"]
     nbr_of_pages = json_res[0]["data"]["getTrackerShipments"]["pageInfo"][
         "totalNumPages"
     ]
-
-    print(f"Total search result {total_nbr_of_resulting_orders}, pages: {nbr_of_pages}")
+    if page == 1:
+        print(
+            f"Total shipment search result-set {total_nbr_of_resulting_orders}, pages: {nbr_of_pages}"
+        )
     for order in json_res[0]["data"]["getTrackerShipments"]["results"]:
         ORDERS.append(order)
 

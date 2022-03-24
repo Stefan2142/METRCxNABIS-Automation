@@ -1317,3 +1317,12 @@
 {"asctime": "2022-03-24 03:28:15,549", "levelname": "INFO", "filename": "Automate.py", "lineno": 792, "funcName": "main", "message": "##------working with order: 147822, shipment 166814------##"}
 {"asctime": "2022-03-24 03:28:21,458", "levelname": "INFO", "filename": "Automate.py", "lineno": 110, "funcName": "find_metrc_order", "message": "Metrc search result for order: 147822 found!"}
 {"asctime": "2022-03-24 03:28:22,032", "levelname": "INFO", "filename": "Automate.py", "lineno": 124, "funcName": "find_metrc_order", "message": "Clicked on 'Use template' (Exited previous while loop!). Waiting for template"}
+{"asctime": "2022-03-24 20:28:29,802", "levelname": "INFO", "filename": "Automate.py", "lineno": 684, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-03-24 20:28:29,848", "levelname": "INFO", "filename": "Automate.py", "lineno": 685, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-03-24 20:28:34,063", "levelname": "INFO", "filename": "Automate.py", "lineno": 687, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-03-24 20:28:47,740", "levelname": "INFO", "filename": "Automate.py", "lineno": 718, "funcName": "main", "message": "Working with date 03-25-2022"}
+{"asctime": "2022-03-24 20:28:47,741", "levelname": "INFO", "filename": "Automate.py", "lineno": 719, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-03-24 20:29:02,202", "levelname": "INFO", "filename": "Automate.py", "lineno": 733, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
+{"asctime": "2022-03-24 20:29:03,395", "levelname": "INFO", "filename": "Automate.py", "lineno": 735, "funcName": "main", "message": "Getting driver info from Nabis API..."}
+{"asctime": "2022-03-24 20:29:04,629", "levelname": "INFO", "filename": "Automate.py", "lineno": 738, "funcName": "main", "message": "Nbr of shipments found: 115"}
+{"asctime": "2022-03-24 20:29:06,177", "levelname": "INFO", "filename": "Automate.py", "lineno": 781, "funcName": "main", "message": "##------working with order: 148904, shipment 168532------##"}

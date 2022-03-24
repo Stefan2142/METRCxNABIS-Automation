@@ -106,8 +106,10 @@ def get_vehicles():
             },
         ]
     )
-
     response = requests.request("POST", url, headers=headers, data=payload)
+    if response.status_code == 502:
+        time.sleep(1)
+        response = requests.request("POST", url, headers=headers, data=payload)
     response = response.json()
     return response
 

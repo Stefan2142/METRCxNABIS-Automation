@@ -141,6 +141,7 @@ def define_email_logger():
         credentials=("finance@headquarters.co", "Pluto7232"),
         subject=f"METRCxNABIS automation error! {dt.datetime.strftime(dt.datetime.today(), '%Y-%m-%d')}",
         secure=(),
+        timeout = 10.0
     )
     email_logger = logging.getLogger("email_logger")
     email_logger.propagate = False

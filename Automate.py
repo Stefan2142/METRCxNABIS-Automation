@@ -817,6 +817,7 @@ def main():
             # continue
         exit(1)
     except Exception as e:
+        email_logger = define_email_logger()
         email_logger.error(get_traceback(e))
 
 

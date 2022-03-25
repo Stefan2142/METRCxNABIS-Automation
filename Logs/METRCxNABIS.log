@@ -1330,3 +1330,5 @@
 {"asctime": "2022-03-25 19:25:29,086", "levelname": "INFO", "filename": "Automate.py", "lineno": 688, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
 {"asctime": "2022-03-25 19:25:29,117", "levelname": "INFO", "filename": "Automate.py", "lineno": 689, "funcName": "main", "message": "Getting routes from gsheet..."}
 {"asctime": "2022-03-25 19:25:33,588", "levelname": "INFO", "filename": "Automate.py", "lineno": 691, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-03-26 00:37:49,611", "levelname": "INFO", "filename": "Automate.py", "lineno": 675, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-03-26 00:37:49,646", "levelname": "INFO", "filename": "Automate.py", "lineno": 676, "funcName": "main", "message": "Getting routes from gsheet..."}

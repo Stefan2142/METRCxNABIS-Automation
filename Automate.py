@@ -25,14 +25,17 @@ from routines import (
     finish_template_get_manifest,
     update_log_sheet,
     define_default_logger,
+    define_email_logger,
     empty_prices_checker,
     get_cookie_and_token,
+    get_traceback,
 )
 from creds import credentials, WAREHOUSE
 
 
 routes = []
 logger = define_default_logger()
+email_logger = define_email_logger()
 
 
 def find_metrc_order(
@@ -681,155 +684,147 @@ def proc_template(
 def main():
     global routes
     global logger
-    logger.info("##----------SESSION STARTED----------##")
-    logger.info("Getting routes from gsheet...")
-    routes = get_spreadsheet_routes()
-    logger.info("Initializing Chrome WebDriver...")
-    driver = get_driver()
-    wait = WebDriverWait(driver, 180)
-
-    ### Login directives for METRC ###
-    driver.get(
-        f"https://ca.metrc.com/industry/{WAREHOUSE['license']}/transfers/licensed/templates"
-    )
     try:
-        driver.find_element(by=By.XPATH, value='//*[@id="username"]').send_keys(
-            credentials["metrc"]["un"]
-        )
-    except:
-        # LOG HERE
-        logger.error("Couldnt find username box")
+        logger.info("##----------SESSION STARTED----------##")
+        logger.info("Getting routes from gsheet...")
+        routes = get_spreadsheet_routes()
+        logger.info("Initializing Chrome WebDriver...")
+        driver = get_driver()
+        wait = WebDriverWait(driver, 180)
 
-    driver.find_element(by=By.XPATH, value='//*[@id="password"]').send_keys(
-        credentials["metrc"]["pwd"]
-    )
-    driver.find_element(by=By.XPATH, value='//*[@id="login_button"]').click()
-    driver.get(
-        f"https://ca.metrc.com/industry/{WAREHOUSE['license']}/transfers/licensed/templates"
-    )
-
-    metrc_auth = get_cookie_and_token(driver)
-    ###             --             ###
-    ### Get list of orders ###
-    # Passing a tomorrow's date (month-day-year): '03-04-2022"'
-    tomorrow = dt.datetime.strftime(
-        dt.datetime.now() + dt.timedelta(days=1), "%m-%d-%Y"
-    )
-    logger.info(f"Working with date {tomorrow}")
-    logger.info("Getting shipments from Nabis...")
-    # Get nabis tracker shipments
-    res = get_tracker_shipments(tomorrow)
-
-    # total number of pages
-    total_num_pages = res["total_num_pages"]
-
-    # Total number of resulting orders for given query
-    total_num_items = res["total_num_items"]
-    if total_num_items == 0:
-        logger.info(f"No orders to work on for date {tomorrow}")
-
-    # Resulting orders
-    nabis_orders = res["orders"]
-    logger.info("Getting vehicle info from Nabis API...")
-    vehicles = get_vehicles()
-    logger.info("Getting driver info from Nabis API...")
-
-    drivers = get_drivers()
-    logger.info(f"Nbr of shipments found: {len(nabis_orders)}")
-
-    # str([[x['orderNumber'],x['shipmentNumber']] for x in nabis_orders])
-    ###        --          ###
-    # nabis_orders.reverse()
-    for nabis_order in nabis_orders:
-        start_time = time.perf_counter()
-        template_req = find_template(
-            str(nabis_order["orderNumber"]),
-            metrc_auth["token"],
-            metrc_auth["cookie"],
-            WAREHOUSE["license"],
+        ### Login directives for METRC ###
+        driver.get(
+            f"https://ca.metrc.com/industry/{WAREHOUSE['license']}/transfers/licensed/templates"
         )
         try:
-            if template_req["Data"] == []:
-                logger.info(
-                    f'Couldnt find metrc template for order: {nabis_order["orderNumber"]}, shipment: {nabis_order["shipmentNumber"]}'
-                )
-                continue
-            else:
-                # We always want the first result(0th) from the template search
-                nabis_template_name = template_req["Data"][0]["Name"]
-        except KeyError:
-            metrc_auth = get_cookie_and_token(driver)
+            driver.find_element(by=By.XPATH, value='//*[@id="username"]').send_keys(
+                credentials["metrc"]["un"]
+            )
+        except:
+            # LOG HERE
+            logger.error("Couldnt find username box")
+
+        driver.find_element(by=By.XPATH, value='//*[@id="password"]').send_keys(
+            credentials["metrc"]["pwd"]
+        )
+        driver.find_element(by=By.XPATH, value='//*[@id="login_button"]').click()
+        driver.get(
+            f"https://ca.metrc.com/industry/{WAREHOUSE['license']}/transfers/licensed/templates"
+        )
+
+        metrc_auth = get_cookie_and_token(driver)
+        ###             --             ###
+        ### Get list of orders ###
+        # Passing a tomorrow's date (month-day-year): '03-04-2022"'
+        tomorrow = dt.datetime.strftime(
+            dt.datetime.now() + dt.timedelta(days=1), "%m-%d-%Y"
+        )
+        logger.info(f"Working with date {tomorrow}")
+        logger.info("Getting shipments from Nabis...")
+        # Get nabis tracker shipments
+        res = get_tracker_shipments(tomorrow)
+
+        # total number of pages
+        total_num_pages = res["total_num_pages"]
+
+        # Total number of resulting orders for given query
+        total_num_items = res["total_num_items"]
+        if total_num_items == 0:
+            logger.info(f"No orders to work on for date {tomorrow}")
+
+        # Resulting orders
+        nabis_orders = res["orders"]
+        logger.info("Getting vehicle info from Nabis API...")
+        vehicles = get_vehicles()
+        logger.info("Getting driver info from Nabis API...")
+
+        drivers = get_drivers()
+        logger.info(f"Nbr of shipments found: {len(nabis_orders)}")
+
+        # str([[x['orderNumber'],x['shipmentNumber']] for x in nabis_orders])
+        ###        --          ###
+        # nabis_orders.reverse()
+        for nabis_order in nabis_orders:
+            start_time = time.perf_counter()
             template_req = find_template(
                 str(nabis_order["orderNumber"]),
                 metrc_auth["token"],
                 metrc_auth["cookie"],
                 WAREHOUSE["license"],
             )
-            if template_req["Data"] == []:
+            try:
+                if template_req["Data"] == []:
+                    logger.info(
+                        f'Couldnt find metrc template for order: {nabis_order["orderNumber"]}, shipment: {nabis_order["shipmentNumber"]}'
+                    )
+                    continue
+                else:
+                    # We always want the first result(0th) from the template search
+                    nabis_template_name = template_req["Data"][0]["Name"]
+            except KeyError:
+                metrc_auth = get_cookie_and_token(driver)
+                template_req = find_template(
+                    str(nabis_order["orderNumber"]),
+                    metrc_auth["token"],
+                    metrc_auth["cookie"],
+                    WAREHOUSE["license"],
+                )
+                if template_req["Data"] == []:
+                    logger.info(
+                        f'Couldnt find metrc template for order: {nabis_order["orderNumber"]}, shipment: {nabis_order["shipmentNumber"]}'
+                    )
+                    continue
+
+            if str(nabis_order["shipmentNumber"]) not in nabis_template_name:
                 logger.info(
-                    f'Couldnt find metrc template for order: {nabis_order["orderNumber"]}, shipment: {nabis_order["shipmentNumber"]}'
+                    f'Order template found but shipment numbers are not the same: {nabis_order["shipmentNumber"]} vs metrc {nabis_template_name}, skipping.'
                 )
                 continue
 
-        if str(nabis_order["shipmentNumber"]) not in nabis_template_name:
             logger.info(
-                f'Order template found but shipment numbers are not the same: {nabis_order["shipmentNumber"]} vs metrc {nabis_template_name}, skipping.'
+                f'##------working with order: {nabis_order["orderNumber"]}, shipment {nabis_order["shipmentNumber"]}------##'
             )
-            continue
+            # logger.info(json.dumps(nabis_order, indent=2))
 
-        logger.info(
-            f'##------working with order: {nabis_order["orderNumber"]}, shipment {nabis_order["shipmentNumber"]}------##'
-        )
-        # logger.info(json.dumps(nabis_order, indent=2))
+            vehicle = {}
+            operator = {}
+            for v in vehicles:
+                if "allVehicles" in v["data"]["viewer"]:
+                    for n in v["data"]["viewer"]["allVehicles"]:
+                        if n["id"] == nabis_order["vehicleId"]:
+                            vehicle = n
+            for d in drivers:
+                for n in d["data"]["viewer"]["allDrivers"]:
+                    if n["id"] == nabis_order["driverId"]:
+                        operator = n
 
-        vehicle = {}
-        operator = {}
-        for v in vehicles:
-            if "allVehicles" in v["data"]["viewer"]:
-                for n in v["data"]["viewer"]["allVehicles"]:
-                    if n["id"] == nabis_order["vehicleId"]:
-                        vehicle = n
-        for d in drivers:
-            for n in d["data"]["viewer"]["allDrivers"]:
-                if n["id"] == nabis_order["driverId"]:
-                    operator = n
+            nabis_order_data = get_order_data(nabis_order["orderNumber"])
+            if vehicle:
+                nabis_order_data.update({"vehicle": vehicle})
+            if operator:
+                nabis_order_data.update({"driver": operator})
 
-        nabis_order_data = get_order_data(nabis_order["orderNumber"])
-        if vehicle:
-            nabis_order_data.update({"vehicle": vehicle})
-        if operator:
-            nabis_order_data.update({"driver": operator})
+            nabis_order_data.update({"shipment_template": nabis_template_name})
 
-        nabis_order_data.update({"shipment_template": nabis_template_name})
+            log_dict = find_metrc_order(
+                wait,
+                driver,
+                nabis_order,
+                nabis_order["orderNumber"],
+                nabis_order_data["lineItems"],
+                nabis_order_data,
+            )
+            end_time = time.perf_counter()
+            logger.info("Updating the ghseet logger..")
+            log_dict.update({"Duration(S)": end_time - start_time})
+            update_log_sheet(log_dict)
+            logger.info(f"Order {nabis_order['orderNumber']} Gsheet updating done.")
 
-        log_dict = find_metrc_order(
-            wait,
-            driver,
-            nabis_order,
-            nabis_order["orderNumber"],
-            nabis_order_data["lineItems"],
-            nabis_order_data,
-        )
-        end_time = time.perf_counter()
-        logger.info("Updating the ghseet logger..")
-        log_dict.update({"Duration(S)": end_time - start_time})
-        update_log_sheet(log_dict)
-        logger.info(f"Order {nabis_order['orderNumber']} Gsheet updating done.")
-
-        logger.info("Moving to next order!")
-        # continue
-    exit(1)
-
-    # For the last part, Nabis (pdf upload)
-    o = get_order_data(nabis_order["orderNumber-"])
-    transfer = view_metrc_transfer(o["id"])
-    # Get id of transfer for which we generated manifest from a found template
-    transfer_id = [
-        x["id"]
-        for x in transfer["data"]["getMetrcTransfers"]
-        if nabis_order["template_name"] == x["metrcTransferTemplateName"]
-    ][0]
-    upload_manifest_pdf(transfer_id, "name.pdf")
+            logger.info("Moving to next order!")
+            # continue
+        exit(1)
+    except Exception as e:
+        email_logger.error(get_traceback(e))
 
 
 if __name__ == "__main__":

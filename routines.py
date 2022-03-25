@@ -12,6 +12,7 @@ import logging.handlers
 from pythonjsonlogger import jsonlogger
 from creds import credentials
 from api_calls import upload_manifest_pdf, upload_manifest_id, view_metrc_transfer
+import traceback
 
 
 # def define_download_folder():
@@ -55,6 +56,11 @@ def waiting_fnc(driver, path):
 
 def check_prices():
     pass
+
+
+def get_traceback(e):
+    lines = traceback.format_exception(type(e), e, e.__traceback__)
+    return "".join(lines)
 
 
 def get_cookie_and_token(driver):
@@ -123,6 +129,29 @@ def empty_prices_checker(driver):
             if el.strip() == "":
                 return True
     return False
+
+
+def define_email_logger():
+    import datetime as dt
+
+    smtp_handler = logging.handlers.SMTPHandler(
+        mailhost=("smtp.gmail.com", 587),
+        fromaddr="finance@headquarters.co",
+        toaddrs=["stefanm2142@gmail.com", "katarina@headquarters.co"],
+        credentials=("finance@headquarters.co", "Pluto7232"),
+        subject=f"METRCxNABIS automation error! {dt.datetime.strftime(dt.datetime.today(), '%Y-%m-%d')}",
+        secure=(),
+    )
+    email_logger = logging.getLogger("email_logger")
+    email_logger.propagate = False
+    formatter = logging.Formatter(
+        "%(asctime)s %(levelname)s:%(filename)s:%(lineno)s - %(funcName)s() %(message)s"
+    )
+    smtp_handler.setFormatter(formatter)
+    email_logger.setLevel(logging.DEBUG)
+    if len(email_logger.handlers) == 0:
+        email_logger.addHandler(smtp_handler)
+    return email_logger
 
 
 def define_default_logger():

@@ -661,19 +661,6 @@ def proc_template(
             )
         }
     )
-    # logger.info("Updating the ghseet logger..")
-    # update_log_sheet(log_dict)
-    # logger.info(f"Order {nabis_order_id} Gsheet updating done.")
-
-    # o = get_order_data(nabis_order["orderNumber"])
-    # transfer = view_metrc_transfer(nabis_order['id'])
-    # transfer_id = [
-    #     x["id"]
-    #     for x in transfer["data"]["getMetrcTransfers"]
-    #     if nabis_order["template_name"] == x["metrcTransferTemplateName"]
-    # ][0]
-
-    # upload_manifest_pdf(transfer_id, "name.pdf")
 
     driver.get(
         f"https://ca.metrc.com/industry/{WAREHOUSE['license']}/transfers/licensed/templates"
@@ -716,9 +703,15 @@ def main():
         ###             --             ###
         ### Get list of orders ###
         # Passing a tomorrow's date (month-day-year): '03-04-2022"'
-        tomorrow = dt.datetime.strftime(
-            dt.datetime.now() + dt.timedelta(days=1), "%m-%d-%Y"
-        )
+        if dt.datetime.today().weekday() == 4:
+            tomorrow = dt.datetime.strftime(
+                dt.datetime.now() + dt.timedelta(days=3), "%m-%d-%Y"
+            )
+        else:
+            tomorrow = dt.datetime.strftime(
+                dt.datetime.now() + dt.timedelta(days=1), "%m-%d-%Y"
+            )
+
         logger.info(f"Working with date {tomorrow}")
         logger.info("Getting shipments from Nabis...")
         # Get nabis tracker shipments

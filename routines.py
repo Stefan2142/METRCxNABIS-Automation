@@ -141,7 +141,7 @@ def define_email_logger():
         credentials=("finance@headquarters.co", "Pluto7232"),
         subject=f"METRCxNABIS automation error! {dt.datetime.strftime(dt.datetime.today(), '%Y-%m-%d')}",
         secure=(),
-        timeout = 10.0
+        timeout=10.0,
     )
     email_logger = logging.getLogger("email_logger")
     email_logger.propagate = False
@@ -178,9 +178,32 @@ def define_default_logger():
     return logger
 
 
-def update_log_sheet(log_dict):
+def duplicate_check(gc, order_id):
+    """_summary_
+
+    Args:
+        gc (_type_): _description_
+        order_id (int): order number as an int
+
+    Returns:
+        _type_: _description_
+    """
+    sh = gc.open_by_url(
+        "https://docs.google.com/spreadsheets/d/1LkP08iIUIZyRz-_C45AJ0FvRJuwGK_SzuZylfNMrAuE"
+    )
+    wks = sh.worksheet("Logs")
+    sheet_df = pd.DataFrame(wks.get_all_records())
+    sheet_df["Order"].replace("", 0, inplace=True)
+    sheet_df["Order"] = pd.to_numeric(sheet_df["Order"], errors="coerce")
+
+    if int(order_id) in sheet_df["Order"].values.tolist():
+        return True
+    else:
+        return False
+
+
+def update_log_sheet(log_dict, gc):
     # Update logging gsheet file
-    gc = gspread.service_account(filename="./emailsending-325211-e5456e88f282.json")
     sh = gc.open_by_url(
         "https://docs.google.com/spreadsheets/d/1LkP08iIUIZyRz-_C45AJ0FvRJuwGK_SzuZylfNMrAuE"
     )
@@ -351,8 +374,7 @@ while bool:
 #     )
 
 
-def get_spreadsheet_routes():
-    gc = gspread.service_account(filename="./emailsending-325211-e5456e88f282.json")
+def get_spreadsheet_routes(gc):
 
     sh = gc.open_by_url(
         "https://docs.google.com/spreadsheets/d/1gGctslxmXIO490qnKPN2SbWZV2ZLT7Z3zIpxQo19us8"

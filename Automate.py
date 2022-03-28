@@ -29,9 +29,10 @@ from routines import (
     empty_prices_checker,
     get_cookie_and_token,
     get_traceback,
+    duplicate_check,
 )
 from creds import credentials, WAREHOUSE
-
+import gspread
 
 routes = []
 logger = define_default_logger()
@@ -671,10 +672,11 @@ def proc_template(
 def main():
     global routes
     global logger
+    gc = gspread.service_account(filename="./emailsending-325211-e5456e88f282.json")
     try:
         logger.info("##----------SESSION STARTED----------##")
         logger.info("Getting routes from gsheet...")
-        routes = get_spreadsheet_routes()
+        routes = get_spreadsheet_routes(gc)
         logger.info("Initializing Chrome WebDriver...")
         driver = get_driver()
         wait = WebDriverWait(driver, 180)
@@ -738,6 +740,12 @@ def main():
         ###        --          ###
         # nabis_orders.reverse()
         for nabis_order in nabis_orders:
+            if duplicate_check(gc, int(nabis_order["orderNumber"])):
+                logger.info(
+                    f'Order {nabis_order["orderNumber"]} found in previous log. Skipping.'
+                )
+                continue
+            logger.debug(f"Order {nabis_order['orderNumber']} is not a duplicate")
             start_time = time.perf_counter()
             template_req = find_template(
                 str(nabis_order["orderNumber"]),
@@ -810,12 +818,12 @@ def main():
             end_time = time.perf_counter()
             logger.info("Updating the ghseet logger..")
             log_dict.update({"Duration(S)": end_time - start_time})
-            update_log_sheet(log_dict)
+            update_log_sheet(log_dict, gc)
             logger.info(f"Order {nabis_order['orderNumber']} Gsheet updating done.")
 
             logger.info("Moving to next order!")
             # continue
-        exit(1)
+        logger.info("##----------SESSION FINISHED----------##")
     except Exception as e:
         email_logger = define_email_logger()
         email_logger.error(get_traceback(e))

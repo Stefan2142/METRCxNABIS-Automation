@@ -234,11 +234,14 @@ def proc_template(
             }
         )
 
-    def temp_none_check(metrc_str, nabis_str):
+    def temp_none_check(key):
         """Helper function to test if nabis data isnt equal to '' and
         metrc not to 'temp' return True.
         In this scenario we check if driver and vehicle info is empty on both sides;
         If it is, skip these checks and label them as correct.
+        NEW UPDATE 2022-03-29: If nabis data is equal to '' and metrc to 'temp':
+            label it as incorrect (return False).
+            If metrc data is 'temp', fill in from the nabis data to webpage and return True.
 
         Args:
             metrc_str (str): metrc data
@@ -247,10 +250,27 @@ def proc_template(
         Returns:
             bool: _description_
         """
-        if (str(metrc_str).strip() == "temp") and (str(nabis_str).strip() == ""):
+
+        # If both fields are empty return True
+        if (str(matching_attrs[key]["metrc"]["data"]).strip() == "temp") and (
+            str(matching_attrs[key]["nabis"]["data"]).strip() == ""
+        ):
+            return False
+        elif str(matching_attrs[key]["metrc"]["data"]).strip() == "temp":
+            # Clear the field
+            driver.find_element(
+                By.XPATH, value=matching_attrs[key]["metrc_key"]
+            ).clear()
+            time.sleep(0.3)
+
+            # Send data
+            driver.find_element(
+                By.XPATH, value=matching_attrs[key]["metrc_key"]
+            ).send_keys(matching_attrs[key]["nabis"]["data"])
+            time.sleep(0.3)
             return True
         else:
-            return False
+            return True
 
     matching_attrs["license"]["metrc"]["data"] = driver.find_element(
         by=By.XPATH, value=matching_attrs["license"]["metrc_key"]
@@ -312,20 +332,14 @@ def proc_template(
         ] = f"{nabis_order['driver']['firstName'].strip()} {nabis_order['driver']['lastName'].strip()}"
     except TypeError:
         matching_attrs["driver"]["nabis"]["data"] = f""
-        if not temp_none_check(
-            matching_attrs["driver"]["metrc"]["data"],
-            matching_attrs["driver"]["nabis"]["data"],
-        ):
+        if not temp_none_check("driver"):
             update_log("driver", "error_missing_key", "error_missing_msg")
 
     if (
         "".join(matching_attrs["driver"]["metrc"]["data"].split()).lower()
         != "".join(matching_attrs["driver"]["nabis"]["data"].split()).lower()
     ):
-        if not temp_none_check(
-            matching_attrs["driver"]["metrc"]["data"],
-            matching_attrs["driver"]["nabis"]["data"],
-        ):
+        if not temp_none_check("driver"):
             update_log("driver", "error_incorrect_key", "error_incorrect_msg")
 
     # DRIVER'S ID matching
@@ -340,20 +354,14 @@ def proc_template(
         ]
     except TypeError:
         matching_attrs["driver_id"]["nabis"]["data"] = ""
-        if not temp_none_check(
-            matching_attrs["driver_id"]["metrc"]["data"],
-            matching_attrs["driver_id"]["nabis"]["data"],
-        ):
+        if not temp_none_check("driver_id"):
             update_log("driver_id", "error_missing_key", "error_missing_msg")
 
     if (
         matching_attrs["driver_id"]["metrc"]["data"]
         != matching_attrs["driver_id"]["nabis"]["data"]
     ):
-        if not temp_none_check(
-            matching_attrs["driver_id"]["metrc"]["data"],
-            matching_attrs["driver_id"]["nabis"]["data"],
-        ):
+        if not temp_none_check("driver_id"):
             update_log("driver_id", "error_incorrect_key", "error_incorrect_msg")
 
     # VEHICLE MAKE
@@ -364,20 +372,14 @@ def proc_template(
         matching_attrs["vehicle_make"]["nabis"]["data"] = nabis_order["vehicle"]["make"]
     except TypeError:
         matching_attrs["vehicle_make"]["nabis"]["data"] = ""
-        if not temp_none_check(
-            matching_attrs["vehicle_make"]["metrc"]["data"],
-            matching_attrs["vehicle_make"]["nabis"]["data"],
-        ):
+        if not temp_none_check("vehicle_make"):
             update_log("vehicle_make", "error_missing_key", "error_missing_msg")
 
     if (
         matching_attrs["vehicle_make"]["metrc"]["data"].strip()
         != matching_attrs["vehicle_make"]["nabis"]["data"].strip()
     ):
-        if not temp_none_check(
-            matching_attrs["vehicle_make"]["metrc"]["data"],
-            matching_attrs["vehicle_make"]["nabis"]["data"],
-        ):
+        if not temp_none_check("vehicle_make"):
             update_log("vehicle_make", "error_incorrect_key", "error_incorrect_msg")
 
     # VEHICLE MODEL
@@ -391,20 +393,14 @@ def proc_template(
         ]
     except TypeError:
         matching_attrs["vehicle_model"]["nabis"]["data"] = ""
-        if not temp_none_check(
-            matching_attrs["vehicle_model"]["metrc"]["data"],
-            matching_attrs["vehicle_model"]["nabis"]["data"],
-        ):
+        if not temp_none_check("vehicle_model"):
             update_log("vehicle_model", "error_missing_key", "error_missing_msg")
 
     if (
         matching_attrs["vehicle_model"]["nabis"]["data"]
         not in matching_attrs["vehicle_model"]["metrc"]["data"]
     ):
-        if not temp_none_check(
-            matching_attrs["vehicle_model"]["metrc"]["data"],
-            matching_attrs["vehicle_model"]["nabis"]["data"],
-        ):
+        if not temp_none_check("vehicle_model"):
             update_log("vehicle_model", "error_incorrect_key", "error_incorrect_msg")
 
     # License plate
@@ -418,20 +414,14 @@ def proc_template(
         ]
     except TypeError:
         matching_attrs["vehicle_plate"]["nabis"]["data"] = ""
-        if not temp_none_check(
-            matching_attrs["vehicle_plate"]["metrc"]["data"],
-            matching_attrs["vehicle_plate"]["nabis"]["data"],
-        ):
+        if not temp_none_check("vehicle_plate"):
             update_log("vehicle_plate", "error_missing_key", "error_missing_msg")
 
     if (
-        matching_attrs["vehicle_plate"]["metrc"]["data"]
-        != matching_attrs["vehicle_plate"]["nabis"]["data"]
+        matching_attrs["vehicle_plate"]["metrc"]["data"].strip().lower()
+        != matching_attrs["vehicle_plate"]["nabis"]["data"].strip().lower()
     ):
-        if not temp_none_check(
-            matching_attrs["vehicle_plate"]["metrc"]["data"],
-            matching_attrs["vehicle_plate"]["nabis"]["data"],
-        ):
+        if not temp_none_check("vehicle_plate"):
             update_log("vehicle_plate", "error_incorrect_key", "error_incorrect_msg")
 
     # Address & route parsing

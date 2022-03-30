@@ -137,7 +137,7 @@ def define_email_logger():
     smtp_handler = logging.handlers.SMTPHandler(
         mailhost=("smtp.gmail.com", 587),
         fromaddr="finance@headquarters.co",
-        toaddrs=["stefanm2142@gmail.com", "katarina@headquarters.co"],
+        toaddrs=["stefanm2142@gmail.com"],
         credentials=("finance@headquarters.co", "Pluto7232"),
         subject=f"METRCxNABIS automation error! {dt.datetime.strftime(dt.datetime.today(), '%Y-%m-%d')}",
         secure=(),
@@ -191,7 +191,12 @@ def duplicate_check(gc, order_id):
     sh = gc.open_by_url(
         "https://docs.google.com/spreadsheets/d/1LkP08iIUIZyRz-_C45AJ0FvRJuwGK_SzuZylfNMrAuE"
     )
-    wks = sh.worksheet("Logs")
+    try:
+        wks = sh.worksheet("Logs")
+    except:
+        time.sleep(61)
+        wks = sh.worksheet("Logs")
+
     sheet_df = pd.DataFrame(wks.get_all_records())
     sheet_df["Order"].replace("", 0, inplace=True)
     sheet_df["Order"] = pd.to_numeric(sheet_df["Order"], errors="coerce")
@@ -438,5 +443,6 @@ def get_cwd_files():
     list_of_files = sorted(
         list_of_files, key=lambda x: os.path.getmtime(os.path.join(os.getcwd(), x))
     )
+    list_of_files = list([x for x in list_of_files if ".pdf" in x])
     list_of_files.reverse()  # 0th element is the newest
     return list_of_files

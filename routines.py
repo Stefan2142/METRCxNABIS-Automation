@@ -440,9 +440,21 @@ def get_cwd_files():
     list_of_files = filter(
         lambda x: os.path.isfile(os.path.join(os.getcwd(), x)), os.listdir(os.getcwd())
     )
-    list_of_files = sorted(
-        list_of_files, key=lambda x: os.path.getmtime(os.path.join(os.getcwd(), x))
+    try:
+        list_of_files = sorted(
+            list_of_files, key=lambda x: os.path.getmtime(os.path.join(os.getcwd(), x))
+        )
+    except FileNotFoundError:
+        time.sleep(2)
+        list_of_files = filter(
+        lambda x: os.path.isfile(os.path.join(os.getcwd(), x)), os.listdir(os.getcwd())
     )
+        list_of_files = sorted(
+            list_of_files, key=lambda x: os.path.getmtime(os.path.join(os.getcwd(), x))
+        )
+        
+        
     list_of_files = list([x for x in list_of_files if ".pdf" in x])
+    list_of_files = list([x for x in list_of_files if ".tmp" not in x])
     list_of_files.reverse()  # 0th element is the newest
     return list_of_files

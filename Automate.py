@@ -210,7 +210,7 @@ def proc_template(
         x["metrcPackageTag"]: {
             "quantity": x["quantity"],
             "unit_price": x["pricePerUnit"],
-            "total": x["pricePerUnit"] * x["quantity"],
+            "total": round((x["pricePerUnit"] * x["quantity"]) - x["discount"], 2),
         }
         for x in nabis_order_line_items
     }
@@ -281,8 +281,8 @@ def proc_template(
         C11-0000340-LIC - Garden of Weeden
         C11-0000825-LIC - Cannex / 4Front"""
     if (
-        matching_attrs["license"]["metrc"]["data"].strip()
-        != matching_attrs["license"]["nabis"]["data"].strip()
+        matching_attrs["license"]["metrc"]["data"].strip().lower()
+        != matching_attrs["license"]["nabis"]["data"].strip().lower()
     ):
         if matching_attrs["license"]["metrc"]["data"].strip() not in [
             "C11-0001274-LIC",

@@ -833,7 +833,7 @@ def main():
             # continue
         logger.info("##----------SESSION FINISHED----------##")
     except Exception as e:
-        raise
+        # raise
         email_logger = define_email_logger()
 
         try:
@@ -843,6 +843,7 @@ def main():
         except UnboundLocalError:
             pass
         email_logger.error(get_traceback(e))
+        raise
 
 
 if __name__ == "__main__":

@@ -642,18 +642,25 @@ def proc_template(
             log_dict.update({"ALL_GOOD": "FALSE"})
 
         else:
-            logger.info(f"---All checks good: {nabis_order_id} / ({shipment})!---")
-            log_dict.update({"ALL_GOOD": "TRUE"})
+            logger.info(
+                f"---All checks good: {nabis_order_id} / ({shipment}) uploading pdf and id!---"
+            )
 
-            manifest_id = finish_template_get_manifest(
+            finish_status = finish_template_get_manifest(
                 driver, WAREHOUSE["license"], nabis_order, logger
             )
-            if manifest_id == False:
+            if finish_status["pdf_response"] == False:
                 log_dict.update(
-                    {"ALL_GOOD": "FALSE - Template regsitered. Manifest not"}
+                    {"ALL_GOOD": "FALSE - Template regsitered. PDF not updated"}
                 )
+            elif finish_status["id_response"] == False:
+                log_dict.update(
+                    {"ALL_GOOD": "FALSE - Template regsitered. Manifest ID not updated"}
+                )
+            else:
+                log_dict.update({"ALL_GOOD": "TRUE"})
 
-            log_dict.update({"ManifestId": str(manifest_id)})
+            log_dict.update({"ManifestId": str(finish_status)})
 
     log_dict.update({"Order": str(nabis_order_id)})
     log_dict.update({"Shipment": str(shipment)})
@@ -834,6 +841,7 @@ def main():
         logger.info("##----------SESSION FINISHED----------##")
     except Exception as e:
         # raise
+        logger.error(get_traceback(e))
         email_logger = define_email_logger()
 
         try:

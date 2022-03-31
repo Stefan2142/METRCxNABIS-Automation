@@ -146,7 +146,10 @@ def upload_manifest_id(transfer_id, manifest_id):
     )
 
     response = requests.request("POST", url, headers=headers, data=payload)
-    return response.json()
+    try:
+        return response.json()
+    except:
+        return False
 
 
 def upload_manifest_pdf(transfer_id, pdf_fl):
@@ -177,7 +180,10 @@ def upload_manifest_pdf(transfer_id, pdf_fl):
     response = requests.request(
         "POST", url, headers=pdf_header, data=payload, files=files
     )
-    return response.json()
+    try:
+        return response.json()
+    except json.decoder.JSONDecodeError:
+        return False
 
 
 def get_order_data(order_number):

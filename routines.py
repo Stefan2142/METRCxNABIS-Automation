@@ -188,20 +188,24 @@ def duplicate_check(gc, order_id):
     Returns:
         _type_: _description_
     """
-    sh = gc.open_by_url(
-        "https://docs.google.com/spreadsheets/d/1LkP08iIUIZyRz-_C45AJ0FvRJuwGK_SzuZylfNMrAuE"
-    )
-    try:
-        wks = sh.worksheet("Logs")
-    except:
-        time.sleep(61)
-        wks = sh.worksheet("Logs")
+    # sh = gc.open_by_url(
+    #     "https://docs.google.com/spreadsheets/d/1LkP08iIUIZyRz-_C45AJ0FvRJuwGK_SzuZylfNMrAuE"
+    # )
+    # try:
+    #     wks = sh.worksheet("Logs")
+    # except:
+    #     time.sleep(61)
+    #     wks = sh.worksheet("Logs")
 
-    sheet_df = pd.DataFrame(wks.get_all_records())
-    sheet_df["Order"].replace("", 0, inplace=True)
-    sheet_df["Order"] = pd.to_numeric(sheet_df["Order"], errors="coerce")
+    # sheet_df = pd.DataFrame(wks.get_all_records())
+    # sheet_df["Order"].replace("", 0, inplace=True)
+    # sheet_df["Order"] = pd.to_numeric(sheet_df["Order"], errors="coerce")
 
-    if int(order_id) in sheet_df["Order"].values.tolist():
+    off_log_df = pd.read_csv("./Logs/Offline_log.csv")
+    off_log_df["Order"].replace("", 0, inplace=True)
+    off_log_df["Order"] = pd.to_numeric(off_log_df["Order"], errors="coerce")
+
+    if int(order_id) in off_log_df["Order"].values.tolist():
         return True
     else:
         return False
@@ -223,6 +227,8 @@ def update_log_sheet(log_dict, gc):
     output["MissingPackageTag"] = output["MissingPackageTag"].apply(str)
 
     wks.update([output.columns.values.tolist()] + output.values.tolist())
+
+    output.to_csv("./Logs/Offline_log.csv", index=False)
 
 
 def finish_template_get_manifest(driver, WAREHOUSE, nabis_order, logger):
@@ -338,16 +344,21 @@ def finish_template_get_manifest(driver, WAREHOUSE, nabis_order, logger):
             logger.info(f"[{nabis_order['id']}] File to be uploaded {list_of_pdf[0]}")
             pdf_response = upload_manifest_pdf(transfer_id, list_of_pdf[0])
             id_response = upload_manifest_id(transfer_id, manifest_id)
-            if "errors" in pdf_response:
+            if ("errors" in pdf_response[0]) or (pdf_response == False):
                 logger.error(
                     f'Error while uploading manifest pdf {transfer_id}, order: {nabis_order["id"]}'
                 )
-            if "errors" in id_response:
+            if ("errors" in id_response[0]) or (id_response == False):
                 logger.error(
                     f'Error while uploading manifest id number {transfer_id}, order {nabis_order["id"]}'
                 )
 
-            return manifest_id
+            return {
+                "manifest_id": manifest_id,
+                "pdf_response": pdf_response,
+                "id_response": id_response,
+            }
+
             # For the last part, Nabis (pdf upload)
             o = get_order_data(142358)
             transfer = view_metrc_transfer(o["id"])

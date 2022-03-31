@@ -221,6 +221,14 @@ def proc_template(
                 By.XPATH, value='//*[@ng-model="destination.TransferTypeId"]'
             )
         ).first_selected_option.text
+
+        # Select(
+        #     driver.find_element(
+        #         By.XPATH, value='//*[@ng-model="destination.TransferTypeId"]'
+        #     )
+        # ).select_by_visible_text('Transfer')
+        # ili 'Wholesale Manifest'
+
     except:
         metrc_transfer_type = ""
 
@@ -715,6 +723,10 @@ def main():
         # Get nabis tracker shipments
         res = get_tracker_shipments(tomorrow)
 
+        if res == False:
+            logger.info("Error while getting shipments from Nabis. Exiting...")
+            exit(1)
+
         # total number of pages
         total_num_pages = res["total_num_pages"]
 
@@ -821,6 +833,7 @@ def main():
             # continue
         logger.info("##----------SESSION FINISHED----------##")
     except Exception as e:
+        raise
         email_logger = define_email_logger()
 
         try:

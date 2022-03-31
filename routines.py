@@ -137,7 +137,7 @@ def define_email_logger():
     smtp_handler = logging.handlers.SMTPHandler(
         mailhost=("smtp.gmail.com", 587),
         fromaddr="finance@headquarters.co",
-        toaddrs=["stefanm2142@gmail.com"],
+        toaddrs=["stefanm2142@gmail.com", "katarina@headquarters.co"],
         credentials=("finance@headquarters.co", "Pluto7232"),
         subject=f"METRCxNABIS automation error! {dt.datetime.strftime(dt.datetime.today(), '%Y-%m-%d')}",
         secure=(),
@@ -447,13 +447,13 @@ def get_cwd_files():
     except FileNotFoundError:
         time.sleep(2)
         list_of_files = filter(
-        lambda x: os.path.isfile(os.path.join(os.getcwd(), x)), os.listdir(os.getcwd())
-    )
+            lambda x: os.path.isfile(os.path.join(os.getcwd(), x)),
+            os.listdir(os.getcwd()),
+        )
         list_of_files = sorted(
             list_of_files, key=lambda x: os.path.getmtime(os.path.join(os.getcwd(), x))
         )
-        
-        
+
     list_of_files = list([x for x in list_of_files if ".pdf" in x])
     list_of_files = list([x for x in list_of_files if ".tmp" not in x])
     list_of_files.reverse()  # 0th element is the newest

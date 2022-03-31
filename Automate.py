@@ -815,6 +815,7 @@ def main():
             # continue
         logger.info("##----------SESSION FINISHED----------##")
     except Exception as e:
+        driver.save_screenshot(f"Error_{str(dt.datetime.today())}.jpg")
         email_logger = define_email_logger()
         email_logger.error(get_traceback(e))
 

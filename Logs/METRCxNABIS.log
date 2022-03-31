@@ -1890,3 +1890,15 @@
 {"asctime": "2022-03-30 19:41:58,421", "levelname": "INFO", "filename": "<string>", "lineno": 68, "funcName": "<module>", "message": "Prices good for 1A40603000072DE000212255;"}
 {"asctime": "2022-03-30 19:41:58,422", "levelname": "INFO", "filename": "<string>", "lineno": 40, "funcName": "<module>", "message": "Quantities good for 1A40603000072DE000212256;"}
 {"asctime": "2022-03-30 19:41:58,422", "levelname": "INFO", "filename": "<string>", "lineno": 68, "funcName": "<module>", "message": "Prices good for 1A40603000072DE000212256;"}
+{"asctime": "2022-03-31 14:32:43,226", "levelname": "INFO", "filename": "Automate.py", "lineno": 673, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-03-31 14:32:43,248", "levelname": "INFO", "filename": "Automate.py", "lineno": 674, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-03-31 14:32:47,484", "levelname": "INFO", "filename": "Automate.py", "lineno": 676, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-03-31 14:33:26,416", "levelname": "INFO", "filename": "Automate.py", "lineno": 673, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-03-31 14:33:26,461", "levelname": "INFO", "filename": "Automate.py", "lineno": 674, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-03-31 14:33:28,640", "levelname": "INFO", "filename": "Automate.py", "lineno": 676, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-03-31 14:40:25,349", "levelname": "INFO", "filename": "Automate.py", "lineno": 673, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-03-31 14:40:25,351", "levelname": "INFO", "filename": "Automate.py", "lineno": 674, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-03-31 14:40:29,068", "levelname": "INFO", "filename": "Automate.py", "lineno": 676, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-03-31 16:36:38,482", "levelname": "INFO", "filename": "Automate.py", "lineno": 673, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-03-31 16:36:38,509", "levelname": "INFO", "filename": "Automate.py", "lineno": 674, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-03-31 16:36:43,001", "levelname": "INFO", "filename": "Automate.py", "lineno": 676, "funcName": "main", "message": "Initializing Chrome WebDriver..."}

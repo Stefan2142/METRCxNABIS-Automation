@@ -214,6 +214,7 @@ def proc_template(
         }
         for x in nabis_order_line_items
     }
+
     try:
         metrc_transfer_type = Select(
             driver.find_element(
@@ -222,6 +223,9 @@ def proc_template(
         ).first_selected_option.text
     except:
         metrc_transfer_type = ""
+
+    if metrc_transfer_type == "":
+        log_dict.update({"UnreadableTransferType": "TRUE"})
 
     def update_log(key, error_type, error_msg):
         nonlocal log_dict
@@ -551,6 +555,8 @@ def proc_template(
                 ### AKO JE TRANSFER A NE WHOLESALE MANIFEST
 
                 if nabis_packages[i]["total"] != metrc_only_tags[i]["WholesalePrice"]:
+                    # if (metrc_transfer_type == 'Wholesale Transfer') and (all_metrc_prices_none == False):
+
                     if (metrc_transfer_type != "Transfer") and (
                         all_metrc_prices_none == False
                     ):
@@ -815,8 +821,14 @@ def main():
             # continue
         logger.info("##----------SESSION FINISHED----------##")
     except Exception as e:
-        driver.save_screenshot(f"Error_{str(dt.datetime.today())}.jpg")
         email_logger = define_email_logger()
+
+        try:
+            driver.save_screenshot(
+                f"./Logs/Error_{str(dt.datetime.today()).replace(':', '.')}.jpg"
+            )
+        except UnboundLocalError:
+            pass
         email_logger.error(get_traceback(e))
 
 

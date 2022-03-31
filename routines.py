@@ -137,7 +137,7 @@ def define_email_logger():
     smtp_handler = logging.handlers.SMTPHandler(
         mailhost=("smtp.gmail.com", 587),
         fromaddr="finance@headquarters.co",
-        toaddrs=["stefanm2142@gmail.com", "katarina@headquarters.co"],
+        toaddrs=["stefanm2142@gmail.com", 'katarina@headquarters.co'],
         credentials=("finance@headquarters.co", "Pluto7232"),
         subject=f"METRCxNABIS automation error! {dt.datetime.strftime(dt.datetime.today(), '%Y-%m-%d')}",
         secure=(),

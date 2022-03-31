@@ -224,7 +224,7 @@ def get_tracker_shipments(tomorrow, page=1):
                 "operationName": "getTrackerShipments",
                 "variables": {
                     "ShipmentTrackerQueryInput": {
-                        "departureTime": tomorrow,
+                        "departureTimeStart": tomorrow,
                         "origin": [WAREHOUSE["id"]],
                         "metrcStatus": ["COMPLETE"],
                         "orderStatus": ["SCHEDULED", "TRANSFERRING", "UNSCHEDULED"],
@@ -249,10 +249,13 @@ def get_tracker_shipments(tomorrow, page=1):
     response.json()
     json_res = response.json()
 
-    if "errors" in json_res:
+    if "errors" in json_res[0]:
         print("Couldnt get any shipment result from Nabis, exiting.")
-        print(json.dumps(json_res, indent=2))
-        exit(1)
+        print(json.dumps(json_res[0], indent=2))
+
+        # response.json()[0]['errors'][0]['message']
+
+        return False
     total_nbr_of_resulting_orders = json_res[0]["data"]["getTrackerShipments"][
         "pageInfo"
     ]["totalNumItems"]

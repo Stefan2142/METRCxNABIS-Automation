@@ -1902,3 +1902,18 @@
 {"asctime": "2022-03-31 16:36:38,482", "levelname": "INFO", "filename": "Automate.py", "lineno": 673, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
 {"asctime": "2022-03-31 16:36:38,509", "levelname": "INFO", "filename": "Automate.py", "lineno": 674, "funcName": "main", "message": "Getting routes from gsheet..."}
 {"asctime": "2022-03-31 16:36:43,001", "levelname": "INFO", "filename": "Automate.py", "lineno": 676, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-03-31 16:52:42,473", "levelname": "INFO", "filename": "Automate.py", "lineno": 673, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-03-31 16:52:42,475", "levelname": "INFO", "filename": "Automate.py", "lineno": 674, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-03-31 16:52:46,279", "levelname": "INFO", "filename": "Automate.py", "lineno": 676, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-03-31 16:53:10,919", "levelname": "INFO", "filename": "Automate.py", "lineno": 713, "funcName": "main", "message": "Working with date 04-01-2022"}
+{"asctime": "2022-03-31 16:53:10,920", "levelname": "INFO", "filename": "Automate.py", "lineno": 714, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-03-31 16:54:34,664", "levelname": "INFO", "filename": "Automate.py", "lineno": 673, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-03-31 16:54:34,666", "levelname": "INFO", "filename": "Automate.py", "lineno": 674, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-03-31 16:54:36,318", "levelname": "INFO", "filename": "Automate.py", "lineno": 676, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-03-31 16:54:45,281", "levelname": "INFO", "filename": "Automate.py", "lineno": 713, "funcName": "main", "message": "Working with date 04-01-2022"}
+{"asctime": "2022-03-31 16:54:45,281", "levelname": "INFO", "filename": "Automate.py", "lineno": 714, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-03-31 16:56:24,978", "levelname": "INFO", "filename": "Automate.py", "lineno": 673, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-03-31 16:56:24,979", "levelname": "INFO", "filename": "Automate.py", "lineno": 674, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-03-31 16:56:26,803", "levelname": "INFO", "filename": "Automate.py", "lineno": 676, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-03-31 16:56:36,040", "levelname": "INFO", "filename": "Automate.py", "lineno": 713, "funcName": "main", "message": "Working with date 04-01-2022"}
+{"asctime": "2022-03-31 16:56:36,041", "levelname": "INFO", "filename": "Automate.py", "lineno": 714, "funcName": "main", "message": "Getting shipments from Nabis..."}

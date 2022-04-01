@@ -1946,3 +1946,532 @@
 {"asctime": "2022-04-01 00:52:31,929", "levelname": "INFO", "filename": "Automate.py", "lineno": 747, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
 {"asctime": "2022-04-01 00:52:43,504", "levelname": "INFO", "filename": "Automate.py", "lineno": 749, "funcName": "main", "message": "Getting driver info from Nabis API..."}
 {"asctime": "2022-04-01 00:52:54,094", "levelname": "INFO", "filename": "Automate.py", "lineno": 752, "funcName": "main", "message": "Nbr of shipments found: 42"}
+{"asctime": "2022-04-01 01:49:08,166", "levelname": "INFO", "filename": "Automate.py", "lineno": 688, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-04-01 01:49:08,172", "levelname": "INFO", "filename": "Automate.py", "lineno": 689, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-04-01 01:49:11,894", "levelname": "INFO", "filename": "Automate.py", "lineno": 691, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-04-01 01:49:22,302", "levelname": "INFO", "filename": "Automate.py", "lineno": 728, "funcName": "main", "message": "Working with date 04-04-2022"}
+{"asctime": "2022-04-01 01:49:22,303", "levelname": "INFO", "filename": "Automate.py", "lineno": 729, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-04-01 01:49:30,262", "levelname": "INFO", "filename": "Automate.py", "lineno": 747, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
+{"asctime": "2022-04-01 01:49:33,926", "levelname": "INFO", "filename": "Automate.py", "lineno": 749, "funcName": "main", "message": "Getting driver info from Nabis API..."}
+{"asctime": "2022-04-01 01:49:35,510", "levelname": "INFO", "filename": "Automate.py", "lineno": 752, "funcName": "main", "message": "Nbr of shipments found: 44"}
+{"asctime": "2022-04-01 01:52:22,153", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 151033 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:22,822", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 151033, shipment: 171922"}
+{"asctime": "2022-04-01 01:52:22,852", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 149497 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:23,476", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 149497, shipment: 169459"}
+{"asctime": "2022-04-01 01:52:23,502", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 149811 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:24,119", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 149811, shipment: 169945"}
+{"asctime": "2022-04-01 01:52:24,147", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 149404 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:24,756", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 149404, shipment: 169314"}
+{"asctime": "2022-04-01 01:52:24,782", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 151482 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:25,394", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 151482, shipment: 172644"}
+{"asctime": "2022-04-01 01:52:25,427", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 151431 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:26,054", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 151431, shipment: 172559"}
+{"asctime": "2022-04-01 01:52:26,078", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 151424 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:26,705", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 151424, shipment: 172546"}
+{"asctime": "2022-04-01 01:52:26,730", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 151396 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:27,672", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 151396, shipment: 172500"}
+{"asctime": "2022-04-01 01:52:27,697", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 151315 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:28,314", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 151315, shipment: 172368"}
+{"asctime": "2022-04-01 01:52:28,359", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 151295 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:28,988", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 151295, shipment: 172336"}
+{"asctime": "2022-04-01 01:52:29,015", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 151291 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:29,632", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 151291, shipment: 172329"}
+{"asctime": "2022-04-01 01:52:29,658", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 151286 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:30,262", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 151286, shipment: 172322"}
+{"asctime": "2022-04-01 01:52:30,290", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 151280 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:30,912", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 151280, shipment: 172312"}
+{"asctime": "2022-04-01 01:52:30,939", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 151227 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:31,561", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 151227, shipment: 172233"}
+{"asctime": "2022-04-01 01:52:31,584", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 151221 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:32,217", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 151221, shipment: 172224"}
+{"asctime": "2022-04-01 01:52:32,243", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 151205 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:32,892", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 151205, shipment: 172199"}
+{"asctime": "2022-04-01 01:52:32,925", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 151202 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:33,580", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 151202, shipment: 172193"}
+{"asctime": "2022-04-01 01:52:33,606", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 151170 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:34,235", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 151170, shipment: 172145"}
+{"asctime": "2022-04-01 01:52:34,262", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 151135 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:34,882", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 151135, shipment: 172090"}
+{"asctime": "2022-04-01 01:52:34,907", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 151133 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:35,552", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 151133, shipment: 172087"}
+{"asctime": "2022-04-01 01:52:35,583", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 151096 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:36,215", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 151096, shipment: 172032"}
+{"asctime": "2022-04-01 01:52:36,240", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 151045 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:36,882", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 151045, shipment: 171939"}
+{"asctime": "2022-04-01 01:52:36,908", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 151010 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:37,561", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 151010, shipment: 171888"}
+{"asctime": "2022-04-01 01:52:37,587", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 151006 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:38,212", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 151006, shipment: 171883"}
+{"asctime": "2022-04-01 01:52:38,237", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 150990 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:38,847", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 150990, shipment: 171857"}
+{"asctime": "2022-04-01 01:52:38,872", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 150980 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:39,489", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 150980, shipment: 171841"}
+{"asctime": "2022-04-01 01:52:39,514", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 150959 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:40,127", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 150959, shipment: 171811"}
+{"asctime": "2022-04-01 01:52:40,152", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 150946 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:40,780", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 150946, shipment: 171785"}
+{"asctime": "2022-04-01 01:52:40,807", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 150824 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:41,425", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 150824, shipment: 171598"}
+{"asctime": "2022-04-01 01:52:41,455", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 150812 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:42,084", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 150812, shipment: 171579"}
+{"asctime": "2022-04-01 01:52:42,109", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 150779 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:42,734", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 150779, shipment: 171528"}
+{"asctime": "2022-04-01 01:52:42,759", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 150769 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:43,379", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 150769, shipment: 171507"}
+{"asctime": "2022-04-01 01:52:43,402", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 150752 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:44,029", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 150752, shipment: 171472"}
+{"asctime": "2022-04-01 01:52:44,055", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 150718 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:44,662", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 150718, shipment: 171420"}
+{"asctime": "2022-04-01 01:52:44,689", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 150604 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:45,320", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 150604, shipment: 171229"}
+{"asctime": "2022-04-01 01:52:45,344", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 150603 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:45,958", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 150603, shipment: 171227"}
+{"asctime": "2022-04-01 01:52:45,983", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 150453 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:46,605", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 150453, shipment: 171001"}
+{"asctime": "2022-04-01 01:52:46,630", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 150452 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:47,267", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 150452, shipment: 170999"}
+{"asctime": "2022-04-01 01:52:47,291", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 150400 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:47,931", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 150400, shipment: 170920"}
+{"asctime": "2022-04-01 01:52:47,957", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 150360 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:48,593", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 150360, shipment: 170859"}
+{"asctime": "2022-04-01 01:52:48,618", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 149641 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:49,246", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 149641, shipment: 169682"}
+{"asctime": "2022-04-01 01:52:49,275", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 148891 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:49,880", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 148891, shipment: 168510"}
+{"asctime": "2022-04-01 01:52:49,908", "levelname": "INFO", "filename": "Automate.py", "lineno": 760, "funcName": "main", "message": "Order 148880 found in previous log. Skipping."}
+{"asctime": "2022-04-01 01:52:49,935", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Order 148384 is not a duplicate"}
+{"asctime": "2022-04-01 01:52:50,774", "levelname": "INFO", "filename": "Automate.py", "lineno": 774, "funcName": "main", "message": "Couldnt find metrc template for order: 148384, shipment: 167706"}
+{"asctime": "2022-04-01 01:52:50,775", "levelname": "INFO", "filename": "Automate.py", "lineno": 841, "funcName": "main", "message": "##----------SESSION FINISHED----------##"}
+{"asctime": "2022-04-01 01:58:25,498", "levelname": "INFO", "filename": "Automate.py", "lineno": 690, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-04-01 01:58:25,500", "levelname": "INFO", "filename": "Automate.py", "lineno": 691, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-04-01 01:58:29,503", "levelname": "INFO", "filename": "Automate.py", "lineno": 693, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-04-01 01:58:39,905", "levelname": "INFO", "filename": "Automate.py", "lineno": 730, "funcName": "main", "message": "Working with date 04-04-2022"}
+{"asctime": "2022-04-01 01:58:39,907", "levelname": "INFO", "filename": "Automate.py", "lineno": 731, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-04-01 01:58:47,554", "levelname": "INFO", "filename": "Automate.py", "lineno": 749, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
+{"asctime": "2022-04-01 01:58:49,142", "levelname": "INFO", "filename": "Automate.py", "lineno": 751, "funcName": "main", "message": "Getting driver info from Nabis API..."}
+{"asctime": "2022-04-01 01:58:50,722", "levelname": "INFO", "filename": "Automate.py", "lineno": 754, "funcName": "main", "message": "Nbr of shipments found: 46"}
+{"asctime": "2022-04-01 01:58:50,755", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151033 is not a duplicate"}
+{"asctime": "2022-04-01 01:58:51,379", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151033, shipment: 171922"}
+{"asctime": "2022-04-01 01:58:51,404", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 149497 is not a duplicate"}
+{"asctime": "2022-04-01 01:58:52,041", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 149497, shipment: 169459"}
+{"asctime": "2022-04-01 01:58:52,068", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 149811 is not a duplicate"}
+{"asctime": "2022-04-01 01:58:53,287", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 149811, shipment: 169945"}
+{"asctime": "2022-04-01 01:58:53,312", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 149404 is not a duplicate"}
+{"asctime": "2022-04-01 01:58:53,930", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 149404, shipment: 169314"}
+{"asctime": "2022-04-01 01:58:53,959", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151482 is not a duplicate"}
+{"asctime": "2022-04-01 01:58:54,584", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151482, shipment: 172644"}
+{"asctime": "2022-04-01 01:58:54,611", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151431 is not a duplicate"}
+{"asctime": "2022-04-01 01:58:55,232", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151431, shipment: 172559"}
+{"asctime": "2022-04-01 01:58:55,260", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151424 is not a duplicate"}
+{"asctime": "2022-04-01 01:58:55,883", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151424, shipment: 172546"}
+{"asctime": "2022-04-01 01:58:55,914", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151396 is not a duplicate"}
+{"asctime": "2022-04-01 01:58:56,545", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151396, shipment: 172500"}
+{"asctime": "2022-04-01 01:58:56,575", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151315 is not a duplicate"}
+{"asctime": "2022-04-01 01:58:57,215", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151315, shipment: 172368"}
+{"asctime": "2022-04-01 01:58:57,238", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151295 is not a duplicate"}
+{"asctime": "2022-04-01 01:58:57,855", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151295, shipment: 172336"}
+{"asctime": "2022-04-01 01:58:57,882", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151291 is not a duplicate"}
+{"asctime": "2022-04-01 01:58:58,510", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151291, shipment: 172329"}
+{"asctime": "2022-04-01 01:58:58,532", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151286 is not a duplicate"}
+{"asctime": "2022-04-01 01:58:59,148", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151286, shipment: 172322"}
+{"asctime": "2022-04-01 01:58:59,203", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151280 is not a duplicate"}
+{"asctime": "2022-04-01 01:58:59,870", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151280, shipment: 172312"}
+{"asctime": "2022-04-01 01:58:59,899", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151227 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:00,526", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151227, shipment: 172233"}
+{"asctime": "2022-04-01 01:59:00,551", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151221 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:01,173", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151221, shipment: 172224"}
+{"asctime": "2022-04-01 01:59:01,209", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151205 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:01,844", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151205, shipment: 172199"}
+{"asctime": "2022-04-01 01:59:01,875", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151202 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:02,500", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151202, shipment: 172193"}
+{"asctime": "2022-04-01 01:59:02,530", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151170 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:03,151", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151170, shipment: 172145"}
+{"asctime": "2022-04-01 01:59:03,180", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151135 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:03,810", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151135, shipment: 172090"}
+{"asctime": "2022-04-01 01:59:03,839", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151133 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:04,468", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151133, shipment: 172087"}
+{"asctime": "2022-04-01 01:59:04,499", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151096 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:05,111", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151096, shipment: 172032"}
+{"asctime": "2022-04-01 01:59:05,144", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151045 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:05,793", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151045, shipment: 171939"}
+{"asctime": "2022-04-01 01:59:05,829", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151010 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:06,472", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151010, shipment: 171888"}
+{"asctime": "2022-04-01 01:59:06,498", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151006 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:07,137", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151006, shipment: 171883"}
+{"asctime": "2022-04-01 01:59:07,165", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150990 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:07,800", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150990, shipment: 171857"}
+{"asctime": "2022-04-01 01:59:07,842", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150980 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:08,464", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150980, shipment: 171841"}
+{"asctime": "2022-04-01 01:59:08,492", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150959 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:09,122", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150959, shipment: 171811"}
+{"asctime": "2022-04-01 01:59:09,148", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150946 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:09,762", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150946, shipment: 171785"}
+{"asctime": "2022-04-01 01:59:09,800", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150824 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:10,426", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150824, shipment: 171598"}
+{"asctime": "2022-04-01 01:59:10,452", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150812 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:11,078", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150812, shipment: 171579"}
+{"asctime": "2022-04-01 01:59:11,102", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150801 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:11,721", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150801, shipment: 171563"}
+{"asctime": "2022-04-01 01:59:11,745", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150779 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:12,359", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150779, shipment: 171528"}
+{"asctime": "2022-04-01 01:59:12,400", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150769 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:13,025", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150769, shipment: 171507"}
+{"asctime": "2022-04-01 01:59:13,064", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150752 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:13,694", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150752, shipment: 171472"}
+{"asctime": "2022-04-01 01:59:13,722", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150718 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:14,367", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150718, shipment: 171420"}
+{"asctime": "2022-04-01 01:59:14,392", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150712 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:15,015", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150712, shipment: 171404"}
+{"asctime": "2022-04-01 01:59:15,045", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150604 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:15,669", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150604, shipment: 171229"}
+{"asctime": "2022-04-01 01:59:15,702", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150603 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:16,335", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150603, shipment: 171227"}
+{"asctime": "2022-04-01 01:59:16,364", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150453 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:16,975", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150453, shipment: 171001"}
+{"asctime": "2022-04-01 01:59:17,001", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150452 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:17,619", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150452, shipment: 170999"}
+{"asctime": "2022-04-01 01:59:17,649", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150400 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:18,268", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150400, shipment: 170920"}
+{"asctime": "2022-04-01 01:59:18,293", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150360 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:18,918", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150360, shipment: 170859"}
+{"asctime": "2022-04-01 01:59:18,943", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 149641 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:19,567", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 149641, shipment: 169682"}
+{"asctime": "2022-04-01 01:59:19,593", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 148891 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:20,218", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 148891, shipment: 168510"}
+{"asctime": "2022-04-01 01:59:20,242", "levelname": "INFO", "filename": "Automate.py", "lineno": 762, "funcName": "main", "message": "Order 148880 found in previous log. Skipping."}
+{"asctime": "2022-04-01 01:59:20,272", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 148384 is not a duplicate"}
+{"asctime": "2022-04-01 01:59:20,918", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 148384, shipment: 167706"}
+{"asctime": "2022-04-01 01:59:20,919", "levelname": "INFO", "filename": "Automate.py", "lineno": 843, "funcName": "main", "message": "##----------SESSION FINISHED----------##"}
+{"asctime": "2022-04-01 02:00:39,456", "levelname": "INFO", "filename": "Automate.py", "lineno": 690, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-04-01 02:00:39,459", "levelname": "INFO", "filename": "Automate.py", "lineno": 691, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-04-01 02:00:41,828", "levelname": "INFO", "filename": "Automate.py", "lineno": 693, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-04-01 02:00:52,282", "levelname": "INFO", "filename": "Automate.py", "lineno": 730, "funcName": "main", "message": "Working with date 04-04-2022"}
+{"asctime": "2022-04-01 02:00:52,283", "levelname": "INFO", "filename": "Automate.py", "lineno": 731, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-04-01 02:01:05,105", "levelname": "INFO", "filename": "Automate.py", "lineno": 749, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
+{"asctime": "2022-04-01 02:01:06,682", "levelname": "INFO", "filename": "Automate.py", "lineno": 751, "funcName": "main", "message": "Getting driver info from Nabis API..."}
+{"asctime": "2022-04-01 02:01:08,212", "levelname": "INFO", "filename": "Automate.py", "lineno": 754, "funcName": "main", "message": "Nbr of shipments found: 46"}
+{"asctime": "2022-04-01 02:01:08,241", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151033 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:08,873", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151033, shipment: 171922"}
+{"asctime": "2022-04-01 02:01:08,899", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 149497 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:09,509", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 149497, shipment: 169459"}
+{"asctime": "2022-04-01 02:01:09,533", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 149811 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:10,164", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 149811, shipment: 169945"}
+{"asctime": "2022-04-01 02:01:10,188", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 149404 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:10,813", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 149404, shipment: 169314"}
+{"asctime": "2022-04-01 02:01:10,836", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151482 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:11,457", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151482, shipment: 172644"}
+{"asctime": "2022-04-01 02:01:11,479", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151431 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:12,119", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151431, shipment: 172559"}
+{"asctime": "2022-04-01 02:01:12,148", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151424 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:12,776", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151424, shipment: 172546"}
+{"asctime": "2022-04-01 02:01:12,801", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151396 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:13,416", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151396, shipment: 172500"}
+{"asctime": "2022-04-01 02:01:13,440", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151315 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:14,057", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151315, shipment: 172368"}
+{"asctime": "2022-04-01 02:01:14,082", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151295 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:14,794", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151295, shipment: 172336"}
+{"asctime": "2022-04-01 02:01:14,820", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151291 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:15,437", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151291, shipment: 172329"}
+{"asctime": "2022-04-01 02:01:15,460", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151286 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:16,072", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151286, shipment: 172322"}
+{"asctime": "2022-04-01 02:01:16,097", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151280 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:16,720", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151280, shipment: 172312"}
+{"asctime": "2022-04-01 02:01:16,744", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151227 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:17,392", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151227, shipment: 172233"}
+{"asctime": "2022-04-01 02:01:17,416", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151221 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:18,027", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151221, shipment: 172224"}
+{"asctime": "2022-04-01 02:01:18,052", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151205 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:18,667", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151205, shipment: 172199"}
+{"asctime": "2022-04-01 02:01:18,691", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151202 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:19,309", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151202, shipment: 172193"}
+{"asctime": "2022-04-01 02:01:19,331", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151170 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:19,944", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151170, shipment: 172145"}
+{"asctime": "2022-04-01 02:01:19,967", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151135 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:20,996", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151135, shipment: 172090"}
+{"asctime": "2022-04-01 02:01:21,019", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151133 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:21,644", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151133, shipment: 172087"}
+{"asctime": "2022-04-01 02:01:21,666", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151096 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:22,277", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151096, shipment: 172032"}
+{"asctime": "2022-04-01 02:01:22,302", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151045 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:22,919", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151045, shipment: 171939"}
+{"asctime": "2022-04-01 02:01:22,944", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151010 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:23,574", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151010, shipment: 171888"}
+{"asctime": "2022-04-01 02:01:23,597", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151006 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:24,218", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151006, shipment: 171883"}
+{"asctime": "2022-04-01 02:01:24,242", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150990 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:24,866", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150990, shipment: 171857"}
+{"asctime": "2022-04-01 02:01:24,888", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150980 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:25,512", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150980, shipment: 171841"}
+{"asctime": "2022-04-01 02:01:25,537", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150959 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:26,157", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150959, shipment: 171811"}
+{"asctime": "2022-04-01 02:01:26,180", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150946 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:26,790", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150946, shipment: 171785"}
+{"asctime": "2022-04-01 02:01:26,816", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150824 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:27,445", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150824, shipment: 171598"}
+{"asctime": "2022-04-01 02:01:27,468", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150812 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:28,098", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150812, shipment: 171579"}
+{"asctime": "2022-04-01 02:01:28,121", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150801 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:28,752", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150801, shipment: 171563"}
+{"asctime": "2022-04-01 02:01:28,774", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150779 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:29,397", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150779, shipment: 171528"}
+{"asctime": "2022-04-01 02:01:29,421", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150769 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:30,035", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150769, shipment: 171507"}
+{"asctime": "2022-04-01 02:01:30,057", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150752 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:30,683", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150752, shipment: 171472"}
+{"asctime": "2022-04-01 02:01:30,707", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150718 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:31,319", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150718, shipment: 171420"}
+{"asctime": "2022-04-01 02:01:31,342", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150712 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:31,974", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150712, shipment: 171404"}
+{"asctime": "2022-04-01 02:01:31,998", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150604 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:32,650", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150604, shipment: 171229"}
+{"asctime": "2022-04-01 02:01:32,673", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150603 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:33,307", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150603, shipment: 171227"}
+{"asctime": "2022-04-01 02:01:33,331", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150453 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:33,946", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150453, shipment: 171001"}
+{"asctime": "2022-04-01 02:01:33,971", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150452 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:34,595", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150452, shipment: 170999"}
+{"asctime": "2022-04-01 02:01:34,618", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150400 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:35,234", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150400, shipment: 170920"}
+{"asctime": "2022-04-01 02:01:35,257", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150360 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:35,906", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150360, shipment: 170859"}
+{"asctime": "2022-04-01 02:01:35,929", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 149641 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:36,553", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 149641, shipment: 169682"}
+{"asctime": "2022-04-01 02:01:36,576", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 148891 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:37,223", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 148891, shipment: 168510"}
+{"asctime": "2022-04-01 02:01:37,245", "levelname": "INFO", "filename": "Automate.py", "lineno": 762, "funcName": "main", "message": "Order 148880 found in previous log. Skipping."}
+{"asctime": "2022-04-01 02:01:37,267", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 148384 is not a duplicate"}
+{"asctime": "2022-04-01 02:01:37,884", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 148384, shipment: 167706"}
+{"asctime": "2022-04-01 02:01:37,885", "levelname": "INFO", "filename": "Automate.py", "lineno": 843, "funcName": "main", "message": "##----------SESSION FINISHED----------##"}
+{"asctime": "2022-04-01 02:03:54,925", "levelname": "INFO", "filename": "Automate.py", "lineno": 690, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-04-01 02:03:54,927", "levelname": "INFO", "filename": "Automate.py", "lineno": 691, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-04-01 02:03:57,289", "levelname": "INFO", "filename": "Automate.py", "lineno": 693, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-04-01 02:04:08,939", "levelname": "INFO", "filename": "Automate.py", "lineno": 730, "funcName": "main", "message": "Working with date 04-04-2022"}
+{"asctime": "2022-04-01 02:04:08,940", "levelname": "INFO", "filename": "Automate.py", "lineno": 731, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-04-01 02:04:19,973", "levelname": "INFO", "filename": "Automate.py", "lineno": 749, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
+{"asctime": "2022-04-01 02:04:21,591", "levelname": "INFO", "filename": "Automate.py", "lineno": 751, "funcName": "main", "message": "Getting driver info from Nabis API..."}
+{"asctime": "2022-04-01 02:04:23,216", "levelname": "INFO", "filename": "Automate.py", "lineno": 754, "funcName": "main", "message": "Nbr of shipments found: 46"}
+{"asctime": "2022-04-01 02:04:23,264", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151033 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:23,925", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151033, shipment: 171922"}
+{"asctime": "2022-04-01 02:04:23,950", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 149497 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:24,587", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 149497, shipment: 169459"}
+{"asctime": "2022-04-01 02:04:24,613", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 149811 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:25,239", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 149811, shipment: 169945"}
+{"asctime": "2022-04-01 02:04:25,270", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 149404 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:25,907", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 149404, shipment: 169314"}
+{"asctime": "2022-04-01 02:04:25,931", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151482 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:26,545", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151482, shipment: 172644"}
+{"asctime": "2022-04-01 02:04:26,572", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151431 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:27,196", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151431, shipment: 172559"}
+{"asctime": "2022-04-01 02:04:27,226", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151424 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:27,844", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151424, shipment: 172546"}
+{"asctime": "2022-04-01 02:04:27,869", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151396 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:28,481", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151396, shipment: 172500"}
+{"asctime": "2022-04-01 02:04:28,510", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151315 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:29,133", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151315, shipment: 172368"}
+{"asctime": "2022-04-01 02:04:29,165", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151295 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:29,783", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151295, shipment: 172336"}
+{"asctime": "2022-04-01 02:04:29,814", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151291 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:30,439", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151291, shipment: 172329"}
+{"asctime": "2022-04-01 02:04:30,465", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151286 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:31,084", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151286, shipment: 172322"}
+{"asctime": "2022-04-01 02:04:31,113", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151280 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:31,786", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151280, shipment: 172312"}
+{"asctime": "2022-04-01 02:04:31,815", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151227 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:32,438", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151227, shipment: 172233"}
+{"asctime": "2022-04-01 02:04:32,462", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151221 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:33,080", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151221, shipment: 172224"}
+{"asctime": "2022-04-01 02:04:33,105", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151205 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:33,730", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151205, shipment: 172199"}
+{"asctime": "2022-04-01 02:04:33,757", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151202 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:34,372", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151202, shipment: 172193"}
+{"asctime": "2022-04-01 02:04:34,398", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151170 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:35,015", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151170, shipment: 172145"}
+{"asctime": "2022-04-01 02:04:35,041", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151135 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:35,679", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151135, shipment: 172090"}
+{"asctime": "2022-04-01 02:04:35,704", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151133 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:36,315", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151133, shipment: 172087"}
+{"asctime": "2022-04-01 02:04:36,340", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151096 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:36,954", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151096, shipment: 172032"}
+{"asctime": "2022-04-01 02:04:36,981", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151045 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:37,609", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151045, shipment: 171939"}
+{"asctime": "2022-04-01 02:04:37,633", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151010 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:38,269", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151010, shipment: 171888"}
+{"asctime": "2022-04-01 02:04:38,294", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 151006 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:38,922", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 151006, shipment: 171883"}
+{"asctime": "2022-04-01 02:04:38,947", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150990 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:39,568", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150990, shipment: 171857"}
+{"asctime": "2022-04-01 02:04:39,593", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150980 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:40,214", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150980, shipment: 171841"}
+{"asctime": "2022-04-01 02:04:40,239", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150959 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:40,854", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150959, shipment: 171811"}
+{"asctime": "2022-04-01 02:04:40,878", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150946 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:41,497", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150946, shipment: 171785"}
+{"asctime": "2022-04-01 02:04:41,535", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150824 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:42,170", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150824, shipment: 171598"}
+{"asctime": "2022-04-01 02:04:42,195", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150812 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:42,822", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150812, shipment: 171579"}
+{"asctime": "2022-04-01 02:04:42,856", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150801 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:43,473", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150801, shipment: 171563"}
+{"asctime": "2022-04-01 02:04:43,497", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150779 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:44,127", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150779, shipment: 171528"}
+{"asctime": "2022-04-01 02:04:44,152", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150769 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:44,777", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150769, shipment: 171507"}
+{"asctime": "2022-04-01 02:04:44,808", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150752 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:45,446", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150752, shipment: 171472"}
+{"asctime": "2022-04-01 02:04:45,473", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150718 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:46,094", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150718, shipment: 171420"}
+{"asctime": "2022-04-01 02:04:46,120", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150712 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:46,748", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150712, shipment: 171404"}
+{"asctime": "2022-04-01 02:04:46,774", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150604 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:47,382", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150604, shipment: 171229"}
+{"asctime": "2022-04-01 02:04:47,408", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150603 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:48,024", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150603, shipment: 171227"}
+{"asctime": "2022-04-01 02:04:48,049", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150453 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:48,663", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150453, shipment: 171001"}
+{"asctime": "2022-04-01 02:04:48,689", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150452 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:49,313", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150452, shipment: 170999"}
+{"asctime": "2022-04-01 02:04:49,342", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150400 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:49,963", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150400, shipment: 170920"}
+{"asctime": "2022-04-01 02:04:49,994", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 150360 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:50,623", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 150360, shipment: 170859"}
+{"asctime": "2022-04-01 02:04:50,651", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 149641 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:51,267", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 149641, shipment: 169682"}
+{"asctime": "2022-04-01 02:04:51,307", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 148891 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:51,942", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 148891, shipment: 168510"}
+{"asctime": "2022-04-01 02:04:51,973", "levelname": "INFO", "filename": "Automate.py", "lineno": 762, "funcName": "main", "message": "Order 148880 found in previous log. Skipping."}
+{"asctime": "2022-04-01 02:04:51,998", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Order 148384 is not a duplicate"}
+{"asctime": "2022-04-01 02:04:52,711", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Couldnt find metrc template for order: 148384, shipment: 167706"}
+{"asctime": "2022-04-01 02:04:52,713", "levelname": "INFO", "filename": "Automate.py", "lineno": 843, "funcName": "main", "message": "##----------SESSION FINISHED----------##"}
+{"asctime": "2022-04-01 02:05:50,925", "levelname": "INFO", "filename": "Automate.py", "lineno": 698, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-04-01 02:05:50,926", "levelname": "INFO", "filename": "Automate.py", "lineno": 699, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-04-01 02:05:53,025", "levelname": "INFO", "filename": "Automate.py", "lineno": 701, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-04-01 02:06:03,469", "levelname": "INFO", "filename": "Automate.py", "lineno": 741, "funcName": "main", "message": "Working with date 04-01-2022"}
+{"asctime": "2022-04-01 02:06:03,469", "levelname": "INFO", "filename": "Automate.py", "lineno": 742, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-04-01 02:06:50,201", "levelname": "INFO", "filename": "Automate.py", "lineno": 760, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
+{"asctime": "2022-04-01 02:06:51,771", "levelname": "INFO", "filename": "Automate.py", "lineno": 762, "funcName": "main", "message": "Getting driver info from Nabis API..."}
+{"asctime": "2022-04-01 02:06:54,120", "levelname": "INFO", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Nbr of shipments found: 222"}
+{"asctime": "2022-04-01 02:06:54,156", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151033 is not a duplicate"}
+{"asctime": "2022-04-01 02:06:54,776", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151033, shipment: 171922"}
+{"asctime": "2022-04-01 02:06:54,804", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 149497 is not a duplicate"}
+{"asctime": "2022-04-01 02:06:55,681", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 149497, shipment: 169459"}
+{"asctime": "2022-04-01 02:06:55,707", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 149811 is not a duplicate"}
+{"asctime": "2022-04-01 02:06:56,323", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 149811, shipment: 169945"}
+{"asctime": "2022-04-01 02:06:56,348", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 149404 is not a duplicate"}
+{"asctime": "2022-04-01 02:06:56,973", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 149404, shipment: 169314"}
+{"asctime": "2022-04-01 02:06:57,001", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151482 is not a duplicate"}
+{"asctime": "2022-04-01 02:06:57,631", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151482, shipment: 172644"}
+{"asctime": "2022-04-01 02:06:57,660", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151431 is not a duplicate"}
+{"asctime": "2022-04-01 02:06:58,289", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151431, shipment: 172559"}
+{"asctime": "2022-04-01 02:06:58,313", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151424 is not a duplicate"}
+{"asctime": "2022-04-01 02:06:58,930", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151424, shipment: 172546"}
+{"asctime": "2022-04-01 02:06:58,954", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151396 is not a duplicate"}
+{"asctime": "2022-04-01 02:06:59,581", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151396, shipment: 172500"}
+{"asctime": "2022-04-01 02:06:59,609", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151315 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:00,252", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151315, shipment: 172368"}
+{"asctime": "2022-04-01 02:07:00,277", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151295 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:00,895", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151295, shipment: 172336"}
+{"asctime": "2022-04-01 02:07:00,923", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151291 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:01,556", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151291, shipment: 172329"}
+{"asctime": "2022-04-01 02:07:01,585", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151286 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:02,239", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151286, shipment: 172322"}
+{"asctime": "2022-04-01 02:07:02,269", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151280 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:02,890", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151280, shipment: 172312"}
+{"asctime": "2022-04-01 02:07:02,914", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151227 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:03,558", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151227, shipment: 172233"}
+{"asctime": "2022-04-01 02:07:03,589", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151221 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:04,208", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151221, shipment: 172224"}
+{"asctime": "2022-04-01 02:07:04,238", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151205 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:04,873", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151205, shipment: 172199"}
+{"asctime": "2022-04-01 02:07:04,901", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151202 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:05,523", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151202, shipment: 172193"}
+{"asctime": "2022-04-01 02:07:05,553", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151170 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:06,406", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151170, shipment: 172145"}
+{"asctime": "2022-04-01 02:07:06,431", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151135 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:07,164", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151135, shipment: 172090"}
+{"asctime": "2022-04-01 02:07:07,192", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151133 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:07,944", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151133, shipment: 172087"}
+{"asctime": "2022-04-01 02:07:07,974", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151096 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:08,711", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151096, shipment: 172032"}
+{"asctime": "2022-04-01 02:07:08,739", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151045 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:09,472", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151045, shipment: 171939"}
+{"asctime": "2022-04-01 02:07:09,505", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151010 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:10,241", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151010, shipment: 171888"}
+{"asctime": "2022-04-01 02:07:10,269", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151006 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:11,012", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151006, shipment: 171883"}
+{"asctime": "2022-04-01 02:07:11,040", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 150990 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:11,924", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 150990, shipment: 171857"}
+{"asctime": "2022-04-01 02:07:11,949", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 150980 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:12,702", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 150980, shipment: 171841"}
+{"asctime": "2022-04-01 02:07:12,725", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 150959 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:13,473", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 150959, shipment: 171811"}
+{"asctime": "2022-04-01 02:07:13,499", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 150946 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:14,135", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 150946, shipment: 171785"}
+{"asctime": "2022-04-01 02:07:14,161", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 150824 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:14,805", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 150824, shipment: 171598"}
+{"asctime": "2022-04-01 02:07:14,850", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 150812 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:15,516", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 150812, shipment: 171579"}
+{"asctime": "2022-04-01 02:07:15,563", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 150801 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:16,236", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 150801, shipment: 171563"}
+{"asctime": "2022-04-01 02:07:16,269", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 150779 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:16,926", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 150779, shipment: 171528"}
+{"asctime": "2022-04-01 02:07:16,957", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 150769 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:17,590", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 150769, shipment: 171507"}
+{"asctime": "2022-04-01 02:07:17,616", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 150752 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:18,245", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 150752, shipment: 171472"}
+{"asctime": "2022-04-01 02:07:18,271", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 150718 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:18,896", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 150718, shipment: 171420"}
+{"asctime": "2022-04-01 02:07:18,928", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 150712 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:19,552", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 150712, shipment: 171404"}
+{"asctime": "2022-04-01 02:07:19,579", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 150604 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:20,210", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 150604, shipment: 171229"}
+{"asctime": "2022-04-01 02:07:20,239", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 150603 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:20,889", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 150603, shipment: 171227"}
+{"asctime": "2022-04-01 02:07:20,917", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 150453 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:21,550", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 150453, shipment: 171001"}
+{"asctime": "2022-04-01 02:07:21,575", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 150452 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:22,187", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 150452, shipment: 170999"}
+{"asctime": "2022-04-01 02:07:22,211", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 150400 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:22,838", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 150400, shipment: 170920"}
+{"asctime": "2022-04-01 02:07:22,877", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 150360 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:23,507", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 150360, shipment: 170859"}
+{"asctime": "2022-04-01 02:07:23,530", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 149641 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:24,149", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 149641, shipment: 169682"}
+{"asctime": "2022-04-01 02:07:24,176", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 148891 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:24,795", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 148891, shipment: 168510"}
+{"asctime": "2022-04-01 02:07:24,824", "levelname": "INFO", "filename": "Automate.py", "lineno": 773, "funcName": "main", "message": "Order 148880 found in previous log. Skipping."}
+{"asctime": "2022-04-01 02:07:24,859", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 148384 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:25,473", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 148384, shipment: 167706"}
+{"asctime": "2022-04-01 02:07:25,504", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151471 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:26,157", "levelname": "INFO", "filename": "Automate.py", "lineno": 787, "funcName": "main", "message": "Couldnt find metrc template for order: 151471, shipment: 172624"}
+{"asctime": "2022-04-01 02:07:26,206", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Order 151350 is not a duplicate"}
+{"asctime": "2022-04-01 02:07:26,887", "levelname": "INFO", "filename": "Automate.py", "lineno": 814, "funcName": "main", "message": "##------working with order: 151350, shipment 172419------##"}
+{"asctime": "2022-04-01 02:07:31,631", "levelname": "INFO", "filename": "Automate.py", "lineno": 115, "funcName": "find_metrc_order", "message": "Metrc search result for order: 151350 found!"}
+{"asctime": "2022-04-01 02:07:32,212", "levelname": "INFO", "filename": "Automate.py", "lineno": 129, "funcName": "find_metrc_order", "message": "Clicked on 'Use template' (Exited previous while loop!). Waiting for template"}
+{"asctime": "2022-04-01 02:08:56,869", "levelname": "INFO", "filename": "Automate.py", "lineno": 163, "funcName": "find_metrc_order", "message": "Template loaded. Begin matching..."}
+{"asctime": "2022-04-01 02:09:18,804", "levelname": "INFO", "filename": "Automate.py", "lineno": 513, "funcName": "proc_template", "message": "Number of packages is the same!!!"}
+{"asctime": "2022-04-01 02:09:18,805", "levelname": "INFO", "filename": "Automate.py", "lineno": 571, "funcName": "proc_template", "message": "Quantities good for 1A4060300022B79000287698;"}
+{"asctime": "2022-04-01 02:09:18,806", "levelname": "INFO", "filename": "Automate.py", "lineno": 598, "funcName": "proc_template", "message": "Price missing on metrc side but template type is Transfer"}
+{"asctime": "2022-04-01 02:09:18,807", "levelname": "INFO", "filename": "Automate.py", "lineno": 571, "funcName": "proc_template", "message": "Quantities good for 1A4060300022B79000287699;"}
+{"asctime": "2022-04-01 02:09:18,808", "levelname": "INFO", "filename": "Automate.py", "lineno": 598, "funcName": "proc_template", "message": "Price missing on metrc side but template type is Transfer"}
+{"asctime": "2022-04-01 02:09:18,810", "levelname": "INFO", "filename": "Automate.py", "lineno": 571, "funcName": "proc_template", "message": "Quantities good for 1A4060300022B79000287700;"}
+{"asctime": "2022-04-01 02:09:18,812", "levelname": "INFO", "filename": "Automate.py", "lineno": 598, "funcName": "proc_template", "message": "Price missing on metrc side but template type is Transfer"}
+{"asctime": "2022-04-01 02:09:18,814", "levelname": "INFO", "filename": "Automate.py", "lineno": 571, "funcName": "proc_template", "message": "Quantities good for 1A4060300022B79000287701;"}
+{"asctime": "2022-04-01 02:09:18,815", "levelname": "INFO", "filename": "Automate.py", "lineno": 598, "funcName": "proc_template", "message": "Price missing on metrc side but template type is Transfer"}
+{"asctime": "2022-04-01 02:09:18,816", "levelname": "INFO", "filename": "Automate.py", "lineno": 571, "funcName": "proc_template", "message": "Quantities good for 1A4060300022B79000287702;"}
+{"asctime": "2022-04-01 02:09:18,817", "levelname": "INFO", "filename": "Automate.py", "lineno": 598, "funcName": "proc_template", "message": "Price missing on metrc side but template type is Transfer"}
+{"asctime": "2022-04-01 02:09:18,818", "levelname": "INFO", "filename": "Automate.py", "lineno": 571, "funcName": "proc_template", "message": "Quantities good for 1A4060300022B79000287703;"}
+{"asctime": "2022-04-01 02:09:18,819", "levelname": "INFO", "filename": "Automate.py", "lineno": 598, "funcName": "proc_template", "message": "Price missing on metrc side but template type is Transfer"}
+{"asctime": "2022-04-01 02:09:18,820", "levelname": "INFO", "filename": "Automate.py", "lineno": 571, "funcName": "proc_template", "message": "Quantities good for 1A4060300022B79000287704;"}
+{"asctime": "2022-04-01 02:09:18,821", "levelname": "INFO", "filename": "Automate.py", "lineno": 598, "funcName": "proc_template", "message": "Price missing on metrc side but template type is Transfer"}
+{"asctime": "2022-04-01 02:09:18,822", "levelname": "INFO", "filename": "Automate.py", "lineno": 571, "funcName": "proc_template", "message": "Quantities good for 1A4060300022B79000287705;"}
+{"asctime": "2022-04-01 02:09:18,823", "levelname": "INFO", "filename": "Automate.py", "lineno": 598, "funcName": "proc_template", "message": "Price missing on metrc side but template type is Transfer"}
+{"asctime": "2022-04-01 02:09:18,824", "levelname": "INFO", "filename": "Automate.py", "lineno": 571, "funcName": "proc_template", "message": "Quantities good for 1A4060300022B79000287706;"}
+{"asctime": "2022-04-01 02:09:18,825", "levelname": "INFO", "filename": "Automate.py", "lineno": 598, "funcName": "proc_template", "message": "Price missing on metrc side but template type is Transfer"}
+{"asctime": "2022-04-01 02:09:18,827", "levelname": "INFO", "filename": "Automate.py", "lineno": 571, "funcName": "proc_template", "message": "Quantities good for 1A4060300022B79000287707;"}
+{"asctime": "2022-04-01 02:09:18,828", "levelname": "INFO", "filename": "Automate.py", "lineno": 598, "funcName": "proc_template", "message": "Price missing on metrc side but template type is Transfer"}
+{"asctime": "2022-04-01 02:09:18,830", "levelname": "INFO", "filename": "Automate.py", "lineno": 571, "funcName": "proc_template", "message": "Quantities good for 1A4060300022B79000287708;"}
+{"asctime": "2022-04-01 02:09:18,832", "levelname": "INFO", "filename": "Automate.py", "lineno": 598, "funcName": "proc_template", "message": "Price missing on metrc side but template type is Transfer"}
+{"asctime": "2022-04-01 02:09:18,833", "levelname": "INFO", "filename": "Automate.py", "lineno": 571, "funcName": "proc_template", "message": "Quantities good for 1A4060300022B79000287709;"}
+{"asctime": "2022-04-01 02:09:18,835", "levelname": "INFO", "filename": "Automate.py", "lineno": 598, "funcName": "proc_template", "message": "Price missing on metrc side but template type is Transfer"}
+{"asctime": "2022-04-01 02:09:18,837", "levelname": "INFO", "filename": "Automate.py", "lineno": 571, "funcName": "proc_template", "message": "Quantities good for 1A4060300022B79000287710;"}
+{"asctime": "2022-04-01 02:09:18,839", "levelname": "INFO", "filename": "Automate.py", "lineno": 598, "funcName": "proc_template", "message": "Price missing on metrc side but template type is Transfer"}

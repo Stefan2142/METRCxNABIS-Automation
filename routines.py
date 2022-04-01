@@ -246,8 +246,7 @@ def finish_template_get_manifest(driver, WAREHOUSE, nabis_order, logger):
             time.sleep(0.5)
 
             driver.find_element(
-                by=By.NAME,
-                value="model[0][Destinations][0][Transporters][0][TransporterDetails][0][VehicleMake]",
+                by=By.XPATH, value='//*[@id="addedit-transfer_form"]/div/button[1]'
             )
         except:
             bool = False
@@ -359,36 +358,7 @@ def finish_template_get_manifest(driver, WAREHOUSE, nabis_order, logger):
                 "id_response": id_response,
             }
 
-            # For the last part, Nabis (pdf upload)
-            o = get_order_data(142358)
-            transfer = view_metrc_transfer(o["id"])
-            transfer["data"]["getMetrcTransfers"][0]["id"]
-            upload_manifest_pdf(
-                transfer["data"]["getMetrcTransfers"][0]["id"], "name.pdf"
-            )
-            [os.remove(x) for x in list_of_pdf]
     return False
-
-
-"""
-bool = True
-while bool:
-    try:
-        time.sleep(0.5)
-        driver.find_element(
-            by=By.CLASS_NAME,
-            value="k-button.k-button-icontext.grid-row-button.k-grid-Use",
-        ).click()
-        bool = False
-    except:
-        pass"""
-###
-# wait.until(
-#         EC.visibility_of_element_located(
-#             (By.CLASS_NAME, 'icon-box__wrapper')
-#         )
-#     )
-
 
 def get_spreadsheet_routes(gc):
 

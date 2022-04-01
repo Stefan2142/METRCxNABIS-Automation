@@ -296,12 +296,23 @@ def proc_template(
         matching_attrs["license"]["metrc"]["data"].strip().lower()
         != matching_attrs["license"]["nabis"]["data"].strip().lower()
     ):
+        # If its internal transfer, they dont need to match
         if matching_attrs["license"]["metrc"]["data"].strip() not in [
             "C11-0001274-LIC",
             "C11-0000340-LIC",
             "C11-0000825-LIC",
         ]:
             update_log("license", "error_incorrect_key", "error_incorrect_msg")
+
+    # Check if its internal transfer
+    if matching_attrs["license"]["metrc"]["data"].strip() not in [
+        "C11-0001274-LIC",
+        "C11-0000340-LIC",
+        "C11-0000825-LIC",
+    ]:
+        internal_transfer = False
+    else:
+        internal_transfer = True
 
     matching_attrs["route"]["metrc"]["data"] = driver.find_element(
         by=By.NAME, value=matching_attrs["route"]["metrc_key"]
@@ -519,6 +530,28 @@ def proc_template(
 
     all_metrc_prices_none = metrc_prices_helper()
 
+    # RULE: If its internal transfer and all prices are none, change
+    # dates
+    if (all_metrc_prices_none == True) and (internal_transfer == True):
+        # EST Departure time
+        driver.find_element(
+            By.XPATH, value='//*[@ng-model="destination.EstimatedDepartureDateTime"]'
+        ).clear()
+        driver.find_element(
+            By.XPATH, value='//*[@ng-model="destination.EstimatedDepartureDateTime"]'
+        ).send_keys(
+            dt.datetime.strftime(dt.datetime.now() + dt.timedelta(days=1), "%m/%d/%Y")
+        )
+        # EST Arrival time
+        driver.find_element(
+            By.XPATH, value='//*[@ng-model="destination.EstimatedArrivalDateTime"]'
+        ).clear()
+        driver.find_element(
+            By.XPATH, value='//*[@ng-model="destination.EstimatedArrivalDateTime"]'
+        ).send_keys(
+            dt.datetime.strftime(dt.datetime.now() + dt.timedelta(days=1), "%m/%d/%Y")
+        )
+
     for i in nabis_packages.keys():
         if i != "SKIP":
             if not metrc_only_tags.get(i):
@@ -621,16 +654,20 @@ def proc_template(
     driver.find_element(
         by=By.NAME, value="model[0][Destinations][0][PlannedRoute]"
     ).send_keys(matching_attrs["route"]["metrc"]["data"])
+
     time.sleep(1)
+
     shipment = list(
         filter(
             lambda word: word[0] == "#",
             nabis_order["shipment_template"].split(),
         )
     )[0]
+
     if log_dict:
         logger.info(f"Log for order: {nabis_order_id}:")
         logger.info(json.dumps(log_dict, indent=2))
+        log_dict.update({"InternalTransfer": internal_transfer})
         log_dict.update({"ALL_GOOD": "FALSE"})
         log_dict.update({"ManifestId": ""})
 
@@ -639,6 +676,7 @@ def proc_template(
         if empty_prices_checker(driver):
             logger.info(f"Log for order: {nabis_order_id}:")
             log_dict.update({"PricesEmpty": "TRUE"})
+            log_dict.update({"InternalTransfer": internal_transfer})
             log_dict.update({"ALL_GOOD": "FALSE"})
 
         else:
@@ -660,6 +698,7 @@ def proc_template(
             else:
                 log_dict.update({"ALL_GOOD": "TRUE"})
 
+            log_dict.update({"InternalTransfer": internal_transfer})
             log_dict.update({"ManifestId": str(finish_status)})
 
     log_dict.update({"Order": str(nabis_order_id)})

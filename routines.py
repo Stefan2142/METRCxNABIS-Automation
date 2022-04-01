@@ -343,7 +343,7 @@ def finish_template_get_manifest(driver, WAREHOUSE, nabis_order, logger):
             logger.info(f"[{nabis_order['id']}] File to be uploaded {list_of_pdf[0]}")
             pdf_response = upload_manifest_pdf(transfer_id, list_of_pdf[0])
             id_response = upload_manifest_id(transfer_id, manifest_id)
-            if ("errors" in pdf_response[0]) or (pdf_response == False):
+            if ("errors" in pdf_response) or (pdf_response == False):
                 logger.error(
                     f'Error while uploading manifest pdf {transfer_id}, order: {nabis_order["id"]}'
                 )
@@ -359,6 +359,7 @@ def finish_template_get_manifest(driver, WAREHOUSE, nabis_order, logger):
             }
 
     return False
+
 
 def get_spreadsheet_routes(gc):
 

@@ -699,7 +699,7 @@ def proc_template(
                 log_dict.update({"ALL_GOOD": "TRUE"})
 
             log_dict.update({"InternalTransfer": internal_transfer})
-            log_dict.update({"ManifestId": str(finish_status)})
+            log_dict.update({"ManifestId": finish_status['manifest_id']})
 
     log_dict.update({"Order": str(nabis_order_id)})
     log_dict.update({"Shipment": str(shipment)})

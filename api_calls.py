@@ -197,7 +197,12 @@ def get_order_data(order_number):
     )
 
     response = requests.request("POST", url, headers=headers, data=payload)
-    response = response.json()
+    try:
+        response = response.json()
+    except:
+        time.sleep(30)
+        response = requests.request("POST", url, headers=headers, data=payload)
+        response = response.json()
 
     return response["data"]["getOrder"]
 

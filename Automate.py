@@ -1,5 +1,6 @@
 import datetime as dt
 from bs4 import BeautifulSoup
+import operator
 import time
 import re
 import json
@@ -670,6 +671,7 @@ def proc_template(
         logger.info(f"Log for order: {nabis_order_id}:")
         logger.info(json.dumps(log_dict, indent=2))
         log_dict.update({"InternalTransfer": internal_transfer})
+        log_dict.update({"TransferType": metrc_transfer_type})
         log_dict.update({"ALL_GOOD": "FALSE"})
         log_dict.update({"ManifestId": ""})
 
@@ -679,6 +681,7 @@ def proc_template(
             logger.info(f"Log for order: {nabis_order_id}:")
             log_dict.update({"PricesEmpty": "TRUE"})
             log_dict.update({"InternalTransfer": internal_transfer})
+            log_dict.update({"TransferType": metrc_transfer_type})
             log_dict.update({"ALL_GOOD": "FALSE"})
             send_slack_msg(f"\t ❌Order: {nabis_order_id} failed. Check gsheet log.")
 
@@ -686,6 +689,7 @@ def proc_template(
             logger.info(
                 f"---All checks good: {nabis_order_id} / ({shipment}) uploading pdf and id!---"
             )
+            log_dict.update({"TransferType": metrc_transfer_type})
 
             finish_status = finish_template_get_manifest(
                 driver, WAREHOUSE["license"], nabis_order, logger
@@ -717,6 +721,14 @@ def proc_template(
     log_dict.update(
         {
             "Date": dt.datetime.strftime(
+                dt.datetime.now(dt.datetime.now().astimezone().tzinfo),
+                "%Y-%m-%d",
+            )
+        }
+    )
+    log_dict.update(
+        {
+            "Timestamp": dt.datetime.strftime(
                 dt.datetime.now(dt.datetime.now().astimezone().tzinfo),
                 "%Y-%m-%dT%H:%M%z",
             )
@@ -808,6 +820,8 @@ def main():
         # str([[x['orderNumber'],x['shipmentNumber']] for x in nabis_orders])
         ###        --          ###
         # nabis_orders.reverse()
+
+        nabis_orders.sort(key=operator.itemgetter("orderNumber"), reverse=True)
         for nabis_order in nabis_orders:
             if duplicate_check(gc, int(nabis_order["orderNumber"])):
                 logger.info(
@@ -903,11 +917,9 @@ def main():
         send_slack_msg(
             f"---------SCRIPT STOPPED, ERROR: {get_traceback(e)}----------##"
         )
-        fl_name = str(dt.datetime.today()).replace(':', '.')
+        fl_name = str(dt.datetime.today()).replace(":", ".")
         try:
-            driver.save_screenshot(
-                f"./Logs/Error_{fl_name}.jpg"
-            )
+            driver.save_screenshot(f"./Logs/Error_{fl_name}.jpg")
         except UnboundLocalError:
             pass
         email_logger.error(get_traceback(e))

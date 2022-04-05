@@ -53,6 +53,11 @@ def waiting_fnc(driver, path):
         driver (webdriver): driver for browser
         path (str): path
     """
+    """
+    driver.find_element_by_id("user-alerts").get_attribute("innerHTML")
+'\n\n\n\n\n<div class="alert alert-error"><a class="close" data-dismiss="alert">×</a><p>Execution Timeout Expired.  The timeout period elapsed prior to completion of the operation or the server is not responding. </p></div>'
+    driver.find_element_by_class_name("alert.alert-error")
+    """
 
 
 def check_prices():
@@ -62,11 +67,10 @@ def check_prices():
 def send_slack_msg(msg):
     # For uploading an image:
     # https://stackoverflow.com/questions/66017386/cant-attach-uploaded-file-to-message-using-slack-api-via-python
-    
+
     client = WebClient(
         token="xoxb-1036389222000-3318129181831-p0vhcrRkabD3pvjJlv0dlGQO"
     )
-
 
     response = client.chat_postMessage(channel="mail-test", text=msg)
 
@@ -217,10 +221,13 @@ def duplicate_check(gc, order_id):
     off_log_df = pd.read_csv("./Logs/Offline_log.csv")
     off_log_df["Order"].replace("", 0, inplace=True)
     off_log_df["Order"] = pd.to_numeric(off_log_df["Order"], errors="coerce")
+    off_log_df["Order"].astype("Int64")
 
-    if int(order_id) in off_log_df["Order"].values.tolist():
+    if int(order_id) in off_log_df[off_log_df["ALL_GOOD"] == True]["Order"].tolist():
+        # It is duplicate
         return True
     else:
+        # Its not a duplicate
         return False
 
 

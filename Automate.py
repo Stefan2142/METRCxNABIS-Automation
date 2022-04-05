@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import time
 import re
 import json
+import os
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -30,6 +31,7 @@ from routines import (
     get_cookie_and_token,
     get_traceback,
     duplicate_check,
+    send_slack_msg,
 )
 from creds import credentials, WAREHOUSE
 import gspread
@@ -678,6 +680,7 @@ def proc_template(
             log_dict.update({"PricesEmpty": "TRUE"})
             log_dict.update({"InternalTransfer": internal_transfer})
             log_dict.update({"ALL_GOOD": "FALSE"})
+            send_slack_msg(f"\t ❌Order: {nabis_order_id} failed. Check gsheet log.")
 
         else:
             logger.info(
@@ -691,15 +694,22 @@ def proc_template(
                 log_dict.update(
                     {"ALL_GOOD": "FALSE - Template regsitered. PDF not updated"}
                 )
+                send_slack_msg(
+                    f"\t ❌Order: {nabis_order_id} registered. Failure at manifest pdf upload. Do it manually. (Manifest nbr: {finish_status['manifest_id']})"
+                )
+
             elif finish_status["id_response"] == False:
                 log_dict.update(
                     {"ALL_GOOD": "FALSE - Template regsitered. Manifest ID not updated"}
+                )
+                send_slack_msg(
+                    f"\t ❌Order: {nabis_order_id} registered. Failure at manifest id upload. Do it manually. (Manifest nbr: {finish_status['manifest_id']})"
                 )
             else:
                 log_dict.update({"ALL_GOOD": "TRUE"})
 
             log_dict.update({"InternalTransfer": internal_transfer})
-            log_dict.update({"ManifestId": finish_status['manifest_id']})
+            log_dict.update({"ManifestId": finish_status["manifest_id"]})
 
     log_dict.update({"Order": str(nabis_order_id)})
     log_dict.update({"Shipment": str(shipment)})
@@ -725,6 +735,11 @@ def main():
     gc = gspread.service_account(filename="./emailsending-325211-e5456e88f282.json")
     try:
         logger.info("##----------SESSION STARTED----------##")
+
+        send_slack_msg(
+            f"---------SESSION STARTED BY USER: {os.getenv('CLIENTNAME')}----------##"
+        )
+
         logger.info("Getting routes from gsheet...")
         routes = get_spreadsheet_routes(gc)
         logger.info("Initializing Chrome WebDriver...")
@@ -878,14 +893,20 @@ def main():
             logger.info("Moving to next order!")
             # continue
         logger.info("##----------SESSION FINISHED----------##")
+        send_slack_msg(
+            f"---------SESSION STARTED BY USER: {os.getenv('CLIENTNAME')} ENDED----------##"
+        )
     except Exception as e:
         # raise
         logger.error(get_traceback(e))
         email_logger = define_email_logger()
-
+        send_slack_msg(
+            f"---------SCRIPT STOPPED, ERROR: {get_traceback(e)}----------##"
+        )
+        fl_name = str(dt.datetime.today()).replace(':', '.')
         try:
             driver.save_screenshot(
-                f"./Logs/Error_{str(dt.datetime.today()).replace(':', '.')}.jpg"
+                f"./Logs/Error_{fl_name}.jpg"
             )
         except UnboundLocalError:
             pass

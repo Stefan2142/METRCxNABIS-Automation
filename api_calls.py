@@ -212,7 +212,11 @@ def view_metrc_transfer(order_id):
         },
     )
 
-    response = requests.request("POST", url, headers=headers, data=payload)
+    try:
+        response = requests.request("POST", url, headers=headers, data=payload)
+    except:
+        time.sleep(10)
+        response = requests.request("POST", url, headers=headers, data=payload)
     return response.json()
 
     #                                  | -> this is a list of how many transfer templates there are

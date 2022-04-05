@@ -13,7 +13,8 @@ from pythonjsonlogger import jsonlogger
 from creds import credentials
 from api_calls import upload_manifest_pdf, upload_manifest_id, view_metrc_transfer
 import traceback
-
+from slack_sdk import WebClient
+from slack_sdk.errors import SlackApiError
 
 # def define_download_folder():
 #     # Unused
@@ -56,6 +57,18 @@ def waiting_fnc(driver, path):
 
 def check_prices():
     pass
+
+
+def send_slack_msg(msg):
+    # For uploading an image:
+    # https://stackoverflow.com/questions/66017386/cant-attach-uploaded-file-to-message-using-slack-api-via-python
+    
+    client = WebClient(
+        token="xoxb-1036389222000-3318129181831-p0vhcrRkabD3pvjJlv0dlGQO"
+    )
+
+
+    response = client.chat_postMessage(channel="mail-test", text=msg)
 
 
 def get_traceback(e):
@@ -213,9 +226,16 @@ def duplicate_check(gc, order_id):
 
 def update_log_sheet(log_dict, gc):
     # Update logging gsheet file
-    sh = gc.open_by_url(
-        "https://docs.google.com/spreadsheets/d/1LkP08iIUIZyRz-_C45AJ0FvRJuwGK_SzuZylfNMrAuE"
-    )
+    try:
+        sh = gc.open_by_url(
+            "https://docs.google.com/spreadsheets/d/1LkP08iIUIZyRz-_C45AJ0FvRJuwGK_SzuZylfNMrAuE"
+        )
+    except:
+        time.sleep(110)
+        sh = gc.open_by_url(
+            "https://docs.google.com/spreadsheets/d/1LkP08iIUIZyRz-_C45AJ0FvRJuwGK_SzuZylfNMrAuE"
+        )
+
     wks = sh.worksheet("Logs")
     sheet_df = pd.DataFrame(wks.get_all_records())
 

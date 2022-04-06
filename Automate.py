@@ -916,7 +916,7 @@ def main():
             # continue
         logger.info("##----------SESSION FINISHED----------##")
 
-        send_slack_msg("#-----⏹{:^15s}⏹-----#".format(f"SESSION ENDED"))
+        send_slack_msg("#-----⏹{:^15s}⏹-----#".format(f"SESSION FINISHED"))
     except Exception as e:
         # raise
         logger.error(get_traceback(e))

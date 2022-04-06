@@ -11,7 +11,7 @@ import re
 import logging
 import logging.handlers
 from pythonjsonlogger import jsonlogger
-from creds import credentials
+from creds import credentials, slack_token
 from api_calls import upload_manifest_pdf, upload_manifest_id, view_metrc_transfer
 import traceback
 from slack_sdk import WebClient
@@ -69,9 +69,7 @@ def send_slack_msg(msg):
     # For uploading an image:
     # https://stackoverflow.com/questions/66017386/cant-attach-uploaded-file-to-message-using-slack-api-via-python
 
-    client = WebClient(
-        token="xoxb-1036389222000-3318129181831-p0vhcrRkabD3pvjJlv0dlGQO"
-    )
+    client = WebClient(token=slack_token)
     msg = "{}\n{}".format(
         dt.datetime.strftime(
             dt.datetime.now(dt.datetime.now().astimezone().tzinfo),

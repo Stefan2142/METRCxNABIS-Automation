@@ -37,6 +37,8 @@ from routines import (
 from creds import credentials, WAREHOUSE
 import gspread
 
+counters = {"done": 0, "duplicates": 0, "template_missing": 0, "not_done": 0}
+
 routes = []
 logger = define_default_logger()
 email_logger = define_email_logger()
@@ -176,6 +178,7 @@ def proc_template(
     from creds import matching_attrs
 
     global logger
+    global counters
     soup = BeautifulSoup(driver.page_source, "html.parser")
     script_element = soup.find(text=re.compile("repeaterData"))
     raw_json = script_element[
@@ -683,6 +686,7 @@ def proc_template(
             log_dict.update({"InternalTransfer": internal_transfer})
             log_dict.update({"TransferType": metrc_transfer_type})
             log_dict.update({"ALL_GOOD": "FALSE"})
+            counters["not_done"] += 1
             send_slack_msg(f"\t ❌ Order: {nabis_order_id} failed. Check gsheet log.")
 
         else:
@@ -698,19 +702,22 @@ def proc_template(
                 log_dict.update(
                     {"ALL_GOOD": "FALSE - Template regsitered. PDF not updated"}
                 )
+                counters["not_done"] += 1
                 send_slack_msg(
-                    f"\t ❌ rder: {nabis_order_id} registered. Failure at manifest pdf upload. Do it manually. (Manifest nbr: {finish_status['manifest_id']})"
+                    f"\t ❌ Order: {nabis_order_id} registered. Failure at manifest pdf upload. Do it manually. (Manifest nbr: {finish_status['manifest_id']})"
                 )
 
             elif finish_status["id_response"] == False:
                 log_dict.update(
                     {"ALL_GOOD": "FALSE - Template regsitered. Manifest ID not updated"}
                 )
+                counters["not_done"] += 1
                 send_slack_msg(
-                    f"\t ❌ rder: {nabis_order_id} registered. Failure at manifest id upload. Do it manually. (Manifest nbr: {finish_status['manifest_id']})"
+                    f"\t ❌ Order: {nabis_order_id} registered. Failure at manifest id upload. Do it manually. (Manifest nbr: {finish_status['manifest_id']})"
                 )
             else:
                 log_dict.update({"ALL_GOOD": "TRUE"})
+                counters["done"] += 1
 
             log_dict.update({"InternalTransfer": internal_transfer})
             log_dict.update({"ManifestId": finish_status["manifest_id"]})
@@ -744,7 +751,9 @@ def proc_template(
 def main():
     global routes
     global logger
+    global counters
     import operator
+
     gc = gspread.service_account(filename="./emailsending-325211-e5456e88f282.json")
     try:
         logger.info("##----------SESSION STARTED----------##")
@@ -836,6 +845,7 @@ def main():
                 logger.info(
                     f'Order {nabis_order["orderNumber"]} found in previous log. Skipping.'
                 )
+                counters["duplicates"] += 1
                 continue
             logger.debug(f"Order {nabis_order['orderNumber']} is not a duplicate")
             start_time = time.perf_counter()
@@ -850,6 +860,7 @@ def main():
                     logger.info(
                         f'Couldnt find metrc template for order: {nabis_order["orderNumber"]}, shipment: {nabis_order["shipmentNumber"]}'
                     )
+                    counters["template_missing"] += 1
                     continue
                 else:
                     # We always want the first result(0th) from the template search
@@ -915,22 +926,37 @@ def main():
 
             logger.info("Moving to next order!")
             # continue
+        logger.info(
+            f"Done: {counters['done']}; Duplicates: {counters['duplicates']}; Template missing: {counters['template_missing']}; Not done: {counters['not_done']}"
+        )
         logger.info("##----------SESSION FINISHED----------##")
 
+        send_slack_msg(
+            f"STATS FOR CURRENT SESSION: \nDone: {counters['done']}; Duplicates: {counters['duplicates']}; Template missing: {counters['template_missing']}; Not done: {counters['not_done']}"
+        )
         send_slack_msg("#-----⏹ {:^15s} ⏹-----#".format(f"SESSION FINISHED"))
+
     except Exception as e:
         # raise
-        logger.error(get_traceback(e))
-        email_logger = define_email_logger()
+        send_slack_msg(
+            f"STATS FOR CURRENT SESSION: \nDone: {counters['done']}; Duplicates: {counters['duplicates']}; Template missing: {counters['template_missing']}; Not done: {counters['not_done']}"
+        )
         send_slack_msg(
             f"---------💀 SCRIPT STOPPED, ERROR: {get_traceback(e)} 💀----------##"
         )
+        logger.info(
+            f"Done: {counters['done']}; Duplicates: {counters['duplicates']}; Template missing: {counters['template_missing']}; Not done: {counters['not_done']}"
+        )
+        logger.error(get_traceback(e))
+        email_logger = define_email_logger()
+
         fl_name = str(dt.datetime.today()).replace(":", ".")
         try:
             driver.save_screenshot(f"./Logs/Error_{fl_name}.jpg")
         except UnboundLocalError:
             pass
         email_logger.error(get_traceback(e))
+        logger.error(get_traceback(e))
         raise
 
 

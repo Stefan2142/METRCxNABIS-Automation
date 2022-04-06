@@ -749,7 +749,9 @@ def main():
         logger.info("##----------SESSION STARTED----------##")
 
         send_slack_msg(
-            f"---------SESSION STARTED BY USER: {os.getenv('CLIENTNAME')}----------##"
+            "#-----▶{:^40s}▶-----#".format(
+                f"SESSION STARTED BY USER: {os.getenv('CLIENTNAME')}"
+            )
         )
 
         logger.info("Getting routes from gsheet...")
@@ -779,17 +781,23 @@ def main():
         )
 
         metrc_auth = get_cookie_and_token(driver)
-        ###             --             ###
-        ### Get list of orders ###
-        # Passing a tomorrow's date (month-day-year): '03-04-2022"'
+
+        # Getting date for nabis shipment query
         if dt.datetime.today().weekday() == 4:
-            tomorrow = dt.datetime.strftime(
-                dt.datetime.now() + dt.timedelta(days=3), "%m-%d-%Y"
-            )
+            if dt.datetime.today().hour >= 6:
+                tomorrow = dt.datetime.strftime(
+                    dt.datetime.now() + dt.timedelta(days=3), "%m-%d-%Y"
+                )
+            else:
+                tomorrow = dt.datetime.strftime(dt.datetime.now(), "%m-%d-%Y")
+
         else:
-            tomorrow = dt.datetime.strftime(
-                dt.datetime.now() + dt.timedelta(days=1), "%m-%d-%Y"
-            )
+            if dt.datetime.today().hour >= 6:
+                tomorrow = dt.datetime.strftime(
+                    dt.datetime.now() + dt.timedelta(days=1), "%m-%d-%Y"
+                )
+            else:
+                tomorrow = dt.datetime.strftime(dt.datetime.now(), "%m-%d-%Y")
 
         logger.info(f"Working with date {tomorrow}")
         logger.info("Getting shipments from Nabis...")
@@ -907,15 +915,14 @@ def main():
             logger.info("Moving to next order!")
             # continue
         logger.info("##----------SESSION FINISHED----------##")
-        send_slack_msg(
-            f"---------SESSION STARTED BY USER: {os.getenv('CLIENTNAME')} ENDED----------##"
-        )
+
+        send_slack_msg("#-----⏹{:^15s}⏹-----#".format(f"SESSION ENDED"))
     except Exception as e:
         # raise
         logger.error(get_traceback(e))
         email_logger = define_email_logger()
         send_slack_msg(
-            f"---------SCRIPT STOPPED, ERROR: {get_traceback(e)}----------##"
+            f"---------💀SCRIPT STOPPED, ERROR: {get_traceback(e)}💀----------##"
         )
         fl_name = str(dt.datetime.today()).replace(":", ".")
         try:

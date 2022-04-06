@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 import pandas as pd
+import datetime as dt
 import os, time
 import re
 import logging
@@ -71,7 +72,13 @@ def send_slack_msg(msg):
     client = WebClient(
         token="xoxb-1036389222000-3318129181831-p0vhcrRkabD3pvjJlv0dlGQO"
     )
-
+    msg = "{}\n{}".format(
+        dt.datetime.strftime(
+            dt.datetime.now(dt.datetime.now().astimezone().tzinfo),
+            "%Y-%m-%dT%H:%M%z",
+        ),
+        msg,
+    )
     response = client.chat_postMessage(channel="mail-test", text=msg)
 
 

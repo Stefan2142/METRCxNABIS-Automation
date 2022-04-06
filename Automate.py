@@ -677,6 +677,7 @@ def proc_template(
         log_dict.update({"TransferType": metrc_transfer_type})
         log_dict.update({"ALL_GOOD": "FALSE"})
         log_dict.update({"ManifestId": ""})
+        send_slack_msg(f"\t ❌ Order: {nabis_order_id} failed. Check gsheet log.")
 
         # finish_template_get_manifest(driver, WAREHOUSE['license'], nabis_order)
     else:
@@ -934,7 +935,7 @@ def main():
         send_slack_msg(
             f"STATS FOR CURRENT SESSION: \nDone: {counters['done']}; Duplicates: {counters['duplicates']}; Template missing: {counters['template_missing']}; Not done: {counters['not_done']}"
         )
-        send_slack_msg("#-----⏹ {:^15s} ⏹-----#".format(f"SESSION FINISHED"))
+        send_slack_msg("#-----⏹ {:^40s} ⏹-----#".format(f"SESSION FINISHED"))
 
     except Exception as e:
         # raise

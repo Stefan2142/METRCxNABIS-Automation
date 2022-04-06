@@ -70,7 +70,7 @@ def send_slack_msg(msg):
     # https://stackoverflow.com/questions/66017386/cant-attach-uploaded-file-to-message-using-slack-api-via-python
 
     client = WebClient(token=slack_token)
-    msg = "{}\n{}".format(
+    msg = "{}:\n{}".format(
         dt.datetime.strftime(
             dt.datetime.now(dt.datetime.now().astimezone().tzinfo),
             "%Y-%m-%dT%H:%M%z",

@@ -683,7 +683,7 @@ def proc_template(
             log_dict.update({"InternalTransfer": internal_transfer})
             log_dict.update({"TransferType": metrc_transfer_type})
             log_dict.update({"ALL_GOOD": "FALSE"})
-            send_slack_msg(f"\t ❌Order: {nabis_order_id} failed. Check gsheet log.")
+            send_slack_msg(f"\t ❌ Order: {nabis_order_id} failed. Check gsheet log.")
 
         else:
             logger.info(
@@ -699,7 +699,7 @@ def proc_template(
                     {"ALL_GOOD": "FALSE - Template regsitered. PDF not updated"}
                 )
                 send_slack_msg(
-                    f"\t ❌Order: {nabis_order_id} registered. Failure at manifest pdf upload. Do it manually. (Manifest nbr: {finish_status['manifest_id']})"
+                    f"\t ❌ rder: {nabis_order_id} registered. Failure at manifest pdf upload. Do it manually. (Manifest nbr: {finish_status['manifest_id']})"
                 )
 
             elif finish_status["id_response"] == False:
@@ -707,7 +707,7 @@ def proc_template(
                     {"ALL_GOOD": "FALSE - Template regsitered. Manifest ID not updated"}
                 )
                 send_slack_msg(
-                    f"\t ❌Order: {nabis_order_id} registered. Failure at manifest id upload. Do it manually. (Manifest nbr: {finish_status['manifest_id']})"
+                    f"\t ❌ rder: {nabis_order_id} registered. Failure at manifest id upload. Do it manually. (Manifest nbr: {finish_status['manifest_id']})"
                 )
             else:
                 log_dict.update({"ALL_GOOD": "TRUE"})
@@ -744,12 +744,13 @@ def proc_template(
 def main():
     global routes
     global logger
+    import operator
     gc = gspread.service_account(filename="./emailsending-325211-e5456e88f282.json")
     try:
         logger.info("##----------SESSION STARTED----------##")
 
         send_slack_msg(
-            "#-----▶{:^40s}▶-----#".format(
+            "#-----▶ {:^40s} ▶-----#".format(
                 f"SESSION STARTED BY USER: {os.getenv('CLIENTNAME')}"
             )
         )
@@ -916,13 +917,13 @@ def main():
             # continue
         logger.info("##----------SESSION FINISHED----------##")
 
-        send_slack_msg("#-----⏹{:^15s}⏹-----#".format(f"SESSION FINISHED"))
+        send_slack_msg("#-----⏹ {:^15s} ⏹-----#".format(f"SESSION FINISHED"))
     except Exception as e:
         # raise
         logger.error(get_traceback(e))
         email_logger = define_email_logger()
         send_slack_msg(
-            f"---------💀SCRIPT STOPPED, ERROR: {get_traceback(e)}💀----------##"
+            f"---------💀 SCRIPT STOPPED, ERROR: {get_traceback(e)} 💀----------##"
         )
         fl_name = str(dt.datetime.today()).replace(":", ".")
         try:

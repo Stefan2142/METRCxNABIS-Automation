@@ -104,7 +104,7 @@ def memory_dump():
             except:
                 dump += "<ERROR WHILE GETTING VALUE>\n"
     with open(
-        f"./Logs/Dump_{dt.datetime.now().strftime('%Y-%m-%d_%H_%M')}.txt", "f"
+        f"./Logs/Dump_{dt.datetime.now().strftime('%Y-%m-%d_%H_%M')}.txt", "w"
     ) as f:
         f.write(dump)
 
@@ -517,6 +517,7 @@ def get_cwd_files():
             list_of_files, key=lambda x: os.path.getmtime(os.path.join(os.getcwd(), x))
         )
 
+    list_of_files = list([x for x in list_of_files if ".pdf.crdownload" not in x])
     list_of_files = list([x for x in list_of_files if ".pdf" in x])
     list_of_files = list([x for x in list_of_files if ".tmp" not in x])
     list_of_files.reverse()  # 0th element is the newest

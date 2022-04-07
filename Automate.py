@@ -16,9 +16,7 @@ from api_calls import (
     get_drivers,
     get_vehicles,
     find_template,
-    view_metrc_transfer,
-    upload_manifest_pdf,
-    upload_manifest_id,
+    upload_order_note,
 )
 
 from routines import (
@@ -33,6 +31,7 @@ from routines import (
     get_traceback,
     duplicate_check,
     send_slack_msg,
+    memory_dump,
 )
 from creds import credentials, WAREHOUSE
 import gspread
@@ -681,7 +680,9 @@ def proc_template(
 
         # finish_template_get_manifest(driver, WAREHOUSE['license'], nabis_order)
     else:
-        if empty_prices_checker(driver):
+        if (empty_prices_checker(driver) == True) and (
+            metrc_transfer_type.strip() != "Wholesale Transfer"
+        ):
             logger.info(f"Log for order: {nabis_order_id}:")
             log_dict.update({"PricesEmpty": "TRUE"})
             log_dict.update({"InternalTransfer": internal_transfer})
@@ -694,6 +695,20 @@ def proc_template(
             logger.info(
                 f"---All checks good: {nabis_order_id} / ({shipment}) uploading pdf and id!---"
             )
+            if (empty_prices_checker(driver) == True) and (
+                metrc_transfer_type.strip() == "Wholesale Transfer"
+            ):
+                logger.info(
+                    "Template has empty prices and type Wholesale Transfer, changing to Transfer"
+                )
+                Select(
+                    driver.find_element(
+                        By.XPATH, value='//*[@ng-model="destination.TransferTypeId"]'
+                    )
+                ).select_by_visible_text("Transfer")
+                logger.info("Type changed!")
+                metrc_transfer_type = f"{metrc_transfer_type}_x_Transfer"
+
             log_dict.update({"TransferType": metrc_transfer_type})
 
             finish_status = finish_template_get_manifest(
@@ -759,11 +774,11 @@ def main():
     try:
         logger.info("##----------SESSION STARTED----------##")
 
-        send_slack_msg(
-            "#-----▶ {:^40s} ▶-----#".format(
-                f"SESSION STARTED BY USER: {os.getenv('CLIENTNAME')}"
-            )
-        )
+        # send_slack_msg(
+        #     "#-----▶ {:^40s} ▶-----#".format(
+        #         f"SESSION STARTED BY USER: {os.getenv('CLIENTNAME')}"
+        #     )
+        # )
 
         logger.info("Getting routes from gsheet...")
         routes = get_spreadsheet_routes(gc)
@@ -938,7 +953,7 @@ def main():
         send_slack_msg("#-----⏹ {:^40s} ⏹-----#".format(f"SESSION FINISHED"))
 
     except Exception as e:
-        # raise
+        memory_dump()
         send_slack_msg(
             f"STATS FOR CURRENT SESSION: \nDone: {counters['done']}; Duplicates: {counters['duplicates']}; Template missing: {counters['template_missing']}; Not done: {counters['not_done']}"
         )

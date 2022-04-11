@@ -143,8 +143,10 @@ def upload_order_note(transfer_id, order_note):
     )
 
     response = requests.request("POST", url, headers=headers, data=payload)
-
-    print(response.text)
+    try:
+        return response.json()
+    except:
+        return False
 
 
 def upload_manifest_id(transfer_id, manifest_id):

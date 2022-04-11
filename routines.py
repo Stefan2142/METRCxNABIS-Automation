@@ -13,7 +13,12 @@ import logging
 import logging.handlers
 from pythonjsonlogger import jsonlogger
 from creds import credentials, slack_token
-from api_calls import upload_manifest_pdf, upload_manifest_id, view_metrc_transfer
+from api_calls import (
+    upload_manifest_pdf,
+    upload_manifest_id,
+    view_metrc_transfer,
+    upload_order_note,
+)
 import traceback
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
@@ -81,18 +86,20 @@ def memory_dump():
         stack.append(f)
         f = f.f_back
     # stack.reverse()
-    # traceback.print_exc()
+
     dump = ""
+    dump += traceback.format_exc() + "\n"
 
     dump += "Locals by frame:\n"
-
-    for frame in stack:
+    fl_name = dt.datetime.now().strftime("%Y-%m-%d_%H_%M")
+    for frame in stack[:]:
         dump += "Frame %s in %s at line %s" % (
             frame.f_code.co_name,
             frame.f_code.co_filename,
             frame.f_lineno,
         )
         for key, value in frame.f_locals.items():
+
             dump += "\t%20s = " % key
             # We have to be VERY careful not to cause a new error in our error
             # printer! Calling str(  ) on an unknown object could cause an
@@ -100,13 +107,16 @@ def memory_dump():
             # we can't stop it from happening, but we can and should
             # stop it from propagating if it does happen!
             try:
+                # print("DUMP:", sys.getsizeof(dump))
+                # print("DUMP:", sys.getsizeof(value))
                 dump += f"{value}\n"
             except:
                 dump += "<ERROR WHILE GETTING VALUE>\n"
-    with open(
-        f"./Logs/Dump_{dt.datetime.now().strftime('%Y-%m-%d_%H_%M')}.txt", "w"
-    ) as f:
+    with open(f"./Logs/Dump_{fl_name}.txt", "w") as f:
         f.write(dump)
+
+    # with open(f"./Logs/Dump_{fl_name}.txt", "a") as f:
+    #     f.write(dump)
 
 
 def send_slack_msg(msg):
@@ -312,7 +322,9 @@ def update_log_sheet(log_dict, gc):
     output.to_csv("./Logs/Offline_log.csv", index=False)
 
 
-def finish_template_get_manifest(driver, WAREHOUSE, nabis_order, logger):
+def finish_template_get_manifest(
+    driver, WAREHOUSE, nabis_order, transport_detail_flags, logger
+):
 
     ### SUBMIT BUTTON
     logger.info(f"[{nabis_order['id']}] Registering transfer...")
@@ -422,6 +434,19 @@ def finish_template_get_manifest(driver, WAREHOUSE, nabis_order, logger):
             ][0]
             logger.info(f"[{nabis_order['id']}] list_of_pdfs: {list_of_pdf}")
             logger.info(f"[{nabis_order['id']}] File to be uploaded {list_of_pdf[0]}")
+
+            order_notes = ""
+            for k, v in transport_detail_flags.items():
+                if v == "FLAG":
+                    order_notes += f"TEMP {v};"
+            if order_notes != "":
+                logger.info(
+                    f"[{nabis_order['id']}] Uploading order notes: {order_notes}"
+                )
+                order_response = upload_order_note(transfer_id, order_notes)
+            else:
+                logger.info("No order notes")
+
             pdf_response = upload_manifest_pdf(transfer_id, list_of_pdf[0])
             id_response = upload_manifest_id(transfer_id, manifest_id)
             if ("errors" in pdf_response) or (pdf_response == False):
@@ -437,6 +462,7 @@ def finish_template_get_manifest(driver, WAREHOUSE, nabis_order, logger):
                 "manifest_id": manifest_id,
                 "pdf_response": pdf_response,
                 "id_response": id_response,
+                "order_note": order_notes,
             }
 
     return False
@@ -470,6 +496,7 @@ def get_driver():
 
     chrome_options.add_experimental_option("prefs", prefs)
     chrome_options.add_argument("--start-maximized")
+    chrome_options.add_argument("--no-sandbox")
     # chrome_options.add_argument("--headless")
     # chrome_options.add_argument("--window-size=1536,865")
 

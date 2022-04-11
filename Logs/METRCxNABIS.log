@@ -2594,3 +2594,254 @@
 {"asctime": "2022-04-07 02:19:28,315", "levelname": "INFO", "filename": "Automate.py", "lineno": 626, "funcName": "proc_template", "message": "Price missing on metrc side but template type is Transfer"}
 {"asctime": "2022-04-07 02:19:28,316", "levelname": "INFO", "filename": "Automate.py", "lineno": 599, "funcName": "proc_template", "message": "Quantities good for 1A4060300022B79000295601;"}
 {"asctime": "2022-04-07 02:19:28,317", "levelname": "INFO", "filename": "Automate.py", "lineno": 626, "funcName": "proc_template", "message": "Price missing on metrc side but template type is Transfer"}
+{"asctime": "2022-04-08 17:45:22,037", "levelname": "INFO", "filename": "Automate.py", "lineno": 736, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-04-08 17:45:22,061", "levelname": "INFO", "filename": "Automate.py", "lineno": 744, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-04-08 17:45:27,321", "levelname": "INFO", "filename": "Automate.py", "lineno": 746, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-04-08 17:48:16,601", "levelname": "INFO", "filename": "Automate.py", "lineno": 789, "funcName": "main", "message": "Working with date 04-11-2022"}
+{"asctime": "2022-04-08 17:48:16,602", "levelname": "INFO", "filename": "Automate.py", "lineno": 790, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-04-08 17:48:24,660", "levelname": "INFO", "filename": "Automate.py", "lineno": 808, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
+{"asctime": "2022-04-08 17:48:25,933", "levelname": "INFO", "filename": "Automate.py", "lineno": 810, "funcName": "main", "message": "Getting driver info from Nabis API..."}
+{"asctime": "2022-04-08 17:48:27,348", "levelname": "INFO", "filename": "Automate.py", "lineno": 813, "funcName": "main", "message": "Nbr of shipments found: 60"}
+{"asctime": "2022-04-08 17:48:27,446", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 827, "funcName": "main", "message": "Order 154084 is not a duplicate"}
+{"asctime": "2022-04-08 17:48:28,147", "levelname": "INFO", "filename": "Automate.py", "lineno": 838, "funcName": "main", "message": "Couldnt find metrc template for order: 154084, shipment: 176724"}
+{"asctime": "2022-04-08 17:48:28,176", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 827, "funcName": "main", "message": "Order 153927 is not a duplicate"}
+{"asctime": "2022-04-08 17:48:29,211", "levelname": "INFO", "filename": "Automate.py", "lineno": 866, "funcName": "main", "message": "##------working with order: 153927, shipment 176474------##"}
+{"asctime": "2022-04-08 17:48:34,001", "levelname": "INFO", "filename": "Automate.py", "lineno": 118, "funcName": "find_metrc_order", "message": "Metrc search result for order: 153927 found!"}
+{"asctime": "2022-04-08 17:48:34,574", "levelname": "INFO", "filename": "Automate.py", "lineno": 132, "funcName": "find_metrc_order", "message": "Clicked on 'Use template' (Exited previous while loop!). Waiting for template"}
+{"asctime": "2022-04-08 17:49:58,342", "levelname": "INFO", "filename": "Automate.py", "lineno": 166, "funcName": "find_metrc_order", "message": "Template loaded. Begin matching..."}
+{"asctime": "2022-04-08 19:02:10,906", "levelname": "INFO", "filename": "Automate.py", "lineno": 739, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-04-08 19:02:10,907", "levelname": "INFO", "filename": "Automate.py", "lineno": 747, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-04-08 19:02:14,968", "levelname": "INFO", "filename": "Automate.py", "lineno": 749, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-04-08 19:03:07,924", "levelname": "INFO", "filename": "Automate.py", "lineno": 739, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-04-08 19:03:07,926", "levelname": "INFO", "filename": "Automate.py", "lineno": 747, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-04-08 19:03:10,400", "levelname": "INFO", "filename": "Automate.py", "lineno": 749, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-04-08 19:03:20,876", "levelname": "INFO", "filename": "Automate.py", "lineno": 792, "funcName": "main", "message": "Working with date 04-11-2022"}
+{"asctime": "2022-04-08 19:03:20,877", "levelname": "INFO", "filename": "Automate.py", "lineno": 793, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-04-08 19:03:25,066", "levelname": "INFO", "filename": "Automate.py", "lineno": 811, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
+{"asctime": "2022-04-08 19:03:26,289", "levelname": "INFO", "filename": "Automate.py", "lineno": 813, "funcName": "main", "message": "Getting driver info from Nabis API..."}
+{"asctime": "2022-04-08 19:03:27,474", "levelname": "INFO", "filename": "Automate.py", "lineno": 816, "funcName": "main", "message": "Nbr of shipments found: 37"}
+{"asctime": "2022-04-08 19:03:27,556", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 830, "funcName": "main", "message": "Order 154084 is not a duplicate"}
+{"asctime": "2022-04-08 19:03:28,205", "levelname": "INFO", "filename": "Automate.py", "lineno": 841, "funcName": "main", "message": "Couldnt find metrc template for order: 154084, shipment: 176724"}
+{"asctime": "2022-04-08 19:03:28,240", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 830, "funcName": "main", "message": "Order 153955 is not a duplicate"}
+{"asctime": "2022-04-08 19:03:28,993", "levelname": "INFO", "filename": "Automate.py", "lineno": 869, "funcName": "main", "message": "##------working with order: 153955, shipment 176515------##"}
+{"asctime": "2022-04-08 19:03:33,686", "levelname": "INFO", "filename": "Automate.py", "lineno": 118, "funcName": "find_metrc_order", "message": "Metrc search result for order: 153955 found!"}
+{"asctime": "2022-04-08 19:03:34,473", "levelname": "INFO", "filename": "Automate.py", "lineno": 132, "funcName": "find_metrc_order", "message": "Clicked on 'Use template' (Exited previous while loop!). Waiting for template"}
+{"asctime": "2022-04-08 19:04:50,238", "levelname": "INFO", "filename": "Automate.py", "lineno": 166, "funcName": "find_metrc_order", "message": "Template loaded. Begin matching..."}
+{"asctime": "2022-04-08 19:05:27,491", "levelname": "INFO", "filename": "Automate.py", "lineno": 401, "funcName": "proc_template", "message": "TransportDetail driver matching result: Match"}
+{"asctime": "2022-04-08 19:13:17,525", "levelname": "INFO", "filename": "Automate.py", "lineno": 739, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-04-08 19:13:17,527", "levelname": "INFO", "filename": "Automate.py", "lineno": 747, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-04-08 19:13:21,679", "levelname": "INFO", "filename": "Automate.py", "lineno": 749, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-04-08 19:13:31,162", "levelname": "INFO", "filename": "Automate.py", "lineno": 792, "funcName": "main", "message": "Working with date 04-11-2022"}
+{"asctime": "2022-04-08 19:13:31,163", "levelname": "INFO", "filename": "Automate.py", "lineno": 793, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-04-08 19:13:35,185", "levelname": "INFO", "filename": "Automate.py", "lineno": 811, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
+{"asctime": "2022-04-08 19:13:36,394", "levelname": "INFO", "filename": "Automate.py", "lineno": 813, "funcName": "main", "message": "Getting driver info from Nabis API..."}
+{"asctime": "2022-04-08 19:13:37,593", "levelname": "INFO", "filename": "Automate.py", "lineno": 816, "funcName": "main", "message": "Nbr of shipments found: 34"}
+{"asctime": "2022-04-08 19:13:37,628", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 830, "funcName": "main", "message": "Order 154084 is not a duplicate"}
+{"asctime": "2022-04-08 19:13:38,311", "levelname": "INFO", "filename": "Automate.py", "lineno": 841, "funcName": "main", "message": "Couldnt find metrc template for order: 154084, shipment: 176724"}
+{"asctime": "2022-04-08 19:13:38,350", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 830, "funcName": "main", "message": "Order 153955 is not a duplicate"}
+{"asctime": "2022-04-08 19:13:39,540", "levelname": "INFO", "filename": "Automate.py", "lineno": 869, "funcName": "main", "message": "##------working with order: 153955, shipment 176515------##"}
+{"asctime": "2022-04-08 19:13:43,751", "levelname": "INFO", "filename": "Automate.py", "lineno": 118, "funcName": "find_metrc_order", "message": "Metrc search result for order: 153955 found!"}
+{"asctime": "2022-04-08 19:13:44,371", "levelname": "INFO", "filename": "Automate.py", "lineno": 132, "funcName": "find_metrc_order", "message": "Clicked on 'Use template' (Exited previous while loop!). Waiting for template"}
+{"asctime": "2022-04-08 19:15:09,138", "levelname": "INFO", "filename": "Automate.py", "lineno": 166, "funcName": "find_metrc_order", "message": "Template loaded. Begin matching..."}
+{"asctime": "2022-04-09 01:52:11,901", "levelname": "INFO", "filename": "Automate.py", "lineno": 753, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-04-09 01:52:11,903", "levelname": "INFO", "filename": "Automate.py", "lineno": 761, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-04-09 01:52:15,785", "levelname": "INFO", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-04-09 01:52:27,583", "levelname": "INFO", "filename": "Automate.py", "lineno": 806, "funcName": "main", "message": "Working with date 04-09-2022"}
+{"asctime": "2022-04-09 01:52:27,584", "levelname": "INFO", "filename": "Automate.py", "lineno": 807, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-04-09 01:52:55,041", "levelname": "INFO", "filename": "Automate.py", "lineno": 825, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
+{"asctime": "2022-04-09 01:52:56,401", "levelname": "INFO", "filename": "Automate.py", "lineno": 827, "funcName": "main", "message": "Getting driver info from Nabis API..."}
+{"asctime": "2022-04-09 01:52:57,755", "levelname": "INFO", "filename": "Automate.py", "lineno": 830, "funcName": "main", "message": "Nbr of shipments found: 223"}
+{"asctime": "2022-04-09 01:52:57,879", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 844, "funcName": "main", "message": "Order 154579 is not a duplicate"}
+{"asctime": "2022-04-09 01:52:58,744", "levelname": "INFO", "filename": "Automate.py", "lineno": 883, "funcName": "main", "message": "##------working with order: 154579, shipment 177522------##"}
+{"asctime": "2022-04-09 01:53:03,152", "levelname": "INFO", "filename": "Automate.py", "lineno": 118, "funcName": "find_metrc_order", "message": "Metrc search result for order: 154579 found!"}
+{"asctime": "2022-04-09 01:53:03,762", "levelname": "INFO", "filename": "Automate.py", "lineno": 132, "funcName": "find_metrc_order", "message": "Clicked on 'Use template' (Exited previous while loop!). Waiting for template"}
+{"asctime": "2022-04-09 01:54:51,303", "levelname": "INFO", "filename": "Automate.py", "lineno": 166, "funcName": "find_metrc_order", "message": "Template loaded. Begin matching..."}
+{"asctime": "2022-04-09 02:14:10,031", "levelname": "INFO", "filename": "Automate.py", "lineno": 415, "funcName": "proc_template", "message": "TransportDetailKey 'driver' matching result: Match"}
+{"asctime": "2022-04-09 02:15:41,732", "levelname": "INFO", "filename": "Automate.py", "lineno": 753, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-04-09 02:15:41,734", "levelname": "INFO", "filename": "Automate.py", "lineno": 761, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-04-09 02:15:45,398", "levelname": "INFO", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-04-09 02:15:55,097", "levelname": "INFO", "filename": "Automate.py", "lineno": 806, "funcName": "main", "message": "Working with date 04-09-2022"}
+{"asctime": "2022-04-09 02:15:55,098", "levelname": "INFO", "filename": "Automate.py", "lineno": 807, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-04-09 02:16:24,710", "levelname": "INFO", "filename": "Automate.py", "lineno": 825, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
+{"asctime": "2022-04-09 02:16:26,046", "levelname": "INFO", "filename": "Automate.py", "lineno": 827, "funcName": "main", "message": "Getting driver info from Nabis API..."}
+{"asctime": "2022-04-09 02:16:27,386", "levelname": "INFO", "filename": "Automate.py", "lineno": 830, "funcName": "main", "message": "Nbr of shipments found: 230"}
+{"asctime": "2022-04-09 02:16:27,418", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 844, "funcName": "main", "message": "Order 154584 is not a duplicate"}
+{"asctime": "2022-04-09 02:16:28,142", "levelname": "INFO", "filename": "Automate.py", "lineno": 855, "funcName": "main", "message": "Couldnt find metrc template for order: 154584, shipment: 177530"}
+{"asctime": "2022-04-09 02:16:28,168", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 844, "funcName": "main", "message": "Order 154579 is not a duplicate"}
+{"asctime": "2022-04-09 02:16:28,858", "levelname": "INFO", "filename": "Automate.py", "lineno": 883, "funcName": "main", "message": "##------working with order: 154579, shipment 177522------##"}
+{"asctime": "2022-04-09 02:16:33,004", "levelname": "INFO", "filename": "Automate.py", "lineno": 118, "funcName": "find_metrc_order", "message": "Metrc search result for order: 154579 found!"}
+{"asctime": "2022-04-09 02:16:33,592", "levelname": "INFO", "filename": "Automate.py", "lineno": 132, "funcName": "find_metrc_order", "message": "Clicked on 'Use template' (Exited previous while loop!). Waiting for template"}
+{"asctime": "2022-04-09 02:18:01,044", "levelname": "INFO", "filename": "Automate.py", "lineno": 166, "funcName": "find_metrc_order", "message": "Template loaded. Begin matching..."}
+{"asctime": "2022-04-09 02:22:00,763", "levelname": "INFO", "filename": "Automate.py", "lineno": 753, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-04-09 02:22:00,784", "levelname": "INFO", "filename": "Automate.py", "lineno": 761, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-04-09 02:22:04,691", "levelname": "INFO", "filename": "Automate.py", "lineno": 763, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-04-09 02:22:15,184", "levelname": "INFO", "filename": "Automate.py", "lineno": 806, "funcName": "main", "message": "Working with date 04-09-2022"}
+{"asctime": "2022-04-09 02:22:15,185", "levelname": "INFO", "filename": "Automate.py", "lineno": 807, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-04-09 02:22:41,201", "levelname": "INFO", "filename": "Automate.py", "lineno": 825, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
+{"asctime": "2022-04-09 02:22:42,526", "levelname": "INFO", "filename": "Automate.py", "lineno": 827, "funcName": "main", "message": "Getting driver info from Nabis API..."}
+{"asctime": "2022-04-09 02:22:43,851", "levelname": "INFO", "filename": "Automate.py", "lineno": 830, "funcName": "main", "message": "Nbr of shipments found: 235"}
+{"asctime": "2022-04-09 02:22:43,881", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 844, "funcName": "main", "message": "Order 154584 is not a duplicate"}
+{"asctime": "2022-04-09 02:22:44,570", "levelname": "INFO", "filename": "Automate.py", "lineno": 855, "funcName": "main", "message": "Couldnt find metrc template for order: 154584, shipment: 177530"}
+{"asctime": "2022-04-09 02:22:44,605", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 844, "funcName": "main", "message": "Order 154579 is not a duplicate"}
+{"asctime": "2022-04-09 02:22:45,304", "levelname": "INFO", "filename": "Automate.py", "lineno": 883, "funcName": "main", "message": "##------working with order: 154579, shipment 177522------##"}
+{"asctime": "2022-04-09 02:22:49,458", "levelname": "INFO", "filename": "Automate.py", "lineno": 118, "funcName": "find_metrc_order", "message": "Metrc search result for order: 154579 found!"}
+{"asctime": "2022-04-09 02:22:50,034", "levelname": "INFO", "filename": "Automate.py", "lineno": 132, "funcName": "find_metrc_order", "message": "Clicked on 'Use template' (Exited previous while loop!). Waiting for template"}
+{"asctime": "2022-04-09 02:24:21,467", "levelname": "INFO", "filename": "Automate.py", "lineno": 166, "funcName": "find_metrc_order", "message": "Template loaded. Begin matching..."}
+{"asctime": "2022-04-09 02:39:38,444", "levelname": "INFO", "filename": "Automate.py", "lineno": 754, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-04-09 02:39:38,445", "levelname": "INFO", "filename": "Automate.py", "lineno": 762, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-04-09 02:39:42,799", "levelname": "INFO", "filename": "Automate.py", "lineno": 764, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-04-09 02:39:53,162", "levelname": "INFO", "filename": "Automate.py", "lineno": 807, "funcName": "main", "message": "Working with date 04-09-2022"}
+{"asctime": "2022-04-09 02:39:53,163", "levelname": "INFO", "filename": "Automate.py", "lineno": 808, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-04-09 02:40:27,929", "levelname": "INFO", "filename": "Automate.py", "lineno": 826, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
+{"asctime": "2022-04-09 02:40:29,221", "levelname": "INFO", "filename": "Automate.py", "lineno": 828, "funcName": "main", "message": "Getting driver info from Nabis API..."}
+{"asctime": "2022-04-09 02:40:30,533", "levelname": "INFO", "filename": "Automate.py", "lineno": 831, "funcName": "main", "message": "Nbr of shipments found: 238"}
+{"asctime": "2022-04-09 02:40:30,629", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 845, "funcName": "main", "message": "Order 154584 is not a duplicate"}
+{"asctime": "2022-04-09 02:40:31,356", "levelname": "INFO", "filename": "Automate.py", "lineno": 856, "funcName": "main", "message": "Couldnt find metrc template for order: 154584, shipment: 177530"}
+{"asctime": "2022-04-09 02:40:31,382", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 845, "funcName": "main", "message": "Order 154579 is not a duplicate"}
+{"asctime": "2022-04-09 02:40:32,131", "levelname": "INFO", "filename": "Automate.py", "lineno": 884, "funcName": "main", "message": "##------working with order: 154579, shipment 177522------##"}
+{"asctime": "2022-04-09 02:40:36,302", "levelname": "INFO", "filename": "Automate.py", "lineno": 118, "funcName": "find_metrc_order", "message": "Metrc search result for order: 154579 found!"}
+{"asctime": "2022-04-09 02:40:36,877", "levelname": "INFO", "filename": "Automate.py", "lineno": 132, "funcName": "find_metrc_order", "message": "Clicked on 'Use template' (Exited previous while loop!). Waiting for template"}
+{"asctime": "2022-04-09 02:42:03,514", "levelname": "INFO", "filename": "Automate.py", "lineno": 166, "funcName": "find_metrc_order", "message": "Template loaded. Begin matching..."}
+{"asctime": "2022-04-09 02:44:11,778", "levelname": "INFO", "filename": "Automate.py", "lineno": 757, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-04-09 02:44:11,779", "levelname": "INFO", "filename": "Automate.py", "lineno": 765, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-04-09 02:44:14,307", "levelname": "INFO", "filename": "Automate.py", "lineno": 767, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-04-09 02:44:24,110", "levelname": "INFO", "filename": "Automate.py", "lineno": 810, "funcName": "main", "message": "Working with date 04-09-2022"}
+{"asctime": "2022-04-09 02:44:24,111", "levelname": "INFO", "filename": "Automate.py", "lineno": 811, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-04-09 02:45:00,818", "levelname": "INFO", "filename": "Automate.py", "lineno": 829, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
+{"asctime": "2022-04-09 02:45:02,207", "levelname": "INFO", "filename": "Automate.py", "lineno": 831, "funcName": "main", "message": "Getting driver info from Nabis API..."}
+{"asctime": "2022-04-09 02:45:03,602", "levelname": "INFO", "filename": "Automate.py", "lineno": 834, "funcName": "main", "message": "Nbr of shipments found: 240"}
+{"asctime": "2022-04-09 02:45:03,642", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 848, "funcName": "main", "message": "Order 154584 is not a duplicate"}
+{"asctime": "2022-04-09 02:45:05,737", "levelname": "INFO", "filename": "Automate.py", "lineno": 859, "funcName": "main", "message": "Couldnt find metrc template for order: 154584, shipment: 177530"}
+{"asctime": "2022-04-09 02:45:05,766", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 848, "funcName": "main", "message": "Order 154579 is not a duplicate"}
+{"asctime": "2022-04-09 02:45:06,469", "levelname": "INFO", "filename": "Automate.py", "lineno": 887, "funcName": "main", "message": "##------working with order: 154579, shipment 177522------##"}
+{"asctime": "2022-04-09 02:45:10,662", "levelname": "INFO", "filename": "Automate.py", "lineno": 118, "funcName": "find_metrc_order", "message": "Metrc search result for order: 154579 found!"}
+{"asctime": "2022-04-09 02:45:11,237", "levelname": "INFO", "filename": "Automate.py", "lineno": 132, "funcName": "find_metrc_order", "message": "Clicked on 'Use template' (Exited previous while loop!). Waiting for template"}
+{"asctime": "2022-04-09 02:46:46,859", "levelname": "INFO", "filename": "Automate.py", "lineno": 166, "funcName": "find_metrc_order", "message": "Template loaded. Begin matching..."}
+{"asctime": "2022-04-09 02:48:02,940", "levelname": "INFO", "filename": "Automate.py", "lineno": 758, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-04-09 02:48:02,984", "levelname": "INFO", "filename": "Automate.py", "lineno": 766, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-04-09 02:48:05,705", "levelname": "INFO", "filename": "Automate.py", "lineno": 768, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-04-09 02:48:17,257", "levelname": "INFO", "filename": "Automate.py", "lineno": 811, "funcName": "main", "message": "Working with date 04-09-2022"}
+{"asctime": "2022-04-09 02:48:17,257", "levelname": "INFO", "filename": "Automate.py", "lineno": 812, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-04-09 02:48:49,011", "levelname": "INFO", "filename": "Automate.py", "lineno": 830, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
+{"asctime": "2022-04-09 02:48:50,341", "levelname": "INFO", "filename": "Automate.py", "lineno": 832, "funcName": "main", "message": "Getting driver info from Nabis API..."}
+{"asctime": "2022-04-09 02:48:51,636", "levelname": "INFO", "filename": "Automate.py", "lineno": 835, "funcName": "main", "message": "Nbr of shipments found: 240"}
+{"asctime": "2022-04-09 02:48:51,667", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 849, "funcName": "main", "message": "Order 154584 is not a duplicate"}
+{"asctime": "2022-04-09 02:48:52,352", "levelname": "INFO", "filename": "Automate.py", "lineno": 860, "funcName": "main", "message": "Couldnt find metrc template for order: 154584, shipment: 177530"}
+{"asctime": "2022-04-09 02:48:52,377", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 849, "funcName": "main", "message": "Order 154579 is not a duplicate"}
+{"asctime": "2022-04-09 02:48:53,071", "levelname": "INFO", "filename": "Automate.py", "lineno": 888, "funcName": "main", "message": "##------working with order: 154579, shipment 177522------##"}
+{"asctime": "2022-04-09 02:48:57,576", "levelname": "INFO", "filename": "Automate.py", "lineno": 118, "funcName": "find_metrc_order", "message": "Metrc search result for order: 154579 found!"}
+{"asctime": "2022-04-09 02:48:58,151", "levelname": "INFO", "filename": "Automate.py", "lineno": 132, "funcName": "find_metrc_order", "message": "Clicked on 'Use template' (Exited previous while loop!). Waiting for template"}
+{"asctime": "2022-04-09 02:50:42,194", "levelname": "INFO", "filename": "Automate.py", "lineno": 166, "funcName": "find_metrc_order", "message": "Template loaded. Begin matching..."}
+{"asctime": "2022-04-09 02:51:57,234", "levelname": "INFO", "filename": "Automate.py", "lineno": 759, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-04-09 02:51:57,236", "levelname": "INFO", "filename": "Automate.py", "lineno": 767, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-04-09 02:51:59,824", "levelname": "INFO", "filename": "Automate.py", "lineno": 769, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-04-09 02:52:09,277", "levelname": "INFO", "filename": "Automate.py", "lineno": 812, "funcName": "main", "message": "Working with date 04-09-2022"}
+{"asctime": "2022-04-09 02:52:09,278", "levelname": "INFO", "filename": "Automate.py", "lineno": 813, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-04-09 02:52:44,866", "levelname": "INFO", "filename": "Automate.py", "lineno": 831, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
+{"asctime": "2022-04-09 02:52:46,565", "levelname": "INFO", "filename": "Automate.py", "lineno": 833, "funcName": "main", "message": "Getting driver info from Nabis API..."}
+{"asctime": "2022-04-09 02:52:48,380", "levelname": "INFO", "filename": "Automate.py", "lineno": 836, "funcName": "main", "message": "Nbr of shipments found: 239"}
+{"asctime": "2022-04-09 02:52:48,409", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 850, "funcName": "main", "message": "Order 154584 is not a duplicate"}
+{"asctime": "2022-04-09 02:52:49,140", "levelname": "INFO", "filename": "Automate.py", "lineno": 861, "funcName": "main", "message": "Couldnt find metrc template for order: 154584, shipment: 177530"}
+{"asctime": "2022-04-09 02:52:49,165", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 850, "funcName": "main", "message": "Order 154579 is not a duplicate"}
+{"asctime": "2022-04-09 02:52:49,845", "levelname": "INFO", "filename": "Automate.py", "lineno": 889, "funcName": "main", "message": "##------working with order: 154579, shipment 177522------##"}
+{"asctime": "2022-04-09 02:52:54,010", "levelname": "INFO", "filename": "Automate.py", "lineno": 118, "funcName": "find_metrc_order", "message": "Metrc search result for order: 154579 found!"}
+{"asctime": "2022-04-09 02:52:54,598", "levelname": "INFO", "filename": "Automate.py", "lineno": 132, "funcName": "find_metrc_order", "message": "Clicked on 'Use template' (Exited previous while loop!). Waiting for template"}
+{"asctime": "2022-04-09 02:54:22,995", "levelname": "INFO", "filename": "Automate.py", "lineno": 166, "funcName": "find_metrc_order", "message": "Template loaded. Begin matching..."}
+{"asctime": "2022-04-09 02:55:34,436", "levelname": "INFO", "filename": "Automate.py", "lineno": 761, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-04-09 02:55:34,438", "levelname": "INFO", "filename": "Automate.py", "lineno": 769, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-04-09 02:55:37,308", "levelname": "INFO", "filename": "Automate.py", "lineno": 771, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-04-09 02:55:48,834", "levelname": "INFO", "filename": "Automate.py", "lineno": 814, "funcName": "main", "message": "Working with date 04-09-2022"}
+{"asctime": "2022-04-09 02:55:48,835", "levelname": "INFO", "filename": "Automate.py", "lineno": 815, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-04-09 02:56:20,981", "levelname": "INFO", "filename": "Automate.py", "lineno": 833, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
+{"asctime": "2022-04-09 02:56:22,348", "levelname": "INFO", "filename": "Automate.py", "lineno": 835, "funcName": "main", "message": "Getting driver info from Nabis API..."}
+{"asctime": "2022-04-09 02:56:23,639", "levelname": "INFO", "filename": "Automate.py", "lineno": 838, "funcName": "main", "message": "Nbr of shipments found: 240"}
+{"asctime": "2022-04-09 02:56:23,708", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 852, "funcName": "main", "message": "Order 154584 is not a duplicate"}
+{"asctime": "2022-04-09 02:56:24,405", "levelname": "INFO", "filename": "Automate.py", "lineno": 863, "funcName": "main", "message": "Couldnt find metrc template for order: 154584, shipment: 177530"}
+{"asctime": "2022-04-09 02:56:24,427", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 852, "funcName": "main", "message": "Order 154579 is not a duplicate"}
+{"asctime": "2022-04-09 02:56:25,102", "levelname": "INFO", "filename": "Automate.py", "lineno": 891, "funcName": "main", "message": "##------working with order: 154579, shipment 177522------##"}
+{"asctime": "2022-04-09 02:56:29,114", "levelname": "INFO", "filename": "Automate.py", "lineno": 118, "funcName": "find_metrc_order", "message": "Metrc search result for order: 154579 found!"}
+{"asctime": "2022-04-09 02:56:29,692", "levelname": "INFO", "filename": "Automate.py", "lineno": 132, "funcName": "find_metrc_order", "message": "Clicked on 'Use template' (Exited previous while loop!). Waiting for template"}
+{"asctime": "2022-04-09 02:58:10,534", "levelname": "INFO", "filename": "Automate.py", "lineno": 166, "funcName": "find_metrc_order", "message": "Template loaded. Begin matching..."}
+{"asctime": "2022-04-09 03:00:16,975", "levelname": "INFO", "filename": "Automate.py", "lineno": 761, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-04-09 03:00:16,977", "levelname": "INFO", "filename": "Automate.py", "lineno": 769, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-04-09 03:00:19,682", "levelname": "INFO", "filename": "Automate.py", "lineno": 771, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-04-09 03:00:29,279", "levelname": "INFO", "filename": "Automate.py", "lineno": 814, "funcName": "main", "message": "Working with date 04-09-2022"}
+{"asctime": "2022-04-09 03:00:29,280", "levelname": "INFO", "filename": "Automate.py", "lineno": 815, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-04-09 03:01:16,053", "levelname": "INFO", "filename": "Automate.py", "lineno": 833, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
+{"asctime": "2022-04-09 03:01:17,607", "levelname": "INFO", "filename": "Automate.py", "lineno": 835, "funcName": "main", "message": "Getting driver info from Nabis API..."}
+{"asctime": "2022-04-09 03:01:19,302", "levelname": "INFO", "filename": "Automate.py", "lineno": 838, "funcName": "main", "message": "Nbr of shipments found: 241"}
+{"asctime": "2022-04-09 03:01:19,335", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 852, "funcName": "main", "message": "Order 154584 is not a duplicate"}
+{"asctime": "2022-04-09 03:01:20,016", "levelname": "INFO", "filename": "Automate.py", "lineno": 863, "funcName": "main", "message": "Couldnt find metrc template for order: 154584, shipment: 177530"}
+{"asctime": "2022-04-09 03:01:20,040", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 852, "funcName": "main", "message": "Order 154579 is not a duplicate"}
+{"asctime": "2022-04-09 03:01:20,721", "levelname": "INFO", "filename": "Automate.py", "lineno": 891, "funcName": "main", "message": "##------working with order: 154579, shipment 177522------##"}
+{"asctime": "2022-04-09 03:01:24,995", "levelname": "INFO", "filename": "Automate.py", "lineno": 118, "funcName": "find_metrc_order", "message": "Metrc search result for order: 154579 found!"}
+{"asctime": "2022-04-09 03:01:25,565", "levelname": "INFO", "filename": "Automate.py", "lineno": 132, "funcName": "find_metrc_order", "message": "Clicked on 'Use template' (Exited previous while loop!). Waiting for template"}
+{"asctime": "2022-04-09 03:02:53,726", "levelname": "INFO", "filename": "Automate.py", "lineno": 166, "funcName": "find_metrc_order", "message": "Template loaded. Begin matching..."}
+{"asctime": "2022-04-09 03:08:31,856", "levelname": "INFO", "filename": "Automate.py", "lineno": 768, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-04-09 03:08:31,858", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-04-09 03:08:37,349", "levelname": "INFO", "filename": "Automate.py", "lineno": 778, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-04-09 03:08:47,407", "levelname": "INFO", "filename": "Automate.py", "lineno": 821, "funcName": "main", "message": "Working with date 04-09-2022"}
+{"asctime": "2022-04-09 03:08:47,408", "levelname": "INFO", "filename": "Automate.py", "lineno": 822, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-04-09 03:09:19,196", "levelname": "INFO", "filename": "Automate.py", "lineno": 840, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
+{"asctime": "2022-04-09 03:09:20,499", "levelname": "INFO", "filename": "Automate.py", "lineno": 842, "funcName": "main", "message": "Getting driver info from Nabis API..."}
+{"asctime": "2022-04-09 03:09:21,810", "levelname": "INFO", "filename": "Automate.py", "lineno": 845, "funcName": "main", "message": "Nbr of shipments found: 239"}
+{"asctime": "2022-04-09 03:09:21,841", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 859, "funcName": "main", "message": "Order 154584 is not a duplicate"}
+{"asctime": "2022-04-09 03:09:22,533", "levelname": "INFO", "filename": "Automate.py", "lineno": 870, "funcName": "main", "message": "Couldnt find metrc template for order: 154584, shipment: 177530"}
+{"asctime": "2022-04-09 03:09:22,596", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 859, "funcName": "main", "message": "Order 154579 is not a duplicate"}
+{"asctime": "2022-04-09 03:09:23,318", "levelname": "INFO", "filename": "Automate.py", "lineno": 898, "funcName": "main", "message": "##------working with order: 154579, shipment 177522------##"}
+{"asctime": "2022-04-09 03:09:27,759", "levelname": "INFO", "filename": "Automate.py", "lineno": 118, "funcName": "find_metrc_order", "message": "Metrc search result for order: 154579 found!"}
+{"asctime": "2022-04-09 03:09:28,405", "levelname": "INFO", "filename": "Automate.py", "lineno": 132, "funcName": "find_metrc_order", "message": "Clicked on 'Use template' (Exited previous while loop!). Waiting for template"}
+{"asctime": "2022-04-09 03:10:53,454", "levelname": "INFO", "filename": "Automate.py", "lineno": 166, "funcName": "find_metrc_order", "message": "Template loaded. Begin matching..."}
+{"asctime": "2022-04-09 03:11:00,324", "levelname": "INFO", "filename": "Automate.py", "lineno": 430, "funcName": "proc_template", "message": "TransportDetailKey 'driver' matching result: Match"}
+{"asctime": "2022-04-09 03:11:00,346", "levelname": "INFO", "filename": "Automate.py", "lineno": 430, "funcName": "proc_template", "message": "TransportDetailKey 'driver_id' matching result: Match"}
+{"asctime": "2022-04-09 03:11:00,368", "levelname": "INFO", "filename": "Automate.py", "lineno": 430, "funcName": "proc_template", "message": "TransportDetailKey 'vehicle_make' matching result: Match"}
+{"asctime": "2022-04-09 03:11:00,389", "levelname": "INFO", "filename": "Automate.py", "lineno": 430, "funcName": "proc_template", "message": "TransportDetailKey 'vehicle_plate' matching result: Match"}
+{"asctime": "2022-04-09 03:11:00,412", "levelname": "INFO", "filename": "Automate.py", "lineno": 521, "funcName": "proc_template", "message": "Number of packages is the same!!!"}
+{"asctime": "2022-04-09 03:11:01,528", "levelname": "INFO", "filename": "Automate.py", "lineno": 601, "funcName": "proc_template", "message": "Quantities good for 1A4060300022B79000303835;"}
+{"asctime": "2022-04-09 03:11:01,529", "levelname": "INFO", "filename": "Automate.py", "lineno": 628, "funcName": "proc_template", "message": "Price missing on metrc side but template type is Transfer"}
+{"asctime": "2022-04-09 03:11:03,291", "levelname": "INFO", "filename": "Automate.py", "lineno": 658, "funcName": "proc_template", "message": "Log for order: 154579:"}
+{"asctime": "2022-04-09 03:11:03,292", "levelname": "INFO", "filename": "Automate.py", "lineno": 659, "funcName": "proc_template", "message": "{\n  \"IncorrectVehicleModel\": \"Vehicle model incorrect; Metrc: T1 Cascadia vs nabis: T1\"\n}"}
+{"asctime": "2022-04-09 03:11:40,457", "levelname": "INFO", "filename": "Automate.py", "lineno": 931, "funcName": "main", "message": "Updating the ghseet logger.."}
+{"asctime": "2022-04-09 03:11:46,862", "levelname": "INFO", "filename": "Automate.py", "lineno": 934, "funcName": "main", "message": "Order 154579 Gsheet updating done."}
+{"asctime": "2022-04-09 03:11:46,863", "levelname": "INFO", "filename": "Automate.py", "lineno": 936, "funcName": "main", "message": "Moving to next order!"}
+{"asctime": "2022-04-09 03:11:46,921", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 859, "funcName": "main", "message": "Order 154577 is not a duplicate"}
+{"asctime": "2022-04-09 03:11:47,628", "levelname": "INFO", "filename": "Automate.py", "lineno": 870, "funcName": "main", "message": "Couldnt find metrc template for order: 154577, shipment: 177519"}
+{"asctime": "2022-04-09 03:11:47,668", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 859, "funcName": "main", "message": "Order 154572 is not a duplicate"}
+{"asctime": "2022-04-09 03:14:54,477", "levelname": "INFO", "filename": "Automate.py", "lineno": 768, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-04-09 03:14:54,516", "levelname": "INFO", "filename": "Automate.py", "lineno": 776, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-04-09 03:14:58,785", "levelname": "INFO", "filename": "Automate.py", "lineno": 778, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-04-09 03:15:09,335", "levelname": "INFO", "filename": "Automate.py", "lineno": 821, "funcName": "main", "message": "Working with date 04-09-2022"}
+{"asctime": "2022-04-09 03:15:09,336", "levelname": "INFO", "filename": "Automate.py", "lineno": 822, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-04-09 03:15:48,835", "levelname": "INFO", "filename": "Automate.py", "lineno": 840, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
+{"asctime": "2022-04-09 03:15:50,122", "levelname": "INFO", "filename": "Automate.py", "lineno": 842, "funcName": "main", "message": "Getting driver info from Nabis API..."}
+{"asctime": "2022-04-09 03:15:51,434", "levelname": "INFO", "filename": "Automate.py", "lineno": 845, "funcName": "main", "message": "Nbr of shipments found: 243"}
+{"asctime": "2022-04-09 03:15:51,476", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 859, "funcName": "main", "message": "Order 154686 is not a duplicate"}
+{"asctime": "2022-04-09 03:15:52,172", "levelname": "INFO", "filename": "Automate.py", "lineno": 898, "funcName": "main", "message": "##------working with order: 154686, shipment 177694------##"}
+{"asctime": "2022-04-09 03:15:56,326", "levelname": "INFO", "filename": "Automate.py", "lineno": 118, "funcName": "find_metrc_order", "message": "Metrc search result for order: 154686 found!"}
+{"asctime": "2022-04-09 03:15:56,917", "levelname": "INFO", "filename": "Automate.py", "lineno": 132, "funcName": "find_metrc_order", "message": "Clicked on 'Use template' (Exited previous while loop!). Waiting for template"}
+{"asctime": "2022-04-09 03:17:23,130", "levelname": "INFO", "filename": "Automate.py", "lineno": 166, "funcName": "find_metrc_order", "message": "Template loaded. Begin matching..."}
+{"asctime": "2022-04-09 03:17:29,704", "levelname": "INFO", "filename": "Automate.py", "lineno": 430, "funcName": "proc_template", "message": "TransportDetailKey 'driver' matching result: Match"}
+{"asctime": "2022-04-09 03:17:29,728", "levelname": "INFO", "filename": "Automate.py", "lineno": 430, "funcName": "proc_template", "message": "TransportDetailKey 'driver_id' matching result: Match"}
+{"asctime": "2022-04-09 03:17:29,752", "levelname": "INFO", "filename": "Automate.py", "lineno": 430, "funcName": "proc_template", "message": "TransportDetailKey 'vehicle_make' matching result: Match"}
+{"asctime": "2022-04-09 03:17:29,777", "levelname": "INFO", "filename": "Automate.py", "lineno": 430, "funcName": "proc_template", "message": "TransportDetailKey 'vehicle_plate' matching result: Match"}
+{"asctime": "2022-04-09 03:23:54,078", "levelname": "INFO", "filename": "Automate.py", "lineno": 770, "funcName": "main", "message": "##----------SESSION STARTED----------##"}
+{"asctime": "2022-04-09 03:23:54,079", "levelname": "INFO", "filename": "Automate.py", "lineno": 778, "funcName": "main", "message": "Getting routes from gsheet..."}
+{"asctime": "2022-04-09 03:23:58,766", "levelname": "INFO", "filename": "Automate.py", "lineno": 780, "funcName": "main", "message": "Initializing Chrome WebDriver..."}
+{"asctime": "2022-04-09 03:24:09,179", "levelname": "INFO", "filename": "Automate.py", "lineno": 823, "funcName": "main", "message": "Working with date 04-09-2022"}
+{"asctime": "2022-04-09 03:24:09,180", "levelname": "INFO", "filename": "Automate.py", "lineno": 824, "funcName": "main", "message": "Getting shipments from Nabis..."}
+{"asctime": "2022-04-09 03:24:39,437", "levelname": "INFO", "filename": "Automate.py", "lineno": 842, "funcName": "main", "message": "Getting vehicle info from Nabis API..."}
+{"asctime": "2022-04-09 03:24:40,792", "levelname": "INFO", "filename": "Automate.py", "lineno": 844, "funcName": "main", "message": "Getting driver info from Nabis API..."}
+{"asctime": "2022-04-09 03:24:42,125", "levelname": "INFO", "filename": "Automate.py", "lineno": 847, "funcName": "main", "message": "Nbr of shipments found: 245"}
+{"asctime": "2022-04-09 03:24:42,167", "levelname": "DEBUG", "filename": "Automate.py", "lineno": 861, "funcName": "main", "message": "Order 154686 is not a duplicate"}
+{"asctime": "2022-04-09 03:24:42,842", "levelname": "INFO", "filename": "Automate.py", "lineno": 900, "funcName": "main", "message": "##------working with order: 154686, shipment 177694------##"}
+{"asctime": "2022-04-09 03:24:47,005", "levelname": "INFO", "filename": "Automate.py", "lineno": 118, "funcName": "find_metrc_order", "message": "Metrc search result for order: 154686 found!"}
+{"asctime": "2022-04-09 03:24:47,579", "levelname": "INFO", "filename": "Automate.py", "lineno": 132, "funcName": "find_metrc_order", "message": "Clicked on 'Use template' (Exited previous while loop!). Waiting for template"}
+{"asctime": "2022-04-09 03:26:13,220", "levelname": "INFO", "filename": "Automate.py", "lineno": 166, "funcName": "find_metrc_order", "message": "Template loaded. Begin matching..."}
+{"asctime": "2022-04-09 03:26:19,914", "levelname": "INFO", "filename": "Automate.py", "lineno": 432, "funcName": "proc_template", "message": "TransportDetailKey 'driver' matching result: Match"}
+{"asctime": "2022-04-09 03:26:19,938", "levelname": "INFO", "filename": "Automate.py", "lineno": 432, "funcName": "proc_template", "message": "TransportDetailKey 'driver_id' matching result: Match"}
+{"asctime": "2022-04-09 03:26:19,960", "levelname": "INFO", "filename": "Automate.py", "lineno": 432, "funcName": "proc_template", "message": "TransportDetailKey 'vehicle_make' matching result: Match"}
+{"asctime": "2022-04-09 03:26:19,981", "levelname": "INFO", "filename": "Automate.py", "lineno": 432, "funcName": "proc_template", "message": "TransportDetailKey 'vehicle_model' matching result: Match"}
+{"asctime": "2022-04-09 03:26:20,002", "levelname": "INFO", "filename": "Automate.py", "lineno": 432, "funcName": "proc_template", "message": "TransportDetailKey 'vehicle_plate' matching result: Match"}
+{"asctime": "2022-04-09 03:26:20,004", "levelname": "INFO", "filename": "Automate.py", "lineno": 523, "funcName": "proc_template", "message": "Number of packages is the same!!!"}
+{"asctime": "2022-04-09 03:26:20,005", "levelname": "INFO", "filename": "Automate.py", "lineno": 603, "funcName": "proc_template", "message": "Quantities good for 1A4060300022B79000300278;"}
+{"asctime": "2022-04-09 03:26:20,005", "levelname": "INFO", "filename": "Automate.py", "lineno": 633, "funcName": "proc_template", "message": "Prices good for 1A4060300022B79000300278;"}

@@ -790,32 +790,46 @@ def proc_template(
                 transport_detail_flags,
                 logger,
             )
-            log_dict.update({"OrderNote": finish_status["order_note"]})
-
-            if finish_status["pdf_response"] == False:
+            if not finish_status:
                 log_dict.update(
-                    {"ALL_GOOD": "FALSE - Template regsitered. PDF not updated"}
+                    {
+                        "ALL_GOOD": f"FALSE - Couldnt find recently created manifest for id {nabis_order_id}"
+                    }
+                )
+                send_slack_msg(
+                    f"\t ❌ Order: {nabis_order_id} registered. Couldnt find recently created manifest. Do it manually."
                 )
                 counters["not_done"] += 1
-                send_slack_msg(
-                    f"\t ❌ Order: {nabis_order_id} registered. Failure at manifest pdf upload. Do it manually. (Manifest nbr: {finish_status['manifest_id']})"
-                )
-
-            elif finish_status["id_response"] == False:
-                log_dict.update(
-                    {"ALL_GOOD": "FALSE - Template regsitered. Manifest ID not updated"}
-                )
-                counters["not_done"] += 1
-                send_slack_msg(
-                    f"\t ❌ Order: {nabis_order_id} registered. Failure at manifest id upload. Do it manually. (Manifest nbr: {finish_status['manifest_id']})"
-                )
             else:
-                log_dict.update({"ALL_GOOD": "TRUE"})
-                log_dict.update(transport_details_log)
-                counters["done"] += 1
 
+                log_dict.update({"OrderNote": finish_status["order_note"]})
+
+                if finish_status["pdf_response"] == False:
+                    log_dict.update(
+                        {"ALL_GOOD": "FALSE - Template regsitered. PDF not updated"}
+                    )
+                    counters["not_done"] += 1
+                    send_slack_msg(
+                        f"\t ❌ Order: {nabis_order_id} registered. Failure at manifest pdf upload. Do it manually. (Manifest nbr: {finish_status['manifest_id']})"
+                    )
+
+                elif finish_status["id_response"] == False:
+                    log_dict.update(
+                        {
+                            "ALL_GOOD": "FALSE - Template regsitered. Manifest ID not updated"
+                        }
+                    )
+                    counters["not_done"] += 1
+                    send_slack_msg(
+                        f"\t ❌ Order: {nabis_order_id} registered. Failure at manifest id upload. Do it manually. (Manifest nbr: {finish_status['manifest_id']})"
+                    )
+                else:
+                    log_dict.update({"ALL_GOOD": "TRUE"})
+                    log_dict.update(transport_details_log)
+                    counters["done"] += 1
+
+                log_dict.update({"ManifestId": finish_status["manifest_id"]})
             log_dict.update({"InternalTransfer": internal_transfer})
-            log_dict.update({"ManifestId": finish_status["manifest_id"]})
 
     log_dict.update({"Order": str(nabis_order_id)})
     log_dict.update({"Shipment": str(shipment)})
@@ -849,6 +863,11 @@ def main():
     global logger
     global counters
     import operator
+
+    def threadFunc():
+        for i in range(5):
+            print("Hello from new Thread ")
+            time.sleep(1)
 
     gc = gspread.service_account(filename="./emailsending-325211-e5456e88f282.json")
     try:

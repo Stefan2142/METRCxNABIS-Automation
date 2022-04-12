@@ -513,9 +513,13 @@ def proc_template(
     # this is the same.
 
     if any([None == x for x in list(nabis_packages.keys())]):
-        log_dict.update(
-            {"MissingChildPackageTag": "One line item doesnt have metrc tag"}
-        )
+        missing_child_package = {"MissingChildPackageTag": "One line item doesnt have metrc tag"}
+    else:
+        missing_child_package = {"MissingChildPackageTag": ""}
+        
+        # log_dict.update(
+        #     {"MissingChildPackageTag": "One line item doesnt have metrc tag"}
+        # )
 
     metrc_only_tags = {}
     for x in metrc_packages:
@@ -756,6 +760,7 @@ def proc_template(
             metrc_transfer_type.strip() != "Wholesale Transfer"
         ):
             logger.info(f"Log for order: {nabis_order_id}:")
+            log_dict.update(missing_child_package)
             log_dict.update({"PricesEmpty": "TRUE"})
             log_dict.update({"InternalTransfer": internal_transfer})
             log_dict.update({"TransferType": metrc_transfer_type})
@@ -782,6 +787,7 @@ def proc_template(
                 metrc_transfer_type = f"{metrc_transfer_type}_x_Transfer"
 
             log_dict.update({"TransferType": metrc_transfer_type})
+            log_dict.update(missing_child_package)
 
             finish_status = finish_template_get_manifest(
                 driver,
@@ -952,7 +958,7 @@ def main():
 
         # str([[x['orderNumber'],x['shipmentNumber']] for x in nabis_orders])
         ###        --          ###
-        nabis_orders.reverse()
+        # nabis_orders.reverse()
 
         nabis_orders.sort(key=operator.itemgetter("orderNumber"), reverse=True)
         for nabis_order in nabis_orders:

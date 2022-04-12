@@ -67,6 +67,9 @@ def find_metrc_order(
     try:
         driver.find_element(by=By.CLASS_NAME, value="k-header-column-menu").click()
     except selenium.common.exceptions.ElementClickInterceptedException:
+        driver.get(
+            f"https://ca.metrc.com/industry/{WAREHOUSE['license']}/transfers/licensed/templates"
+        )
         time.sleep(0.3)
         wait.until(
             EC.invisibility_of_element_located((By.CLASS_NAME, "k-loading-text"))
@@ -585,6 +588,14 @@ def proc_template(
         ).send_keys(
             dt.datetime.strftime(dt.datetime.now() + dt.timedelta(days=1), "%m/%d/%Y")
         )
+
+        # When pasting dates, a calendar pop-up will appear, click
+        # on other element so the calendar pop-up will disappear
+        driver.find_element(
+            by=By.NAME, value="model[0][Destinations][0][PlannedRoute]"
+        ).click()
+        time.sleep(0.3)
+
         # When pasting dates, time resets, bring it back
         metrc_est_dept_time_el = driver.find_element(
             By.XPATH, value='//div[@ng-model="destination.EstimatedDepartureDateTime"]'
@@ -624,6 +635,12 @@ def proc_template(
         ).send_keys(
             dt.datetime.strftime(dt.datetime.now() + dt.timedelta(days=1), "%m/%d/%Y")
         )
+        # When pasting dates, a calendar pop-up will appear, click
+        # on other element so the calendar pop-up will disappear
+        driver.find_element(
+            by=By.NAME, value="model[0][Destinations][0][PlannedRoute]"
+        ).click()
+        time.sleep(0.3)
         # When pasting dates, time resets, bring it back
         metrc_est_arr_time_el = driver.find_element(
             By.XPATH, value='//div[@ng-model="destination.EstimatedArrivalDateTime"]'
@@ -845,7 +862,7 @@ def proc_template(
     log_dict.update({"Order": str(nabis_order_id)})
     log_dict.update({"Shipment": str(shipment)})
     log_dict.update({"PkgNbr": len(nabis_packages)})
-    log_dict.update({"TransportMatchAction": temp_check_result})
+    # log_dict.update({"TransportMatchAction": temp_check_result})
     log_dict.update(
         {
             "Date": dt.datetime.strftime(

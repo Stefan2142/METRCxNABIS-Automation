@@ -120,7 +120,7 @@ def find_metrc_order(
         bool = True
         while bool:
             try:
-                time.sleep(0.5)
+                time.sleep(0.7)
                 driver.find_element(
                     by=By.CLASS_NAME,
                     value="k-button.k-button-icontext.grid-row-button.k-grid-Use",
@@ -303,8 +303,10 @@ def proc_template(
         if (
             str(matching_attrs[key]["nabis"]["data"]).lower().strip()
             == str(matching_attrs[key]["metrc"]["data"]).lower().strip()
-        ) or (str(matching_attrs[key]["nabis"]["data"]).lower().strip()
-            in str(matching_attrs[key]["metrc"]["data"]).lower().strip()):
+        ) or (
+            str(matching_attrs[key]["nabis"]["data"]).lower().strip()
+            in str(matching_attrs[key]["metrc"]["data"]).lower().strip()
+        ):
             return "Match"
         else:
             # Ovde pravi log update-ovati
@@ -373,6 +375,24 @@ def proc_template(
                 )
             }
         )
+    # Get the time from the ajax json response
+    # For both, departure and arrival
+
+    # Departure time
+    metrc_est_dept_time = json_dict["Details"][0]["Destinations"][0][
+        "EstimatedDepartureDateTime"
+    ]
+    metrc_est_dept_time = dt.datetime.strptime(
+        metrc_est_dept_time.split("T")[-1], "%H:%M:%S.%f"
+    )
+
+    # Arrival time
+    metrc_est_arr_time = json_dict["Details"][0]["Destinations"][0][
+        "EstimatedArrivalDateTime"
+    ]
+    metrc_est_arr_time = dt.datetime.strptime(
+        metrc_est_arr_time.split("T")[-1], "%H:%M:%S.%f"
+    )
 
     # Free memory
     del json_dict
@@ -385,14 +405,18 @@ def proc_template(
     }
 
     transport_details = ["driver", "driver_id", "vehicle_make", "vehicle_plate"]
-    transport_details = {'driver':
-                        {'driver':['firstName', 'lastName'], 
-                         'driver_id':['driversLicense']}, 
-                     'vehicle':
-                         {'vehicle_make':['make'], 
-                          'vehicle_model':['name'],
-                          'vehicle_plate':['licensePlate']}}
-    
+    transport_details = {
+        "driver": {
+            "driver": ["firstName", "lastName"],
+            "driver_id": ["driversLicense"],
+        },
+        "vehicle": {
+            "vehicle_make": ["make"],
+            "vehicle_model": ["name"],
+            "vehicle_plate": ["licensePlate"],
+        },
+    }
+
     transport_detail_flags = {"driver": "", "vehicle": ""}
 
     for transport_detail in transport_details.keys():
@@ -542,7 +566,8 @@ def proc_template(
     # RULE: If its internal transfer and all prices are none, change
     # dates
     if (all_metrc_prices_none == True) and (internal_transfer == True):
-        # EST Departure time
+
+        # EST Departure date
         driver.find_element(
             By.XPATH, value='//*[@ng-model="destination.EstimatedDepartureDateTime"]'
         ).clear()
@@ -551,7 +576,37 @@ def proc_template(
         ).send_keys(
             dt.datetime.strftime(dt.datetime.now() + dt.timedelta(days=1), "%m/%d/%Y")
         )
-        # EST Arrival time
+        # When pasting dates, time resets, bring it back
+        metrc_est_dept_time_el = driver.find_element(
+            By.XPATH, value='//div[@ng-model="destination.EstimatedDepartureDateTime"]'
+        )
+        hours = metrc_est_dept_time.hour
+        if metrc_est_dept_time.hour > 12:
+            # Switch AM/PM
+            if (
+                metrc_est_dept_time_el.find_element(
+                    by=By.CLASS_NAME, value="btn.text-center.ng-binding"
+                ).text
+                != "PM"
+            ):
+                metrc_est_dept_time_el.find_element(
+                    by=By.CLASS_NAME, value="btn.text-center.ng-binding"
+                ).click()
+                hours = hours - 12
+        metrc_est_dept_time_el.find_element(
+            by=By.XPATH, value='//input[@ng-model="hours"]'
+        ).clear()
+        metrc_est_dept_time_el.find_element(
+            by=By.XPATH, value='//input[@ng-model="hours"]'
+        ).send_keys(hours)
+        metrc_est_dept_time_el.find_element(
+            by=By.XPATH, value='//input[@ng-model="minutes"]'
+        ).clear()
+        metrc_est_dept_time_el.find_element(
+            by=By.XPATH, value='//input[@ng-model="minutes"]'
+        ).send_keys(metrc_est_dept_time.minute)
+
+        # EST Arrival date
         driver.find_element(
             By.XPATH, value='//*[@ng-model="destination.EstimatedArrivalDateTime"]'
         ).clear()
@@ -560,6 +615,35 @@ def proc_template(
         ).send_keys(
             dt.datetime.strftime(dt.datetime.now() + dt.timedelta(days=1), "%m/%d/%Y")
         )
+        # When pasting dates, time resets, bring it back
+        metrc_est_arr_time_el = driver.find_element(
+            By.XPATH, value='//div[@ng-model="destination.EstimatedArrivalDateTime"]'
+        )
+        hours = metrc_est_arr_time.hour
+        if hours > 12:
+            # Switch AM/PM
+            if (
+                metrc_est_arr_time_el.find_element(
+                    by=By.CLASS_NAME, value="btn.text-center.ng-binding"
+                ).text
+                != "PM"
+            ):
+                metrc_est_arr_time_el.find_element(
+                    by=By.CLASS_NAME, value="btn.text-center.ng-binding"
+                ).click()
+                hours = hours - 12
+        metrc_est_arr_time_el.find_element(
+            by=By.XPATH, value='.//input[@ng-model="hours"]'
+        ).clear()
+        metrc_est_arr_time_el.find_element(
+            by=By.XPATH, value='.//input[@ng-model="hours"]'
+        ).send_keys(hours)
+        metrc_est_arr_time_el.find_element(
+            by=By.XPATH, value='.//input[@ng-model="minutes"]'
+        ).clear()
+        metrc_est_arr_time_el.find_element(
+            by=By.XPATH, value='.//input[@ng-model="minutes"]'
+        ).send_keys(metrc_est_arr_time.minute)
 
     for i in nabis_packages.keys():
         if i != "SKIP":
@@ -664,6 +748,7 @@ def proc_template(
         log_dict.update({"ALL_GOOD": "FALSE"})
         log_dict.update({"ManifestId": ""})
         send_slack_msg(f"\t ❌ Order: {nabis_order_id} failed. Check gsheet log.")
+        counters["not_done"] += 1
 
         # finish_template_get_manifest(driver, WAREHOUSE['license'], nabis_order)
     else:

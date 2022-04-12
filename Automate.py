@@ -400,12 +400,6 @@ def proc_template(
     matching_attrs["est_departure_date"]["metrc"]["data"].date() - dt.timedelta(days=1)
 
     transport_details = {
-        "driver": {"name": ["firstName", "lastName"], "id": ["driversLicense"]},
-        "vehicle": {"make": ["make"], "plate": ["licensePlate"]},
-    }
-
-    transport_details = ["driver", "driver_id", "vehicle_make", "vehicle_plate"]
-    transport_details = {
         "driver": {
             "driver": ["firstName", "lastName"],
             "driver_id": ["driversLicense"],
@@ -420,6 +414,15 @@ def proc_template(
     transport_detail_flags = {"driver": "", "vehicle": ""}
 
     for transport_detail in transport_details.keys():
+        if nabis_order[transport_detail] == None:
+            transport_detail_flags[
+                [
+                    x
+                    for x in list(transport_detail_flags.keys())
+                    if x == transport_detail
+                ][0]
+            ] = "FLAG"
+            continue
         for transport_detail_key in transport_details[transport_detail].keys():
             matching_attrs[transport_detail_key]["metrc"]["data"] = driver.find_element(
                 by=By.XPATH,
@@ -513,10 +516,12 @@ def proc_template(
     # this is the same.
 
     if any([None == x for x in list(nabis_packages.keys())]):
-        missing_child_package = {"MissingChildPackageTag": "One line item doesnt have metrc tag"}
+        missing_child_package = {
+            "MissingChildPackageTag": "One line item doesnt have metrc tag"
+        }
     else:
         missing_child_package = {"MissingChildPackageTag": ""}
-        
+
         # log_dict.update(
         #     {"MissingChildPackageTag": "One line item doesnt have metrc tag"}
         # )

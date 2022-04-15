@@ -320,6 +320,7 @@ def thread_fnc(gc):
                 rows_count = sheet_df.shape[0]
         else:
             time.sleep(60)
+            print(f"Tick..{time.time() - start_time}")
 
 
 def update_log_sheet(log_dict, gc):

@@ -529,10 +529,12 @@ def proc_template(
             log_dict = {
                 "MissingChildPackageTag": "Error: One line item doesnt have metrc tag"
             }
+            logger.debug("MissingChildPackageTag: Error - One line item doesnt have metrc tag")
         else:
             missing_child_package = {
                 "MissingChildPackageTag": "Warning: One line item doesnt have metrc tag"
             }
+            logger.debug("MissingChildPackageTag: Warning - One line item doesnt have metrc tag")
     else:
         missing_child_package = {"MissingChildPackageTag": ""}
 
@@ -883,7 +885,7 @@ def proc_template(
     log_dict.update({"Order": str(nabis_order_id)})
     log_dict.update({"Shipment": str(shipment)})
     log_dict.update({"PkgNbr": len(nabis_packages)})
-    log_dict.update({"Warehouse": WAREHOUSE})
+    log_dict.update({"Warehouse": WAREHOUSE["name"]})
     # log_dict.update({"TransportMatchAction": temp_check_result})
     log_dict.update(
         {
@@ -922,11 +924,9 @@ def main():
 
     gc = gspread.service_account(filename="./emailsending-325211-e5456e88f282.json")
 
-    # import threading
-    # proc = threading.Thread(target=thread_fnc, args=(gc,), daemon=True)
-    # proc.start()
-    # proc.terminate()
-    
+    import threading
+    proc = threading.Thread(target=thread_fnc, args=(gc,), daemon=True)
+    proc.start()
 
     def kill_thread(thread):
         """
@@ -942,6 +942,7 @@ def main():
 
     try:
         logger.info("##----------SESSION STARTED----------##")
+        
 
         # send_slack_msg(
         #     "#-----▶ {:^40s} ▶-----#".format(
@@ -1120,10 +1121,10 @@ def main():
             f"STATS FOR CURRENT SESSION: \nDone: {counters['done']}; Duplicates: {counters['duplicates']}; Template missing: {counters['template_missing']}; Not done: {counters['not_done']}"
         )
         send_slack_msg("#-----⏹ {:^40s} ⏹-----#".format(f"SESSION FINISHED"))
-        
-        
+        kill_thread(proc)
 
     except Exception as e:
+        kill_thread(proc)
         memory_dump()
         send_slack_msg(
             f"STATS FOR CURRENT SESSION: \nDone: {counters['done']}; Duplicates: {counters['duplicates']}; Template missing: {counters['template_missing']}; Not done: {counters['not_done']}"

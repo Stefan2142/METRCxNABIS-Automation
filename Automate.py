@@ -16,6 +16,7 @@ from api_calls import (
     get_drivers,
     get_vehicles,
     find_template,
+    get_metrc_order_and_all_metrc_resources,
 )
 
 from routines import (
@@ -31,9 +32,11 @@ from routines import (
     duplicate_check,
     send_slack_msg,
     memory_dump,
+    thread_fnc,
 )
 from creds import credentials, WAREHOUSE
 import gspread
+import ctypes
 
 counters = {"done": 0, "duplicates": 0, "template_missing": 0, "not_done": 0}
 
@@ -519,9 +522,17 @@ def proc_template(
     # this is the same.
 
     if any([None == x for x in list(nabis_packages.keys())]):
-        missing_child_package = {
-            "MissingChildPackageTag": "One line item doesnt have metrc tag"
-        }
+        pkg_data = get_metrc_order_and_all_metrc_resources(nabis_order["id"])
+        if len(
+            pkg_data[0]["data"]["viewer"]["getOnlyMetrcOrder"]["tagSequence"]
+        ) == len(pkg_data[0]["data"]["viewer"]["getOnlyMetrcOrder"]["lineItems"]):
+            log_dict = {
+                "MissingChildPackageTag": "Error: One line item doesnt have metrc tag"
+            }
+        else:
+            missing_child_package = {
+                "MissingChildPackageTag": "Warning: One line item doesnt have metrc tag"
+            }
     else:
         missing_child_package = {"MissingChildPackageTag": ""}
 
@@ -548,13 +559,13 @@ def proc_template(
     if len(nabis_packages) != len(metrc_only_tags):
         # SKIP tags are nc (non cannabis items)
         if "SKIP" not in nabis_packages.keys():
-
-            log_dict.update(
-                {
-                    "IncorrectPkgNbr": f"Mismatch of number of packages between metrc and nabis; Metrc: {len(metrc_only_tags)}, Nabis: {len(nabis_packages)}"
-                }
-            )
-            logger.warning("Number of packages not the same!!!")
+            if None not in nabis_packages.keys():
+                log_dict.update(
+                    {
+                        "IncorrectPkgNbr": f"Mismatch of number of packages between metrc and nabis; Metrc: {len(metrc_only_tags)}, Nabis: {len(nabis_packages)}"
+                    }
+                )
+                logger.warning("Number of packages not the same!!!")
     else:
         logger.info("Number of packages is the same!!!")
 
@@ -672,75 +683,78 @@ def proc_template(
         ).send_keys(metrc_est_arr_time.minute)
 
     for i in nabis_packages.keys():
-        if i != "SKIP":
-            if not metrc_only_tags.get(i):
-                # tag is missing
-                if "MissingPackageTag" not in log_dict:
-                    log_dict.update(
-                        {
-                            "MissingPackageTag": [
-                                f"Tag exists in nabis but not in metrc template. NabisTagId: '{i}'"
-                            ]
-                        }
-                    )
-                else:
-                    log_dict["MissingPackageTag"].extend(
-                        {
-                            "MissingPackageTag": [
-                                f"Tag exists in nabis but not in metrc template. NabisTagId: '{i}'"
-                            ]
-                        }
-                    )
-
-            else:
-                if nabis_packages[i]["quantity"] != metrc_only_tags[i]["quantity"]:
-                    if "WrongQuantity" not in log_dict:
+        if i == "SKIP":
+            if i != None:
+                if not metrc_only_tags.get(i):
+                    # tag is missing
+                    if "MissingPackageTag" not in log_dict:
                         log_dict.update(
                             {
-                                "WrongQuantity": [
-                                    f"Incorrect quantity; Metrc: {metrc_only_tags[i]['quantity']}, Nabis: {nabis_packages[i]['quantity']}"
+                                "MissingPackageTag": [
+                                    f"Tag exists in nabis but not in metrc template. NabisTagId: '{i}'"
                                 ]
                             }
                         )
                     else:
-                        log_dict["WrongQuantity"].extend(
-                            [
-                                f"Incorrect quantity; Metrc: {metrc_only_tags[i]['quantity']}, Nabis: {nabis_packages[i]['quantity']}"
-                            ]
+                        log_dict["MissingPackageTag"].extend(
+                            {
+                                "MissingPackageTag": [
+                                    f"Tag exists in nabis but not in metrc template. NabisTagId: '{i}'"
+                                ]
+                            }
                         )
 
                 else:
-                    logger.info(f"Quantities good for {i};")
-
-                ### AKO JE TRANSFER A NE WHOLESALE MANIFEST
-
-                if nabis_packages[i]["total"] != metrc_only_tags[i]["WholesalePrice"]:
-                    # if (metrc_transfer_type == 'Wholesale Transfer') and (all_metrc_prices_none == False):
-
-                    if (metrc_transfer_type != "Transfer") and (
-                        all_metrc_prices_none == False
-                    ):
-                        if "WrongPrice" not in log_dict:
+                    if nabis_packages[i]["quantity"] != metrc_only_tags[i]["quantity"]:
+                        if "WrongQuantity" not in log_dict:
                             log_dict.update(
                                 {
-                                    "WrongPrice": [
-                                        f"Incorrect price ({i}); Metrc: {metrc_only_tags[i]['WholesalePrice']}, Nabis: {nabis_packages[i]['total']}"
+                                    "WrongQuantity": [
+                                        f"Incorrect quantity; Metrc: {metrc_only_tags[i]['quantity']}, Nabis: {nabis_packages[i]['quantity']}"
                                     ]
                                 }
                             )
                         else:
-                            log_dict["WrongPrice"].extend(
+                            log_dict["WrongQuantity"].extend(
                                 [
-                                    f"Incorrect price ({i}); Metrc: {metrc_only_tags[i]['WholesalePrice']}, Nabis: {nabis_packages[i]['total']}"
+                                    f"Incorrect quantity; Metrc: {metrc_only_tags[i]['quantity']}, Nabis: {nabis_packages[i]['quantity']}"
                                 ]
                             )
 
                     else:
-                        logger.info(
-                            "Price missing on metrc side but template type is Transfer"
-                        )
-                else:
-                    logger.info(f"Prices good for {i};")
+                        logger.info(f"Quantities good for {i};")
+
+                    ### AKO JE TRANSFER A NE WHOLESALE MANIFEST
+
+                    if (
+                        nabis_packages[i]["total"]
+                        != metrc_only_tags[i]["WholesalePrice"]
+                    ):
+
+                        if (metrc_transfer_type != "Transfer") and (
+                            all_metrc_prices_none == False
+                        ):
+                            if "WrongPrice" not in log_dict:
+                                log_dict.update(
+                                    {
+                                        "WrongPrice": [
+                                            f"Incorrect price ({i}); Metrc: {metrc_only_tags[i]['WholesalePrice']}, Nabis: {nabis_packages[i]['total']}"
+                                        ]
+                                    }
+                                )
+                            else:
+                                log_dict["WrongPrice"].extend(
+                                    [
+                                        f"Incorrect price ({i}); Metrc: {metrc_only_tags[i]['WholesalePrice']}, Nabis: {nabis_packages[i]['total']}"
+                                    ]
+                                )
+
+                        else:
+                            logger.info(
+                                "Price missing on metrc side but template type is Transfer"
+                            )
+                    else:
+                        logger.info(f"Prices good for {i};")
         else:
             pass
 
@@ -765,6 +779,12 @@ def proc_template(
             nabis_order["shipment_template"].split(),
         )
     )[0]
+    logger.debug("Matching attrs:")
+    logger.debug(json.dumps(matching_attrs, indent=2, default=str))
+    logger.debug("Nabis packages:")
+    logger.debug(json.dumps(nabis_packages, indent=2, default=str))
+    logger.debug("Metrc packages:")
+    logger.debug(json.dumps(metrc_only_tags, indent=2, default=str))
 
     if log_dict:
         logger.info(f"Log for order: {nabis_order_id}:")
@@ -779,9 +799,10 @@ def proc_template(
         # finish_template_get_manifest(driver, WAREHOUSE['license'], nabis_order)
     else:
         if (empty_prices_checker(driver) == True) and (
-            metrc_transfer_type.strip() != "Wholesale Transfer"
+            metrc_transfer_type.strip() == "Wholesale Manifest"
         ):
             logger.info(f"Log for order: {nabis_order_id}:")
+            logger.info(json.dumps(log_dict, indent=2, default=str))
             log_dict.update(missing_child_package)
             log_dict.update({"PricesEmpty": "TRUE"})
             log_dict.update({"InternalTransfer": internal_transfer})
@@ -795,10 +816,10 @@ def proc_template(
                 f"---All checks good: {nabis_order_id} / ({shipment}) uploading pdf and id!---"
             )
             if (empty_prices_checker(driver) == True) and (
-                metrc_transfer_type.strip() == "Wholesale Transfer"
+                metrc_transfer_type.strip() == "Wholesale Manifest"
             ):
                 logger.info(
-                    "Template has empty prices and type Wholesale Transfer, changing to Transfer"
+                    "Template has empty prices and type Wholesale Manifest, changing to Transfer"
                 )
                 Select(
                     driver.find_element(
@@ -862,6 +883,7 @@ def proc_template(
     log_dict.update({"Order": str(nabis_order_id)})
     log_dict.update({"Shipment": str(shipment)})
     log_dict.update({"PkgNbr": len(nabis_packages)})
+    log_dict.update({"Warehouse": WAREHOUSE})
     # log_dict.update({"TransportMatchAction": temp_check_result})
     log_dict.update(
         {
@@ -880,9 +902,15 @@ def proc_template(
         }
     )
 
-    driver.get(
-        f"https://ca.metrc.com/industry/{WAREHOUSE['license']}/transfers/licensed/templates"
-    )
+    try:
+        driver.get(
+            f"https://ca.metrc.com/industry/{WAREHOUSE['license']}/transfers/licensed/templates"
+        )
+    except:
+        time.sleep(7)
+        driver.get(
+            f"https://ca.metrc.com/industry/{WAREHOUSE['license']}/transfers/licensed/templates"
+        )
     return log_dict
 
 
@@ -892,12 +920,26 @@ def main():
     global counters
     import operator
 
-    def threadFunc():
-        for i in range(5):
-            print("Hello from new Thread ")
-            time.sleep(1)
-
     gc = gspread.service_account(filename="./emailsending-325211-e5456e88f282.json")
+
+    # import threading
+    # proc = threading.Thread(target=thread_fnc, args=(gc,), daemon=True)
+    # proc.start()
+    # proc.terminate()
+    
+
+    def kill_thread(thread):
+        """
+        thread: a threading.Thread object
+        """
+        thread_id = thread.ident
+        res = ctypes.pythonapi.PyThreadState_SetAsyncExc(
+            thread_id, ctypes.py_object(SystemExit)
+        )
+        if res > 1:
+            ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, 0)
+            print("Exception raise failure")
+
     try:
         logger.info("##----------SESSION STARTED----------##")
 
@@ -1078,6 +1120,8 @@ def main():
             f"STATS FOR CURRENT SESSION: \nDone: {counters['done']}; Duplicates: {counters['duplicates']}; Template missing: {counters['template_missing']}; Not done: {counters['not_done']}"
         )
         send_slack_msg("#-----⏹ {:^40s} ⏹-----#".format(f"SESSION FINISHED"))
+        
+        
 
     except Exception as e:
         memory_dump()

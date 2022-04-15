@@ -57,8 +57,13 @@ def find_template(order_id, api_token, cookie, metrc_lic):
         response = requests.request("POST", url, headers=headers, data=payload)
     except:
         time.sleep(1)
-        response = requests.request("POST", url, headers=headers, data=payload)
+        try:
+            response = requests.request("POST", url, headers=headers, data=payload)
+        except:
+            time.sleep(5)
+            response = requests.request("POST", url, headers=headers, data=payload)
 
+    time.sleep(5)
     # print(response.text)
     return response.json()
 
@@ -219,6 +224,21 @@ def upload_manifest_pdf(transfer_id, pdf_fl):
         return response.json()
     except json.decoder.JSONDecodeError:
         return False
+
+
+def get_metrc_order_and_all_metrc_resources(order_id):
+    payload = json.dumps(
+        [
+            {
+                "operationName": "getMetrcOrderAndAllMetrcResources",
+                "variables": {"orderId": order_id},
+                "query": "query getMetrcOrderAndAllMetrcResources($orderId: ID!) {\n  viewer {\n    getOnlyMetrcOrder(orderId: $orderId) {\n      details\n      errors {\n        type\n        message\n        __typename\n      }\n      warnings {\n        type\n        message\n        __typename\n      }\n      licenseNumber\n      lineItems {\n        id\n        __typename\n      }\n      tagSequence\n      warehouseKey\n      __typename\n    }\n    getMetrcItems(orderId: $orderId)\n    __typename\n  }\n}\n",
+            }
+        ]
+    )
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+    return response.json()
 
 
 def get_order_data(order_number):

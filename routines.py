@@ -295,6 +295,33 @@ def duplicate_check(gc, order_id):
         return False
 
 
+def thread_fnc(gc):
+    try:
+        sh = gc.open_by_url(
+            "https://docs.google.com/spreadsheets/d/1LkP08iIUIZyRz-_C45AJ0FvRJuwGK_SzuZylfNMrAuE"
+        )
+    except:
+        time.sleep(110)
+        sh = gc.open_by_url(
+            "https://docs.google.com/spreadsheets/d/1LkP08iIUIZyRz-_C45AJ0FvRJuwGK_SzuZylfNMrAuE"
+        )
+
+    wks = sh.worksheet("Logs")
+    sheet_df = pd.DataFrame(wks.get_all_records())
+    start_time = time.time()
+    rows_count = sheet_df.shape[0]
+    while True:
+        if (time.time() - start_time) > 60:
+            start_time = time.time()
+            sheet_df = pd.DataFrame(wks.get_all_records())
+            if rows_count == sheet_df.shape[0]:
+                send_slack_msg("Same number of orders for the last 10 minutes")
+            else:
+                rows_count = sheet_df.shape[0]
+        else:
+            time.sleep(60)
+
+
 def update_log_sheet(log_dict, gc):
     # Update logging gsheet file
     try:
@@ -356,7 +383,11 @@ def finish_template_get_manifest(
     logger.info(f"[{nabis_order['id']}] Voiding completed.")
 
     logger.info("Opening outgoing transfers")
-    driver.get(f"https://ca.metrc.com/industry/{WAREHOUSE}/transfers/licensed")
+    try:
+        driver.get(f"https://ca.metrc.com/industry/{WAREHOUSE}/transfers/licensed")
+    except:
+        time.sleep(5)
+        driver.get(f"https://ca.metrc.com/industry/{WAREHOUSE}/transfers/licensed")
 
     driver.find_element_by_id("outgoing-tab").click()
     time.sleep(0.5)
@@ -438,7 +469,7 @@ def finish_template_get_manifest(
             order_notes = ""
             for k, v in transport_detail_flags.items():
                 if v == "FLAG":
-                    order_notes += f"TEMP {v};"
+                    order_notes += f"TEMP {k};"
             if order_notes != "":
                 logger.info(
                     f"[{nabis_order['id']}] Uploading order notes: {order_notes}"
@@ -453,7 +484,7 @@ def finish_template_get_manifest(
                 logger.error(
                     f'Error while uploading manifest pdf {transfer_id}, order: {nabis_order["id"]}'
                 )
-            if ("errors" in id_response[0]) or (id_response == False):
+            if ("errors" in id_response) or (id_response == False):
                 logger.error(
                     f'Error while uploading manifest id number {transfer_id}, order {nabis_order["id"]}'
                 )
@@ -474,7 +505,7 @@ def get_spreadsheet_routes(gc):
         "https://docs.google.com/spreadsheets/d/1gGctslxmXIO490qnKPN2SbWZV2ZLT7Z3zIpxQo19us8"
     )
 
-    known_sheets = ["LA routes", "OAK routes"]
+    known_sheets = ["LA routes", "OAK routes", "4Front routes"]
     routes = []
     for sheet in known_sheets:
         wks = sh.worksheet(sheet)

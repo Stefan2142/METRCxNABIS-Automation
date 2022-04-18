@@ -296,6 +296,7 @@ def duplicate_check(gc, order_id):
 
 
 def thread_fnc(gc):
+    # https://stackoverflow.com/questions/48745240/python-logging-in-multi-threads
     try:
         sh = gc.open_by_url(
             "https://docs.google.com/spreadsheets/d/1LkP08iIUIZyRz-_C45AJ0FvRJuwGK_SzuZylfNMrAuE"
@@ -311,7 +312,7 @@ def thread_fnc(gc):
     start_time = time.time()
     rows_count = sheet_df.shape[0]
     while True:
-        if (time.time() - start_time) > 60:
+        if (time.time() - start_time) > 600:
             start_time = time.time()
             sheet_df = pd.DataFrame(wks.get_all_records())
             if rows_count == sheet_df.shape[0]:
@@ -355,6 +356,12 @@ def finish_template_get_manifest(
 ):
 
     ### SUBMIT BUTTON
+    fl_name = str(dt.datetime.today()).replace(":", ".")
+    try:
+        driver.save_screenshot(f"./Logs/Template_{fl_name}.jpg")
+    except UnboundLocalError:
+        pass
+
     logger.info(f"[{nabis_order['id']}] Registering transfer...")
     driver.find_element(
         by=By.XPATH, value='//*[@id="addedit-transfer_form"]/div/button[1]'

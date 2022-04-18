@@ -2,6 +2,7 @@ import requests, json
 from creds import WAREHOUSE, bearer
 import time
 import copy
+from tenacity import retry, wait_fixed
 
 ORDERS = []
 DATE_FILTER = None
@@ -119,6 +120,7 @@ def get_vehicles():
     return response
 
 
+@retry(wait=wait_fixed(2))
 def upload_order_note(transfer_id, order_note):
 
     payload = json.dumps(
@@ -154,6 +156,7 @@ def upload_order_note(transfer_id, order_note):
         return False
 
 
+@retry(wait=wait_fixed(5))
 def upload_manifest_id(transfer_id, manifest_id):
     # try:
     #     del pdf_header["content-type"]
@@ -192,6 +195,7 @@ def upload_manifest_id(transfer_id, manifest_id):
         return False
 
 
+@retry(wait=wait_fixed(5))
 def upload_manifest_pdf(transfer_id, pdf_fl):
     global bearer
     pdf_header = {
@@ -220,12 +224,14 @@ def upload_manifest_pdf(transfer_id, pdf_fl):
     response = requests.request(
         "POST", url, headers=pdf_header, data=payload, files=files
     )
+
     try:
         return response.json()
     except json.decoder.JSONDecodeError:
         return False
 
 
+@retry(wait=wait_fixed(5))
 def get_metrc_order_and_all_metrc_resources(order_id):
     payload = json.dumps(
         [
@@ -238,9 +244,11 @@ def get_metrc_order_and_all_metrc_resources(order_id):
     )
 
     response = requests.request("POST", url, headers=headers, data=payload)
+    time.sleep(1)
     return response.json()
 
 
+@retry(wait=wait_fixed(5))
 def get_order_data(order_number):
 
     payload = json.dumps(
@@ -252,17 +260,12 @@ def get_order_data(order_number):
     )
 
     response = requests.request("POST", url, headers=headers, data=payload)
-    try:
-        response = response.json()
-    except:
-        time.sleep(30)
-        response = requests.request("POST", url, headers=headers, data=payload)
-        response = response.json()
-
+    time.sleep(1)
+    response = response.json()
     return response["data"]["getOrder"]
 
 
-# order['order']['id']
+@retry(wait=wait_fixed(5))
 def view_metrc_transfer(order_id):
     payload = json.dumps(
         {
@@ -271,18 +274,17 @@ def view_metrc_transfer(order_id):
             "query": "query getMetrcTransfers($orderId: ID!) {\n  getMetrcTransfers(orderId: $orderId) {\n    ...metrcTransferFragment\n    __typename\n  }\n}\n\nfragment metrcTransferFragment on MetrcTransfer {\n  id\n  orderId\n  order {\n    id\n    metrcWarehouseLicenseNumber\n    __typename\n  }\n  originLicensedLocationId\n  originLicensedLocation {\n    ...licensedLocationFragment\n    __typename\n  }\n  destinationLicensedLocationId\n  destinationLicensedLocation {\n    ...licensedLocationFragment\n    __typename\n  }\n  metrcManifestId\n  metrcTransferTemplateName\n  metrcManifestS3FileLink\n  metrcOrderNotes\n  shipmentId\n  shipment {\n    ...shipmentFragment\n    __typename\n  }\n  creatorId\n  creator {\n    id\n    email\n    __typename\n  }\n  createdAt\n  updatedAt\n  __typename\n}\n\nfragment licensedLocationFragment on LicensedLocation {\n  id\n  name\n  address1\n  address2\n  city\n  state\n  zip\n  siteCategory\n  lat\n  lng\n  billingAddress1\n  billingAddress2\n  billingAddressCity\n  billingAddressState\n  billingAddressZip\n  warehouseId\n  isArchived\n  doingBusinessAs\n  noExciseTax\n  phoneNumber\n  printCoas\n  hoursBusiness\n  hoursDelivery\n  deliveryByApptOnly\n  specialProtocol\n  schedulingSoftwareRequired\n  schedulingSoftwareLink\n  centralizedPurchasingNotes\n  payByCheck\n  collectionNotes\n  deliveryNotes\n  collect1PocFirstName\n  collect1PocLastName\n  collect1PocTitle\n  collect1PocNumber\n  collect1PocEmail\n  collect1PocAllowsText\n  collect1PreferredContactMethod\n  collect2PocFirstName\n  collect2PocLastName\n  collect2PocTitle\n  collect2PocNumber\n  collect2PocEmail\n  collect2PocAllowsText\n  collect2PreferredContactMethod\n  delivery1PocFirstName\n  delivery1PocLastName\n  delivery1PocTitle\n  delivery1PocNumber\n  delivery1PocEmail\n  delivery1PocAllowsText\n  delivery1PreferredContactMethod\n  delivery2PocFirstName\n  delivery2PocLastName\n  delivery2PocTitle\n  delivery2PocNumber\n  delivery2PocEmail\n  delivery2PocAllowsText\n  delivery2PreferredContactMethod\n  unmaskedId\n  qualitativeRating\n  creditRating\n  trustLevelNabis\n  trustLevelInEffect\n  isOnNabisTracker\n  locationNotes\n  infoplus\n  w9Link\n  taxIdentificationNumber\n  sellerPermitLink\n  nabisMaxTerms\n  __typename\n}\n\nfragment shipmentFragment on Shipment {\n  id\n  orderId\n  originLicensedLocationId\n  destinationLicensedLocationId\n  status\n  stagingAreaId\n  isUnloaded\n  unloaderId\n  isLoaded\n  loaderId\n  arrivalTime\n  departureTime\n  isShipped\n  vehicleId\n  driverId\n  previousShipmentId\n  nextShipmentId\n  infoplusOrderId\n  infoplusAsnId\n  infoplusOrderInventoryStatus\n  infoplusAsnInventoryStatus\n  createdAt\n  updatedAt\n  shipmentNumber\n  queueOrder\n  isStaged\n  isPrinted\n  arrivalTimeAfter\n  arrivalTimeBefore\n  fulfillability\n  pickers\n  shipmentType\n  intaken\n  outtaken\n  metrcWarehouseLicenseNumber\n  __typename\n}\n",
         },
     )
-
-    try:
-        response = requests.request("POST", url, headers=headers, data=payload)
-    except:
-        time.sleep(10)
-        response = requests.request("POST", url, headers=headers, data=payload)
+    # Ir will return html code on error instead of json
+    response = requests.request("POST", url, headers=headers, data=payload)
+    time.sleep(1)
+    # print("Couldnt get metrc transfers from nabis site. Restart the script.")
     return response.json()
 
     #                                  | -> this is a list of how many transfer templates there are
     # We can use directly this template name to search it on the metrc site
 
 
+@retry(wait=wait_fixed(5))
 def get_tracker_shipments(tomorrow, page=1):
 
     # origin - its the NABIS LA origin field
@@ -316,6 +318,8 @@ def get_tracker_shipments(tomorrow, page=1):
     )
 
     response = requests.request("POST", url, headers=headers, data=payload)
+
+    time.sleep(3)
     response.json()
     json_res = response.json()
 

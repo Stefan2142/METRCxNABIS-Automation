@@ -1,25 +1,15 @@
-import requests, json
-from creds import WAREHOUSE, bearer
-import time
-import copy
+import requests, json, time, copy
 from tenacity import retry, wait_fixed
+from config import nabis_api_url, nabis_headers, WAREHOUSE
 
 ORDERS = []
 DATE_FILTER = None
 
-url = "https://api.getnabis.com/graphql/admin"
-
 
 # "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36",
-headers = {
-    "authority": "api.getnabis.com",
-    "accept": "*/*",
-    "authorization": bearer,
-    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36",
-    "content-type": "application/json",
-}
 
 
+@retry(wait=wait_fixed(5))
 def find_template(order_id, api_token, cookie, metrc_lic):
 
     url = "https://ca.metrc.com/api/transfers/templates?slt=Licensed"
@@ -54,22 +44,15 @@ def find_template(order_id, api_token, cookie, metrc_lic):
         "Origin": "https://ca.metrc.com",
         "Cookie": cookie,
     }
-    try:
-        response = requests.request("POST", url, headers=headers, data=payload)
-    except:
-        time.sleep(1)
-        try:
-            response = requests.request("POST", url, headers=headers, data=payload)
-        except:
-            time.sleep(5)
-            response = requests.request("POST", url, headers=headers, data=payload)
+    response = requests.request("POST", url, headers=headers, data=payload)
+    
 
-    time.sleep(5)
+    time.sleep(3)
     # print(response.text)
     return response.json()
 
 
-def get_drivers():
+def get_nabis_drivers():
 
     payload = json.dumps(
         [
@@ -86,12 +69,14 @@ def get_drivers():
         ]
     )
 
-    response = requests.request("POST", url, headers=headers, data=payload)
+    response = requests.request(
+        "POST", nabis_api_url, headers=nabis_headers, data=payload
+    )
     response = response.json()
     return response
 
 
-def get_vehicles():
+def get_nabis_vehicles():
 
     payload = json.dumps(
         [
@@ -112,10 +97,14 @@ def get_vehicles():
             },
         ]
     )
-    response = requests.request("POST", url, headers=headers, data=payload)
+    response = requests.request(
+        "POST", nabis_api_url, headers=nabis_headers, data=payload
+    )
     if response.status_code == 502:
         time.sleep(1)
-        response = requests.request("POST", url, headers=headers, data=payload)
+        response = requests.request(
+            "POST", nabis_api_url, headers=nabis_headers, data=payload
+        )
     response = response.json()
     return response
 
@@ -136,7 +125,7 @@ def upload_order_note(transfer_id, order_note):
         ]
     )
 
-    custom_header = copy.deepcopy(headers)
+    custom_header = copy.deepcopy(nabis_headers)
     custom_header.update(
         {
             "sec-gpc": "1",
@@ -149,7 +138,9 @@ def upload_order_note(transfer_id, order_note):
         }
     )
 
-    response = requests.request("POST", url, headers=headers, data=payload)
+    response = requests.request(
+        "POST", nabis_api_url, headers=nabis_headers, data=payload
+    )
     try:
         return response.json()
     except:
@@ -162,7 +153,7 @@ def upload_manifest_id(transfer_id, manifest_id):
     #     del pdf_header["content-type"]
     # except:
     #     pass
-    custom_header = copy.deepcopy(headers)
+    custom_header = copy.deepcopy(nabis_headers)
     custom_header.update(
         {
             "sec-gpc": "1",
@@ -188,7 +179,9 @@ def upload_manifest_id(transfer_id, manifest_id):
         ]
     )
 
-    response = requests.request("POST", url, headers=headers, data=payload)
+    response = requests.request(
+        "POST", nabis_api_url, headers=nabis_headers, data=payload
+    )
     try:
         return response.json()
     except:
@@ -222,7 +215,7 @@ def upload_manifest_pdf(transfer_id, pdf_fl):
     ]
 
     response = requests.request(
-        "POST", url, headers=pdf_header, data=payload, files=files
+        "POST", nabis_api_url, headers=pdf_header, data=payload, files=files
     )
 
     try:
@@ -243,7 +236,9 @@ def get_metrc_order_and_all_metrc_resources(order_id):
         ]
     )
 
-    response = requests.request("POST", url, headers=headers, data=payload)
+    response = requests.request(
+        "POST", nabis_api_url, headers=nabis_headers, data=payload
+    )
     time.sleep(1)
     return response.json()
 
@@ -259,7 +254,9 @@ def get_order_data(order_number):
         }
     )
 
-    response = requests.request("POST", url, headers=headers, data=payload)
+    response = requests.request(
+        "POST", nabis_api_url, headers=nabis_headers, data=payload
+    )
     time.sleep(1)
     response = response.json()
     return response["data"]["getOrder"]
@@ -275,7 +272,9 @@ def view_metrc_transfer(order_id):
         },
     )
     # Ir will return html code on error instead of json
-    response = requests.request("POST", url, headers=headers, data=payload)
+    response = requests.request(
+        "POST", nabis_api_url, headers=nabis_headers, data=payload
+    )
     time.sleep(1)
     # print("Couldnt get metrc transfers from nabis site. Restart the script.")
     return response.json()
@@ -317,7 +316,9 @@ def get_tracker_shipments(tomorrow, page=1):
         ]
     )
 
-    response = requests.request("POST", url, headers=headers, data=payload)
+    response = requests.request(
+        "POST", nabis_api_url, headers=nabis_headers, data=payload
+    )
 
     time.sleep(3)
     response.json()

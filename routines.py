@@ -1,4 +1,3 @@
-import gspread
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -316,7 +315,9 @@ def thread_fnc(gc):
             start_time = time.time()
             sheet_df = pd.DataFrame(wks.get_all_records())
             if rows_count == sheet_df.shape[0]:
-                send_slack_msg("Same number of orders for the last 10 minutes")
+                send_slack_msg(
+                    "<@U0114CKP5UP> Same number of orders for the last 10 minutes"
+                )
             else:
                 rows_count = sheet_df.shape[0]
         else:
@@ -358,7 +359,7 @@ def finish_template_get_manifest(
     ### SUBMIT BUTTON
     fl_name = str(dt.datetime.today()).replace(":", ".")
     try:
-        driver.save_screenshot(f"./Logs/Template_{fl_name}.jpg")
+        driver.save_screenshot(f"./Templates/Template_{fl_name}.jpg")
     except UnboundLocalError:
         pass
 
@@ -528,7 +529,7 @@ def get_driver():
     chrome_options = webdriver.ChromeOptions()
     prefs = {
         "profile.default_content_setting_values.notifications": 2,
-        "download.default_directory": os.getcwd(),
+        "download.default_directory": f"{os.getcwd()}\\downloads",
         "download.prompt_for_download": False,
         "profile.default_content_setting_values.geolocation": 2,
     }
@@ -541,26 +542,6 @@ def get_driver():
 
     driver = webdriver.Chrome(
         executable_path="./chromedriver.exe", chrome_options=chrome_options
-    )
-    return driver
-
-
-def nabis_login(driver):
-    driver.get("https://app.getnabis.com/nabione-inc-deliveries/app/dashboard")
-
-    driver.find_element(
-        by=By.XPATH, value='//*[@id="sign-in"]/div[1]/div/div[1]/input'
-    ).send_keys(credentials["nabis"]["un"])
-
-    driver.find_element(
-        by=By.XPATH, value='//*[@id="sign-in"]/div[2]/div/div[1]/input'
-    ).send_keys(credentials["nabis"]["pwd"])
-
-    driver.find_element(by=By.XPATH, value='//*[@id="sign-in"]/button[2]').click()
-
-    # Get on Admin Shipments Tracker Page
-    driver.get(
-        "https://app.getnabis.com/nabione-inc-deliveries/app/admin-shipment-tracker"
     )
     return driver
 

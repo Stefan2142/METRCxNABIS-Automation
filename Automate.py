@@ -13,8 +13,8 @@ from selenium.webdriver.support.ui import Select
 from api_calls import (
     get_tracker_shipments,
     get_order_data,
-    get_drivers,
-    get_vehicles,
+    get_nabis_drivers,
+    get_nabis_vehicles,
     find_template,
     get_metrc_order_and_all_metrc_resources,
 )
@@ -179,7 +179,7 @@ def find_metrc_order(
 def proc_template(
     driver, nabis_order_id, nabis_order_line_items, nabis_order, nabis_shipment
 ):
-    from creds import matching_attrs
+    from config import matching_attrs
 
     global logger
     global counters
@@ -529,12 +529,16 @@ def proc_template(
             log_dict = {
                 "MissingChildPackageTag": "Error: One line item doesnt have metrc tag"
             }
-            logger.debug("MissingChildPackageTag: Error - One line item doesnt have metrc tag")
+            logger.debug(
+                "MissingChildPackageTag: Error - One line item doesnt have metrc tag"
+            )
         else:
             missing_child_package = {
                 "MissingChildPackageTag": "Warning: One line item doesnt have metrc tag"
             }
-            logger.debug("MissingChildPackageTag: Warning - One line item doesnt have metrc tag")
+            logger.debug(
+                "MissingChildPackageTag: Warning - One line item doesnt have metrc tag"
+            )
     else:
         missing_child_package = {"MissingChildPackageTag": ""}
 
@@ -925,6 +929,7 @@ def main():
     gc = gspread.service_account(filename="./emailsending-325211-e5456e88f282.json")
 
     import threading
+
     proc = threading.Thread(target=thread_fnc, args=(gc,), daemon=True)
     proc.start()
 
@@ -942,7 +947,6 @@ def main():
 
     try:
         logger.info("##----------SESSION STARTED----------##")
-        
 
         # send_slack_msg(
         #     "#-----▶ {:^40s} ▶-----#".format(
@@ -1015,10 +1019,10 @@ def main():
         # Resulting orders
         nabis_orders = res["orders"]
         logger.info("Getting vehicle info from Nabis API...")
-        vehicles = get_vehicles()
+        vehicles = get_nabis_vehicles()
         logger.info("Getting driver info from Nabis API...")
 
-        drivers = get_drivers()
+        drivers = get_nabis_drivers()
         logger.info(f"Nbr of shipments found: {len(nabis_orders)}")
 
         # str([[x['orderNumber'],x['shipmentNumber']] for x in nabis_orders])
@@ -1140,7 +1144,7 @@ def main():
 
         fl_name = str(dt.datetime.today()).replace(":", ".")
         try:
-            driver.save_screenshot(f"./Logs/Error_{fl_name}.jpg")
+            driver.save_screenshot(f"./Logs/Screenshots/Error_{fl_name}.jpg")
         except UnboundLocalError:
             pass
         email_logger.error(get_traceback(e))

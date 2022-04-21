@@ -34,7 +34,8 @@ from routines import (
     memory_dump,
     thread_fnc,
 )
-from creds import credentials, WAREHOUSE
+from creds import credentials
+from config import paths, WAREHOUSE, nabis_warehouse_licenses
 import gspread
 import ctypes
 
@@ -327,29 +328,19 @@ def proc_template(
     ).get_attribute("value")
     matching_attrs["license"]["nabis"]["data"] = nabis_order["siteLicenseNum"]
 
-    """C11-0001274-LIC - Nabitwo
-        C11-0000340-LIC - Garden of Weeden
-        C11-0000825-LIC - Cannex / 4Front"""
+ 
     if (
         matching_attrs["license"]["metrc"]["data"].strip().lower()
         != matching_attrs["license"]["nabis"]["data"].strip().lower()
     ):
         # If its internal transfer, they dont need to match
-        if matching_attrs["license"]["metrc"]["data"].strip() not in [
-            "C11-0001274-LIC",
-            "C11-0000340-LIC",
-            "C11-0000825-LIC",
-        ]:
+        if matching_attrs["license"]["metrc"]["data"].strip() not in nabis_warehouse_licenses:
             update_log(
                 log_dict, "license", "error_incorrect_key", "error_incorrect_msg"
             )
 
     # Check if its internal transfer
-    if matching_attrs["license"]["metrc"]["data"].strip() not in [
-        "C11-0001274-LIC",
-        "C11-0000340-LIC",
-        "C11-0000825-LIC",
-    ]:
+    if matching_attrs["license"]["metrc"]["data"].strip() not in nabis_warehouse_licenses:
         internal_transfer = False
     else:
         internal_transfer = True
@@ -443,13 +434,6 @@ def proc_template(
 
             matching_attrs[transport_detail_key]["nabis"]["data"] = s.strip()
 
-            # try:
-            #     matching_attrs[transport_detail]["nabis"][
-            #         "data"
-            #     ] = f"{nabis_order[transport_detail]['firstName'].strip()} {nabis_order[transport_detail]['lastName'].strip()}"
-            # except TypeError:
-            #     matching_attrs[transport_detail]["nabis"]["data"] = ""
-
             # If values are 'temp' and ''
             # If values are not ''
             temp_check_result = temp_none_check(transport_detail_key)
@@ -464,30 +448,6 @@ def proc_template(
             logger.info(
                 f"TransportDetailKey '{transport_detail_key}' matching result: {temp_check_result}"
             )
-
-    # # VEHICLE MODEL
-    # matching_attrs["vehicle_model"]["metrc"]["data"] = driver.find_element(
-    #     by=By.XPATH, value=matching_attrs["vehicle_model"]["metrc_key"]
-    # ).get_attribute("value")
-
-    # try:
-    #     matching_attrs["vehicle_model"]["nabis"]["data"] = nabis_order["vehicle"][
-    #         "name"
-    #     ]
-    # except TypeError:
-    #     matching_attrs["vehicle_model"]["nabis"]["data"] = ""
-
-    # if not temp_none_check("vehicle_model"):
-    #     update_log(log_dict, "vehicle_model", "error_missing_key", "error_missing_msg")
-
-    # if (
-    #     matching_attrs["vehicle_model"]["nabis"]["data"]
-    #     not in matching_attrs["vehicle_model"]["metrc"]["data"]
-    # ):
-    #     if not temp_none_check("vehicle_model"):
-    #         update_log(
-    #             log_dict, "vehicle_model", "error_incorrect_key", "error_incorrect_msg"
-    #         )
 
     # Address & route parsing
     addresses = (
@@ -799,7 +759,7 @@ def proc_template(
         log_dict.update({"TransferType": metrc_transfer_type})
         log_dict.update({"ALL_GOOD": "FALSE"})
         log_dict.update({"ManifestId": ""})
-        send_slack_msg(f"\t ❌ Order: {nabis_order_id} failed. Check gsheet log.")
+        # send_slack_msg(f"\t ❌ Order: {nabis_order_id} failed. Check gsheet log.")
         counters["not_done"] += 1
 
         # finish_template_get_manifest(driver, WAREHOUSE['license'], nabis_order)
@@ -815,7 +775,7 @@ def proc_template(
             log_dict.update({"TransferType": metrc_transfer_type})
             log_dict.update({"ALL_GOOD": "FALSE"})
             counters["not_done"] += 1
-            send_slack_msg(f"\t ❌ Order: {nabis_order_id} failed. Check gsheet log.")
+            # send_slack_msg(f"\t ❌ Order: {nabis_order_id} failed. Check gsheet log.")
 
         else:
             logger.info(
@@ -1136,6 +1096,7 @@ def main():
         send_slack_msg(
             f"---------💀 SCRIPT STOPPED, ERROR: {get_traceback(e)} 💀----------##"
         )
+        send_slack_msg(f"{type(e).__name__} was raised: {e}")
         logger.info(
             f"Done: {counters['done']}; Duplicates: {counters['duplicates']}; Template missing: {counters['template_missing']}; Not done: {counters['not_done']}"
         )
@@ -1144,7 +1105,7 @@ def main():
 
         fl_name = str(dt.datetime.today()).replace(":", ".")
         try:
-            driver.save_screenshot(f"./Logs/Screenshots/Error_{fl_name}.jpg")
+            driver.save_screenshot(f"{paths['errors_sc']}Error_{fl_name}.jpg")
         except UnboundLocalError:
             pass
         email_logger.error(get_traceback(e))

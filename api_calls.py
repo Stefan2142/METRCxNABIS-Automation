@@ -1,5 +1,6 @@
 import requests, json, time, copy
 from tenacity import retry, wait_fixed
+from creds import nabis_bearer_token
 from config import nabis_api_url, nabis_headers, WAREHOUSE
 
 ORDERS = []
@@ -45,7 +46,6 @@ def find_template(order_id, api_token, cookie, metrc_lic):
         "Cookie": cookie,
     }
     response = requests.request("POST", url, headers=headers, data=payload)
-    
 
     time.sleep(3)
     # print(response.text)
@@ -190,11 +190,11 @@ def upload_manifest_id(transfer_id, manifest_id):
 
 @retry(wait=wait_fixed(5))
 def upload_manifest_pdf(transfer_id, pdf_fl):
-    global bearer
+    global nabis_bearer_token
     pdf_header = {
         "authority": "api.getnabis.com",
         "accept": "*/*",
-        "authorization": bearer,
+        "authorization": nabis_bearer_token,
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36",
     }
 

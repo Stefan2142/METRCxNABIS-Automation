@@ -12,6 +12,7 @@ import logging
 import logging.handlers
 from pythonjsonlogger import jsonlogger
 from creds import credentials, slack_token
+from config import paths, urls
 from api_calls import (
     upload_manifest_pdf,
     upload_manifest_id,
@@ -111,11 +112,8 @@ def memory_dump():
                 dump += f"{value}\n"
             except:
                 dump += "<ERROR WHILE GETTING VALUE>\n"
-    with open(f"./Logs/Dump_{fl_name}.txt", "w") as f:
+    with open(f"{paths['logs']}Dump_{fl_name}.txt", "w") as f:
         f.write(dump)
-
-    # with open(f"./Logs/Dump_{fl_name}.txt", "a") as f:
-    #     f.write(dump)
 
 
 def send_slack_msg(msg):
@@ -245,7 +243,7 @@ def define_default_logger():
         "%(asctime)s %(levelname)s:%(filename)s:%(lineno)s - %(funcName)s() %(message)s"
     )
     file_handler = logging.handlers.RotatingFileHandler(
-        r"Logs/METRCxNABIS.log", maxBytes=10485760, backupCount=5
+        paths["logs"] + r"METRCxNABIS.log", maxBytes=10485760, backupCount=5
     )
     # file_handler.setLevel(logging.ERROR)
     file_handler.setFormatter(formatter_json)
@@ -269,7 +267,7 @@ def duplicate_check(gc, order_id):
         _type_: _description_
     """
     # sh = gc.open_by_url(
-    #     "https://docs.google.com/spreadsheets/d/1LkP08iIUIZyRz-_C45AJ0FvRJuwGK_SzuZylfNMrAuE"
+    #     urls['gsheet_logger']
     # )
     # try:
     #     wks = sh.worksheet("Logs")
@@ -281,7 +279,7 @@ def duplicate_check(gc, order_id):
     # sheet_df["Order"].replace("", 0, inplace=True)
     # sheet_df["Order"] = pd.to_numeric(sheet_df["Order"], errors="coerce")
 
-    off_log_df = pd.read_csv("./Logs/Offline_log.csv")
+    off_log_df = pd.read_csv(f"{paths['logs']}Offline_log.csv")
     off_log_df["Order"].replace("", 0, inplace=True)
     off_log_df["Order"] = pd.to_numeric(off_log_df["Order"], errors="coerce")
     off_log_df["Order"].astype("Int64")
@@ -297,14 +295,10 @@ def duplicate_check(gc, order_id):
 def thread_fnc(gc):
     # https://stackoverflow.com/questions/48745240/python-logging-in-multi-threads
     try:
-        sh = gc.open_by_url(
-            "https://docs.google.com/spreadsheets/d/1LkP08iIUIZyRz-_C45AJ0FvRJuwGK_SzuZylfNMrAuE"
-        )
+        sh = gc.open_by_url(urls["gsheet_logger"])
     except:
         time.sleep(110)
-        sh = gc.open_by_url(
-            "https://docs.google.com/spreadsheets/d/1LkP08iIUIZyRz-_C45AJ0FvRJuwGK_SzuZylfNMrAuE"
-        )
+        sh = gc.open_by_url(urls["gsheet_logger"])
 
     wks = sh.worksheet("Logs")
     sheet_df = pd.DataFrame(wks.get_all_records())
@@ -328,14 +322,10 @@ def thread_fnc(gc):
 def update_log_sheet(log_dict, gc):
     # Update logging gsheet file
     try:
-        sh = gc.open_by_url(
-            "https://docs.google.com/spreadsheets/d/1LkP08iIUIZyRz-_C45AJ0FvRJuwGK_SzuZylfNMrAuE"
-        )
+        sh = gc.open_by_url(urls["gsheet_logger"])
     except:
         time.sleep(110)
-        sh = gc.open_by_url(
-            "https://docs.google.com/spreadsheets/d/1LkP08iIUIZyRz-_C45AJ0FvRJuwGK_SzuZylfNMrAuE"
-        )
+        sh = gc.open_by_url(urls["gsheet_logger"])
 
     wks = sh.worksheet("Logs")
     sheet_df = pd.DataFrame(wks.get_all_records())
@@ -349,7 +339,7 @@ def update_log_sheet(log_dict, gc):
 
     wks.update([output.columns.values.tolist()] + output.values.tolist())
 
-    output.to_csv("./Logs/Offline_log.csv", index=False)
+    output.to_csv(f"{paths['logs']}Offline_log.csv", index=False)
 
 
 def finish_template_get_manifest(
@@ -359,7 +349,7 @@ def finish_template_get_manifest(
     ### SUBMIT BUTTON
     fl_name = str(dt.datetime.today()).replace(":", ".")
     try:
-        driver.save_screenshot(f"./Templates/Template_{fl_name}.jpg")
+        driver.save_screenshot(f"{paths['template_sc']}Template_{fl_name}.jpg")
     except UnboundLocalError:
         pass
 
@@ -510,9 +500,7 @@ def finish_template_get_manifest(
 
 def get_spreadsheet_routes(gc):
 
-    sh = gc.open_by_url(
-        "https://docs.google.com/spreadsheets/d/1gGctslxmXIO490qnKPN2SbWZV2ZLT7Z3zIpxQo19us8"
-    )
+    sh = gc.open_by_url(urls["gsheet_routes"])
 
     known_sheets = ["LA routes", "OAK routes", "4Front routes"]
     routes = []
@@ -529,7 +517,7 @@ def get_driver():
     chrome_options = webdriver.ChromeOptions()
     prefs = {
         "profile.default_content_setting_values.notifications": 2,
-        "download.default_directory": f"{os.getcwd()}\\downloads",
+        "download.default_directory": f"{paths['pdfs']}",
         "download.prompt_for_download": False,
         "profile.default_content_setting_values.geolocation": 2,
     }
@@ -541,27 +529,30 @@ def get_driver():
     # chrome_options.add_argument("--window-size=1536,865")
 
     driver = webdriver.Chrome(
-        executable_path="./chromedriver.exe", chrome_options=chrome_options
+        executable_path=paths["chromedriver"], chrome_options=chrome_options
     )
     return driver
 
 
 def get_cwd_files():
     list_of_files = filter(
-        lambda x: os.path.isfile(os.path.join(os.getcwd(), x)), os.listdir(os.getcwd())
+        lambda x: os.path.isfile(os.path.join(paths["pdfs"], x)),
+        os.listdir(paths["pdfs"]),
     )
     try:
         list_of_files = sorted(
-            list_of_files, key=lambda x: os.path.getmtime(os.path.join(os.getcwd(), x))
+            list_of_files,
+            key=lambda x: os.path.getmtime(os.path.join(paths["pdfs"], x)),
         )
     except FileNotFoundError:
         time.sleep(2)
         list_of_files = filter(
-            lambda x: os.path.isfile(os.path.join(os.getcwd(), x)),
-            os.listdir(os.getcwd()),
+            lambda x: os.path.isfile(os.path.join(paths["pdfs"], x)),
+            os.listdir(paths["pdfs"]),
         )
         list_of_files = sorted(
-            list_of_files, key=lambda x: os.path.getmtime(os.path.join(os.getcwd(), x))
+            list_of_files,
+            key=lambda x: os.path.getmtime(os.path.join(paths["pdfs"], x)),
         )
 
     list_of_files = list([x for x in list_of_files if ".pdf.crdownload" not in x])

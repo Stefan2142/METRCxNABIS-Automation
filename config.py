@@ -9,6 +9,17 @@ LARGE_WAIT = 10
 # na kraju, mozda logiku srediti
 
 
+paths = {
+    "pdfs": "./PDFS/",
+    "logs": "./Logs/",
+    "errors_sc": "./Logs/Screenshots/",
+    "template_sc": "./PDFs/TemplateScs/",
+    "chromedriver": "./chromedriver.exe",
+}
+
+urls = {
+    "gsheet_logger": "https://docs.google.com/spreadsheets/d/1LkP08iIUIZyRz-_C45AJ0FvRJuwGK_SzuZylfNMrAuE"
+}
 ###############
 GARDEN_OF_WEEDEN = {
     "name": "Garden of Weeden",
@@ -29,6 +40,17 @@ front_commerce = {
 
 # Here pick the desired warehouse
 WAREHOUSE = NABITWO
+
+
+"""C11-0001274-LIC - Nabitwo
+        C11-0000340-LIC - Garden of Weeden
+        C11-0000825-LIC - Cannex / 4Front"""
+
+nabis_warehouse_licenses = [
+    "C11-0001274-LIC",
+    "C11-0000340-LIC",
+    "C11-0000825-LIC",
+]
 
 # --- Nabis api---#
 nabis_api_url = "https://api.getnabis.com/graphql/admin"

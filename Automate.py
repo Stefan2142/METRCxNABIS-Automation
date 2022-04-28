@@ -5,6 +5,7 @@ import time
 import re
 import json
 import os
+from pathlib import Path
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -16,6 +17,7 @@ from api_calls import (
     get_nabis_drivers,
     get_nabis_vehicles,
     find_template,
+    create_manifest,
     get_metrc_order_and_all_metrc_resources,
 )
 
@@ -328,19 +330,24 @@ def proc_template(
     ).get_attribute("value")
     matching_attrs["license"]["nabis"]["data"] = nabis_order["siteLicenseNum"]
 
- 
     if (
         matching_attrs["license"]["metrc"]["data"].strip().lower()
         != matching_attrs["license"]["nabis"]["data"].strip().lower()
     ):
         # If its internal transfer, they dont need to match
-        if matching_attrs["license"]["metrc"]["data"].strip() not in nabis_warehouse_licenses:
+        if (
+            matching_attrs["license"]["metrc"]["data"].strip()
+            not in nabis_warehouse_licenses
+        ):
             update_log(
                 log_dict, "license", "error_incorrect_key", "error_incorrect_msg"
             )
 
     # Check if its internal transfer
-    if matching_attrs["license"]["metrc"]["data"].strip() not in nabis_warehouse_licenses:
+    if (
+        matching_attrs["license"]["metrc"]["data"].strip()
+        not in nabis_warehouse_licenses
+    ):
         internal_transfer = False
     else:
         internal_transfer = True
@@ -798,6 +805,7 @@ def proc_template(
             log_dict.update({"TransferType": metrc_transfer_type})
             log_dict.update(missing_child_package)
 
+            finish_status = []
             finish_status = finish_template_get_manifest(
                 driver,
                 WAREHOUSE["license"],
@@ -893,6 +901,12 @@ def main():
     proc = threading.Thread(target=thread_fnc, args=(gc,), daemon=True)
     proc.start()
 
+    for k, v in paths.items():
+        try:
+            Path(v).mkdir(parents=True, exist_ok=True)
+        except:
+            pass
+
     def kill_thread(thread):
         """
         thread: a threading.Thread object
@@ -941,6 +955,12 @@ def main():
         )
 
         metrc_auth = get_cookie_and_token(driver)
+        
+        # manifest_result = create_manifest(metrc_auth["token"],
+        #         metrc_auth["cookie"],
+        #         WAREHOUSE["license"])
+        # '{"Message": "Package 1A4060300022B79000323525 cannot be added to C10-0000550-LIC (RED RHINO REMEDIES) because it is currently in another Transfer and cannot be added to this one."}'
+        
 
         # Getting date for nabis shipment query
         if dt.datetime.today().weekday() == 4:

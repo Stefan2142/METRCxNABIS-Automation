@@ -418,6 +418,7 @@ def finish_template_get_manifest(
     if not rows:
         pass
     current_files = len(get_cwd_files())
+    manifest_id = None
     for row in rows:
         soup = BeautifulSoup(row.get_attribute("innerHTML"), "html.parser")
 
@@ -477,7 +478,9 @@ def finish_template_get_manifest(
             else:
                 logger.info("No order notes")
 
-            pdf_response = upload_manifest_pdf(transfer_id, list_of_pdf[0])
+            pdf_response = upload_manifest_pdf(
+                transfer_id, paths["pdfs"] + list_of_pdf[0]
+            )
             id_response = upload_manifest_id(transfer_id, manifest_id)
             if ("errors" in pdf_response) or (pdf_response == False):
                 logger.error(
@@ -517,7 +520,7 @@ def get_driver():
     chrome_options = webdriver.ChromeOptions()
     prefs = {
         "profile.default_content_setting_values.notifications": 2,
-        "download.default_directory": f"{paths['pdfs']}",
+        "download.default_directory": f"{os.getcwd()}{paths['selenium_download_dir']}",
         "download.prompt_for_download": False,
         "profile.default_content_setting_values.geolocation": 2,
     }

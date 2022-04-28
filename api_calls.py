@@ -11,6 +11,71 @@ DATE_FILTER = None
 
 
 @retry(wait=wait_fixed(5))
+def create_manifest(api_token, cookie, metrc_lic):
+
+    url = "https://ca.metrc.com/api/transfers/create"
+
+    payload = json.dumps(
+        [
+            {
+                "ShipmentLicenseType": "Licensed",
+                "Destinations": [
+                    {
+                        "ShipmentLicenseType": "Licensed",
+                        "RecipientId": "33101",
+                        "PlannedRoute": "NABIS 159986 Los Angeles to Vista via I-5 S on a multi stop route.",
+                        "TransferTypeId": "111",
+                        "EstimatedDepartureDateTime": "2022-04-28T07:00:00",
+                        "EstimatedArrivalDateTime": "2022-04-28T17:00:00",
+                        "GrossWeight": "",
+                        "GrossUnitOfWeightId": "",
+                        "Transporters": [
+                            {
+                                "TransporterId": "142201",
+                                "PhoneNumberForQuestions": "(628) 219-4330",
+                                "EstimatedArrivalDateTime": "2022-04-28T17:00:00",
+                                "EstimatedDepartureDateTime": "2022-04-28T07:00:00",
+                                "TransporterDetails": [
+                                    {
+                                        "DriverName": "Anthony Maccarello",
+                                        "DriverOccupationalLicenseNumber": "736877464",
+                                        "DriverLicenseNumber": "736877464",
+                                        "VehicleMake": "Mercedes Benz",
+                                        "VehicleModel": "S48 Sprinter Cargo Van",
+                                        "VehicleLicensePlateNumber": "CA80J54",
+                                    }
+                                ],
+                            }
+                        ],
+                        "Packages": [
+                            {
+                                "Id": "24618655",
+                                "WholesalePrice": "0.11",
+                                "GrossWeight": "",
+                                "GrossUnitOfWeightId": "",
+                            }
+                        ],
+                    }
+                ],
+            }
+        ]
+    )
+
+    headers = {
+        "ApiVerificationToken": api_token,
+        "X-Metrc-LicenseNumber": metrc_lic,
+        "sec-ch-ua-mobile": "?0",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36",
+        "Content-Type": "application/json",
+        "Origin": "https://ca.metrc.com",
+        "Cookie": cookie,
+    }
+    response = requests.request("POST", url, headers=headers, data=payload)
+
+    return response.json()
+
+
+@retry(wait=wait_fixed(5))
 def find_template(order_id, api_token, cookie, metrc_lic):
 
     url = "https://ca.metrc.com/api/transfers/templates?slt=Licensed"

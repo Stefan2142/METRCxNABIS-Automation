@@ -10,7 +10,8 @@ LARGE_WAIT = 10
 
 
 paths = {
-    "pdfs": "./PDFS/",
+    "selenium_download_dir": "\\PDFs\\",
+    "pdfs": "./PDFs/",
     "logs": "./Logs/",
     "errors_sc": "./Logs/Screenshots/",
     "template_sc": "./PDFs/TemplateScs/",
@@ -18,7 +19,8 @@ paths = {
 }
 
 urls = {
-    "gsheet_logger": "https://docs.google.com/spreadsheets/d/1LkP08iIUIZyRz-_C45AJ0FvRJuwGK_SzuZylfNMrAuE"
+    "gsheet_logger": "https://docs.google.com/spreadsheets/d/1LkP08iIUIZyRz-_C45AJ0FvRJuwGK_SzuZylfNMrAuE",
+    "gsheet_routes": "https://docs.google.com/spreadsheets/d/1gGctslxmXIO490qnKPN2SbWZV2ZLT7Z3zIpxQo19us8",
 }
 ###############
 GARDEN_OF_WEEDEN = {
@@ -39,7 +41,7 @@ front_commerce = {
 }
 
 # Here pick the desired warehouse
-WAREHOUSE = NABITWO
+WAREHOUSE = GARDEN_OF_WEEDEN
 
 
 """C11-0001274-LIC - Nabitwo

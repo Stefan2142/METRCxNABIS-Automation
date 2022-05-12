@@ -184,11 +184,14 @@ def create_metrc_manifest(nabis_order, nabis_order_data, template, driver):
         metrc_route = [x for x in routes if route_search_str.lower() in x.lower()][0]
         metrc_route = f"NABIS {nabis_order['orderNumber']} " + metrc_route
     else:
+        logger.error(f"Couldnt find route for: {template_deliveries[0]['PlannedRoute']}")
         error_log.update(
             {
-                "CantFindRoute": f"Cant find route in the sheet for planned route (metrc): {metrc_route}"
+                "CantFindRoute": f"Cant find route in the sheet for planned route (metrc): {template_deliveries[0]['PlannedRoute']}"
             }
         )
+        error_log.update({"ALL_GOOD": False})
+        
         return error_log
 
     if destination_license not in nabis_warehouse_licenses:
@@ -384,11 +387,9 @@ def create_metrc_manifest(nabis_order, nabis_order_data, template, driver):
     try:
         # {'Message': 'An error has occurred.'}
         # Not created
-        if manifest_creation_res["Message"] == "An error has occured.":
-            logger.error(
-                "Template data provied was correct but template isnt registered"
-            )
-            error_log.update({"ManifestCreateError": "Template not registered"})
+        if manifest_creation_res["Message"]:
+            logger.error(f"Manifest creation error: {manifest_creation_res['Message']}")
+            error_log.update({"ManifestCreateError": manifest_creation_res["Message"]})
             logger.error(
                 f"Manifest payload: {metrc_manifest_payload}; metrc token: {metrc_auth['token']}; metrc cookie: {metrc_auth['cookie']}; warehouse license: {WAREHOUSE['license']}; manifest creation res: {manifest_creation_res}"
             )
@@ -468,7 +469,7 @@ def create_metrc_manifest(nabis_order, nabis_order_data, template, driver):
         logger.info(f"[{nabis_order['id']}] Uploading order notes: {order_notes}")
         order_note_response = upload_order_note(transfer_id, order_notes)
         logger.debug(f"Order note response: {order_note_response}")
-        error_log.update({"OrderNotes": order_note_response})
+        error_log.update({"OrderNotes": order_notes})
     else:
         logger.info("No order notes")
 
@@ -1573,7 +1574,7 @@ def main():
             # )
             end_time = time.perf_counter()
             logger.info(
-                f"Updating the ghseet logger.. all good: {error_LOG['ALL_GOOD']}"
+                f"Updating the ghseet logger.. all good: {error_log['ALL_GOOD']}"
             )
             error_log.update({"Duration(S)": end_time - start_time})
             update_log_sheet(error_log, gc)

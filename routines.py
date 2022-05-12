@@ -186,7 +186,7 @@ def memory_dump():
                 dump += f"{value}\n"
             except:
                 dump += "<ERROR WHILE GETTING VALUE>\n"
-    with open(f"{paths['logs']}Dump_{fl_name}.txt", "w") as f:
+    with open(f"{paths['logs']}Dump_{fl_name}.txt", "w", encoding="utf8") as f:
         f.write(dump)
 
 

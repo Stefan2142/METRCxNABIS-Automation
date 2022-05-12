@@ -12,6 +12,7 @@ DATE_FILTER = None
 metrc_api_base_url = "https://api-ca.metrc.com//"
 
 
+@retry(wait=wait_fixed(5))
 def metrc_api_get_templates():
     """Get list of available templates for a given WAREHOUSE license
 
@@ -27,6 +28,7 @@ def metrc_api_get_templates():
     return response.json()
 
 
+@retry(wait=wait_fixed(5))
 def metrc_api_get_template_deliveries(template_id):
     url = metrc_api_base_url + f"transfers/v1/templates/{template_id}/deliveries"
     headers = {"Authorization": metrc_bearer_token}
@@ -34,6 +36,7 @@ def metrc_api_get_template_deliveries(template_id):
     return response.json()
 
 
+@retry(wait=wait_fixed(5))
 def metrc_api_get_template_packages(template_id):
     url = metrc_api_base_url + f"transfers/v1/templates/delivery/{template_id}/packages"
     headers = {"Authorization": metrc_bearer_token}
@@ -42,6 +45,7 @@ def metrc_api_get_template_packages(template_id):
     return response.json()
 
 
+@retry(wait=wait_fixed(5))
 def metrc_api_find_template(order_id):
     url = (
         metrc_api_base_url

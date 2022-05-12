@@ -3,8 +3,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
+from pathlib import Path
 import pandas as pd
 import sys
+import json
 import datetime as dt
 import os, time
 import re
@@ -22,6 +24,8 @@ from api_calls import (
 import traceback
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
+from Screenshot import Screenshot_Clipping
+from tenacity import retry, wait_fixed
 
 # def define_download_folder():
 #     # Unused
@@ -67,8 +71,78 @@ def waiting_fnc(driver, path):
     """
 
 
-def check_prices():
-    pass
+def get_recipients_ids(driver):
+    try:
+        driver.find_element(
+            by=By.CLASS_NAME,
+            value="k-button.k-button-icontext.grid-row-button.k-grid-Use",
+        ).click()
+
+    # selenium.common.exceptions.NoSuchElementExceptions
+    except:
+        return False
+    """
+        If NoSuchElementExceptions - means there are no templates to pick from
+    """
+    bool = True
+    while bool:
+        try:
+            time.sleep(0.5)
+
+            driver.find_element(
+                by=By.NAME,
+                value="model[0][Destinations][0][Transporters][0][TransporterDetails][0][VehicleMake]",
+            )
+            bool = False
+            continue
+        except:
+            pass
+        try:
+            driver.find_element(By.CLASS_NAME, value="k-loading-image")
+
+        except:
+            if bool:
+                try:
+                    driver.find_element(
+                        by=By.CLASS_NAME,
+                        value="k-button.k-button-icontext.grid-row-button.k-grid-Use",
+                    ).click()
+                except:
+                    pass
+            else:
+                bool = False
+
+    soup = BeautifulSoup(driver.page_source, "html.parser")
+    script_element = soup.find(text=re.compile("repeaterData"))
+    raw_json = script_element[
+        script_element.find("JSON.parse") : script_element.rfind("x7d'),")
+    ]
+    del soup
+    raw_json_escapped = raw_json.encode().decode("unicode_escape", errors="ignore")
+    repeater_json = json.loads(raw_json_escapped[12:] + "}")
+    del raw_json_escapped
+
+    with open("./repeater_script.json", "w") as f:
+        f.write(json.dumps(repeater_json["Facilities"]))
+
+    # json_script['TransferTypes']
+    # To close the opened template pop-up
+    # Instead of clicking on 'x'
+    driver.refresh()
+    return repeater_json["Facilities"]
+
+
+def metrc_get_facilities(driver):
+    repeater_json = ""
+    if not Path("./repeater_script.json").is_file():
+        facilities = get_recipients_ids(driver)
+        if not facilities:
+            return False
+
+    with open("./repeater_script.json", "r") as f:
+        repeater_json = f.read()
+    repeater_json = json.loads(repeater_json)
+    return repeater_json
 
 
 def memory_dump():
@@ -257,7 +331,9 @@ def define_default_logger():
 
 
 def duplicate_check(gc, order_id):
-    """_summary_
+    """Check if a given order_id hasnt been done before.
+        Check is being done in the offline copy of a log gsheet, to
+        preserve the API quota.
 
     Args:
         gc (_type_): _description_
@@ -300,7 +376,7 @@ def thread_fnc(gc):
         time.sleep(110)
         sh = gc.open_by_url(urls["gsheet_logger"])
 
-    wks = sh.worksheet("Logs")
+    wks = sh.worksheet("API_Log(wip)")
     sheet_df = pd.DataFrame(wks.get_all_records())
     start_time = time.time()
     rows_count = sheet_df.shape[0]
@@ -316,26 +392,30 @@ def thread_fnc(gc):
                 rows_count = sheet_df.shape[0]
         else:
             time.sleep(60)
-            print(f"Tick..{time.time() - start_time}")
+            print(f"Thread 60 seconds idle tick..{time.time() - start_time}")
 
 
 def update_log_sheet(log_dict, gc):
     # Update logging gsheet file
-    try:
-        sh = gc.open_by_url(urls["gsheet_logger"])
-    except:
-        time.sleep(110)
-        sh = gc.open_by_url(urls["gsheet_logger"])
 
-    wks = sh.worksheet("Logs")
+    @retry(wait=wait_fixed(5))
+    def helper_get_gsheet_data():
+        sh = gc.open_by_url(urls["gsheet_logger"])
+        wks = sh.worksheet("API_Log(wip)")
+        return wks
+
+    wks = helper_get_gsheet_data()
     sheet_df = pd.DataFrame(wks.get_all_records())
 
     df_dict = pd.DataFrame([log_dict])
     output = pd.concat([sheet_df, df_dict], ignore_index=True)
     output.fillna("", inplace=True)
-    output["WrongPrice"] = output["WrongPrice"].apply(str)
-    output["WrongQuantity"] = output["WrongQuantity"].apply(str)
-    output["MissingPackageTag"] = output["MissingPackageTag"].apply(str)
+    try:
+        output["WrongPrice"] = output["WrongPrice"].apply(str)
+        output["WrongQuantity"] = output["WrongQuantity"].apply(str)
+        output["MissingPackageTag"] = output["MissingPackageTag"].apply(str)
+    except:
+        pass
 
     wks.update([output.columns.values.tolist()] + output.values.tolist())
 
@@ -348,10 +428,17 @@ def finish_template_get_manifest(
 
     ### SUBMIT BUTTON
     fl_name = str(dt.datetime.today()).replace(":", ".")
-    try:
-        driver.save_screenshot(f"{paths['template_sc']}Template_{fl_name}.jpg")
-    except UnboundLocalError:
-        pass
+    ob = Screenshot_Clipping.Screenshot()
+    img_url = ob.full_Screenshot(
+        driver,
+        save_path=r".",
+        image_name=f"{paths['template_sc']}Template_{fl_name}.jpg",
+    )
+
+    # try:
+    #     driver.save_screenshot(f"{paths['template_sc']}Template_{fl_name}.jpg")
+    # except UnboundLocalError:
+    #     pass
 
     logger.info(f"[{nabis_order['id']}] Registering transfer...")
     driver.find_element(
@@ -431,7 +518,7 @@ def finish_template_get_manifest(
             -2
         ].text.strip()
         logger.info(
-            f"[{nabis_order['id']}] ManifestID found: {manifest_id}, date created: {manifest_date_created}"
+            f"[{nabis_order['id']}] ManifestID found: {manifest_id}, date created: {manifest_date_created}, {employee}"
         )
 
         if employee == "Aleksandar Plavljanic":
@@ -482,7 +569,7 @@ def finish_template_get_manifest(
                 transfer_id, paths["pdfs"] + list_of_pdf[0]
             )
             id_response = upload_manifest_id(transfer_id, manifest_id)
-            if ("errors" in pdf_response) or (pdf_response == False):
+            if (pdf_response == "errors") or (pdf_response == False):
                 logger.error(
                     f'Error while uploading manifest pdf {transfer_id}, order: {nabis_order["id"]}'
                 )

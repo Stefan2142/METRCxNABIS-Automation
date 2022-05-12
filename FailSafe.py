@@ -5,14 +5,14 @@ from tenacity import retry, wait_fixed, stop_after_attempt
 from datetime import datetime, timedelta
 
 
-@retry(wait=wait_fixed(2), stop=stop_after_attempt(4), reraise=True)
-def loo():
-    print("HE")
-    1 / 0
+# @retry(wait=wait_fixed(2), stop=stop_after_attempt(4), reraise=True)
+# def loo():
+#     print("HE")
+#     1 / 0
 
 
-print("RUN")
-exit(1)
+# print("RUN")
+# exit(1)
 
 
 @retry(wait=wait_fixed(4))

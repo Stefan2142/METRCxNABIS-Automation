@@ -1,65 +1,82 @@
 import requests, json, time, copy
 from tenacity import retry, wait_fixed
-from creds import nabis_bearer_token
+from creds import nabis_bearer_token, metrc_bearer_token
 from config import nabis_api_url, nabis_headers, WAREHOUSE
 
-ORDERS = []
+SHIPMENTS = []
 DATE_FILTER = None
 
 
 # "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36",
 
+metrc_api_base_url = "https://api-ca.metrc.com//"
+
+
+def metrc_api_get_templates():
+    """Get list of available templates for a given WAREHOUSE license
+
+    Returns:
+        dict: list of dicts (json like structure) where each element contains template data
+    """
+    url = (
+        metrc_api_base_url
+        + f"transfers/v1/templates?licenseNumber={WAREHOUSE['license']}"
+    )
+    headers = {"Authorization": metrc_bearer_token}
+    response = requests.request("GET", url, headers=headers)
+    return response.json()
+
+
+def metrc_api_get_template_deliveries(template_id):
+    url = metrc_api_base_url + f"transfers/v1/templates/{template_id}/deliveries"
+    headers = {"Authorization": metrc_bearer_token}
+    response = requests.request("GET", url, headers=headers)
+    return response.json()
+
+
+def metrc_api_get_template_packages(template_id):
+    url = metrc_api_base_url + f"transfers/v1/templates/delivery/{template_id}/packages"
+    headers = {"Authorization": metrc_bearer_token}
+    response = requests.request("GET", url, headers=headers)
+    response.json()
+    return response.json()
+
+
+def metrc_api_find_template(order_id):
+    url = (
+        metrc_api_base_url
+        + f"transfers/v1/templates?licenseNumber={WAREHOUSE['license']}"
+    )
+
+    headers = {"Authorization": metrc_bearer_token}
+
+    response = requests.request("GET", url, headers=headers)
+
+    templates = response.json()
+    for template in templates:
+        if str(order_id) in template["Name"]:
+            print(template)
+            return template
+    return False
+
+
+def metrc_api_archive_template(template_id):
+    url = (
+        metrc_api_base_url
+        + f"transfers/v1/templates/{template_id}?licenseNumber={WAREHOUSE['license']}"
+    )
+
+    headers = {"Authorization": metrc_bearer_token}
+
+    response = requests.request("DELETE", url, headers=headers)
+
+    return response
+
 
 @retry(wait=wait_fixed(5))
-def create_manifest(api_token, cookie, metrc_lic):
+def create_manifest(api_token, cookie, metrc_lic, payload):
 
     url = "https://ca.metrc.com/api/transfers/create"
-
-    payload = json.dumps(
-        [
-            {
-                "ShipmentLicenseType": "Licensed",
-                "Destinations": [
-                    {
-                        "ShipmentLicenseType": "Licensed",
-                        "RecipientId": "33101",
-                        "PlannedRoute": "NABIS 159986 Los Angeles to Vista via I-5 S on a multi stop route.",
-                        "TransferTypeId": "111",
-                        "EstimatedDepartureDateTime": "2022-04-28T07:00:00",
-                        "EstimatedArrivalDateTime": "2022-04-28T17:00:00",
-                        "GrossWeight": "",
-                        "GrossUnitOfWeightId": "",
-                        "Transporters": [
-                            {
-                                "TransporterId": "142201",
-                                "PhoneNumberForQuestions": "(628) 219-4330",
-                                "EstimatedArrivalDateTime": "2022-04-28T17:00:00",
-                                "EstimatedDepartureDateTime": "2022-04-28T07:00:00",
-                                "TransporterDetails": [
-                                    {
-                                        "DriverName": "Anthony Maccarello",
-                                        "DriverOccupationalLicenseNumber": "736877464",
-                                        "DriverLicenseNumber": "736877464",
-                                        "VehicleMake": "Mercedes Benz",
-                                        "VehicleModel": "S48 Sprinter Cargo Van",
-                                        "VehicleLicensePlateNumber": "CA80J54",
-                                    }
-                                ],
-                            }
-                        ],
-                        "Packages": [
-                            {
-                                "Id": "24618655",
-                                "WholesalePrice": "0.11",
-                                "GrossWeight": "",
-                                "GrossUnitOfWeightId": "",
-                            }
-                        ],
-                    }
-                ],
-            }
-        ]
-    )
 
     headers = {
         "ApiVerificationToken": api_token,
@@ -407,7 +424,7 @@ def get_tracker_shipments(tomorrow, page=1):
             f"Total shipment search result-set {total_nbr_of_resulting_orders}, pages: {nbr_of_pages}"
         )
     for order in json_res[0]["data"]["getTrackerShipments"]["results"]:
-        ORDERS.append(order)
+        SHIPMENTS.append(order)
 
     DATE_FILTER = tomorrow
 
@@ -430,7 +447,7 @@ def get_tracker_shipments(tomorrow, page=1):
     #     "results"
     # ]  # this is a list of orders in the search result
     return {
-        "orders": ORDERS,
+        "orders": SHIPMENTS,
         "total_num_pages": nbr_of_pages,
         "total_num_items": total_nbr_of_resulting_orders,
     }

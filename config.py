@@ -27,11 +27,13 @@ GARDEN_OF_WEEDEN = {
     "name": "Garden of Weeden",
     "license": "C11-0000340-LIC",
     "id": "QWxsTGljZW5zZWRMb2NhdGlvblNpbXBsaWZpZWQ6NDFkYjA5NDctZDFmMy00OTU1LWFmMjAtZDg5MmYxODYwMTA5",
+    "PhoneNumberForQuestions": "(628) 219-4329",
 }
 NABITWO = {
     "name": "Nabitwo",
     "license": "C11-0001274-LIC",
     "id": "QWxsTGljZW5zZWRMb2NhdGlvblNpbXBsaWZpZWQ6MGNlZGNmNmQtODc4NC00Yjc2LWJlOWMtMGUxMDJlNTI0NWY5",
+    "PhoneNumberForQuestions": "(628) 219-4330",
 }
 
 front_commerce = {

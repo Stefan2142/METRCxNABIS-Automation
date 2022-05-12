@@ -19,6 +19,14 @@ from api_calls import (
     find_template,
     create_manifest,
     get_metrc_order_and_all_metrc_resources,
+    metrc_api_get_template_deliveries,
+    metrc_api_get_template_packages,
+    metrc_api_find_template,
+    metrc_api_archive_template,
+    view_metrc_transfer,
+    upload_order_note,
+    upload_manifest_id,
+    upload_manifest_pdf,
 )
 
 from routines import (
@@ -35,6 +43,8 @@ from routines import (
     send_slack_msg,
     memory_dump,
     thread_fnc,
+    metrc_get_facilities,
+    get_cwd_files,
 )
 from creds import credentials
 from config import paths, WAREHOUSE, nabis_warehouse_licenses
@@ -43,9 +53,466 @@ import ctypes
 
 counters = {"done": 0, "duplicates": 0, "template_missing": 0, "not_done": 0}
 
+recipient_data = ""
 routes = []
 logger = define_default_logger()
 email_logger = define_email_logger()
+
+
+def create_metrc_manifest(nabis_order, nabis_order_data, template, driver):
+    global recipient_data
+
+    error_log = {}  # These here wont register template/download pdf/update pdf etc
+
+    error_log.update({"Order": nabis_order["orderNumber"]})
+    error_log.update({"Shipment": nabis_order["shipmentNumber"]})
+    error_log.update({"Warehouse": WAREHOUSE["name"]})
+
+    error_log.update(
+        {
+            "Date": dt.datetime.strftime(
+                dt.datetime.now(dt.datetime.now().astimezone().tzinfo),
+                "%Y-%m-%d",
+            )
+        }
+    )
+    error_log.update(
+        {
+            "Timestamp": dt.datetime.strftime(
+                dt.datetime.now(dt.datetime.now().astimezone().tzinfo),
+                "%Y-%m-%dT%H:%M%z",
+            )
+        }
+    )
+
+    # Get Metrc creds from current webdriver session
+    metrc_auth = get_cookie_and_token(driver)
+
+    template_deliveries = metrc_api_get_template_deliveries(template["Id"])
+    template_packages = metrc_api_get_template_packages(template_deliveries[0]["Id"])
+
+    nabis_pkg_data = get_metrc_order_and_all_metrc_resources(nabis_order["orderId"])
+
+    # -----------------------------------------------------------
+    #                     Finding recipient id
+    # -----------------------------------------------------------
+
+    # use this license to find RecipientId
+    destination_license = template_deliveries[0]["RecipientFacilityLicenseNumber"]
+    metrc_recipient_id = ""
+    if any(
+        [
+            recipient_data[key]
+            for key in recipient_data.keys()
+            if recipient_data[key]["LicenseNumber"] == destination_license
+        ]
+    ):
+        metrc_recipient_id = [
+            recipient_data[key]
+            for key in recipient_data.keys()
+            if recipient_data[key]["LicenseNumber"] == destination_license
+        ][0]["Id"]
+    else:
+        logger.error("Couldnt find recipient ID for destination_license")
+        error_log.update({"RecipientId": "NotFound"})
+        error_log.update({"ALL_GOOD": False})
+        return error_log
+    error_log.update({"RecipientId": metrc_recipient_id})
+
+    # -----------------------------------------------------------
+    #                 Finding recipient license
+    # -----------------------------------------------------------
+
+    metrc_recipient_license = ""
+    if any(
+        [
+            value["Id"]
+            for key, value in recipient_data.items()
+            if value["LicenseNumber"] == destination_license
+        ]
+    ):
+        metrc_recipient_license = [
+            value
+            for key, value in recipient_data.items()
+            if value["LicenseNumber"] == destination_license
+        ][0]
+
+    if not metrc_recipient_license:
+        error_log.update({"RecipientLicense": "NotFound"})
+        error_log.update({"ALL_GOOD": False})
+        return error_log
+    error_log.update({"RecipientLicense": metrc_recipient_license["LicenseNumber"]})
+    logger.debug(f"Found recipient license: {metrc_recipient_license['LicenseNumber']}")
+    # -----------------------------------------------------------
+    #                      Transfer type
+    # -----------------------------------------------------------
+    """
+    Transfer type id is required by create request to metrc unofficial api
+    Transfer shouldnt have prices and Wholesale Manifest should
+    """
+    metrc_transfer_type = None
+    if template_deliveries[0]["ShipmentTypeName"] == "Transfer":
+        metrc_transfer_type = {"Name": "Transfer", "Id": "1"}
+    if template_deliveries[0]["ShipmentTypeName"] == "Wholesale Manifest":
+        metrc_transfer_type = {"Name": "Wholesale Manifest", "Id": "111"}
+
+    # We cant continue if metrc_transfer_type is None
+    if not metrc_transfer_type:
+        error_log.update({"MetrcTransferType": "NotFound"})
+        error_log.update({"ALL_GOOD": False})
+        return error_log
+    error_log.update({"MetrcTransferType": metrc_transfer_type["Name"]})
+    logger.debug(f"Metrc transfer type: {metrc_transfer_type['Name']}")
+    # -----------------------------------------------------------
+    #                 Adress and route parsing
+    # -----------------------------------------------------------
+
+    addresses = (
+        template_deliveries[0]["PlannedRoute"]
+        .replace(str(nabis_order["orderNumber"]), "")
+        .replace("NABIS", "")
+        .split("via")[0]
+        .replace(" to ", ";")
+        .strip()
+        .split(";")
+    )
+    metrc_route = ""
+    route_addr_origin = addresses[0].split(", ")[0].strip()
+    route_addr_dest = addresses[-1].split(", ")[0].strip()
+    route_search_str = f"{route_addr_origin} to {route_addr_dest}"
+    if any([route_search_str.lower() in x.lower() for x in routes]):
+        metrc_route = [x for x in routes if route_search_str.lower() in x.lower()][0]
+        metrc_route = f"NABIS {nabis_order['orderNumber']} " + metrc_route
+    else:
+        error_log.update(
+            {
+                "CantFindRoute": f"Cant find route in the sheet for planned route (metrc): {metrc_route}"
+            }
+        )
+        return error_log
+
+    if destination_license not in nabis_warehouse_licenses:
+        internal_transfer = False
+    else:
+        internal_transfer = True
+    error_log.update({"InternalTransfer": internal_transfer})
+
+    # -----------------------------------------------------------
+    #                       Package processing
+    # -----------------------------------------------------------
+
+    nabis_line_items = {
+        x["metrcPackageTag"]: {
+            "quantity": x["quantity"],
+            "unit_price": x["pricePerUnit"],
+            "total": round((x["pricePerUnit"] * x["quantity"]) - x["discount"], 2),
+        }
+        for x in nabis_order_data["lineItems"]
+    }
+
+    """
+    getOnlyMetrcOrder -> tagSequence will give us number of tags allocated
+    to only cannabis items (without nc items)
+    If there are items with "SKIP"...... [FIND ABOUT THIS]
+    """
+    if len(
+        nabis_pkg_data[0]["data"]["viewer"]["getOnlyMetrcOrder"]["tagSequence"]
+    ) != len(template_packages):
+        logger.error("Missmatch of number of packages")
+        error_log.update({"IncorrectPkgNbr": True})
+        error_log.update({"ALL_GOOD": False})
+        logger.debug(f"Template pkgs: {template_packages}")
+        logger.debug(f"Nabis pkgs: {nabis_pkg_data}")
+        return error_log
+
+    # If True - all tags are present in both data sets
+    comparison_check = all(
+        item in list([x["PackageLabel"] for x in template_packages])
+        for item in nabis_pkg_data[0]["data"]["viewer"]["getOnlyMetrcOrder"][
+            "tagSequence"
+        ]
+    )
+    if not comparison_check:
+        error_log.update({"ComparisonCheck": comparison_check})
+        error_log.update({"ALL_GOOD": False})
+        logger.error("Missmatch of number of packages")
+        logger.debug(f"Template pkgs: {template_packages}")
+        logger.debug(f"Nabis pkgs: {nabis_pkg_data}")
+        return error_log
+    error_log.update({"ComparisonCheck": comparison_check})
+
+    """
+    At this point we know that the number of items 
+    is the same in template and in the nabis order, and that the tag values 
+    are equal to each other across template x nabis order;
+    so just assign price from nabis directly instead of relying on template values
+    """
+    metrc_packages = []
+    for template_pkg in template_packages:
+        # If type is Wholesale Manifest, we need the price too
+        if metrc_transfer_type["Name"] == "Wholesale Manifest":
+            wholesale_price = nabis_line_items[template_pkg["PackageLabel"]]["total"]
+        else:
+            wholesale_price = ""
+
+        metrc_packages.append(
+            {
+                "Id": template_pkg["PackageId"],
+                "WholesalePrice": wholesale_price,
+                "GrossWeight": "",
+                "GrossUnitOfWeightId": "",
+            }
+        )
+
+    # -----------------------------------------------------------
+    #                       Transport details
+    # -----------------------------------------------------------
+    """
+    When driver/vehicle info is missing from Nabis side, 
+    nabis_order_data['driver'/'vehicle'] will be None.
+    In that case assign flags to be further used with order notes
+    """
+    transport_detail_flags = {"driver": "", "vehicle": ""}
+    transport_details = {
+        "driver": {"driversLicense": "temp", "name": "temp"},
+        "vehicle": {"make": "temp", "model": "temp", "licensePlate": "temp"},
+    }
+    if nabis_order_data["driver"]:
+        nabis_order_data["driver"][
+            "name"
+        ] = f"{nabis_order_data['driver']['firstName']} {nabis_order_data['driver']['lastName']}"
+    if nabis_order_data["vehicle"]:
+        nabis_order_data["vehicle"][
+            "model"
+        ] = f"{nabis_order_data['vehicle']['name']} {nabis_order_data['vehicle']['model']}"
+
+    for key in transport_detail_flags.keys():
+        if not nabis_order_data[key]:
+            transport_detail_flags[key] = "FLAG"
+        else:
+            for detail in transport_details[key].keys():
+                transport_details[key][detail] = nabis_order_data[key][detail]
+
+    metrc_manifest_payload = json.dumps(
+        [
+            {
+                "ShipmentLicenseType": template["ShipmentLicenseType"],
+                "Destinations": [
+                    {
+                        "ShipmentLicenseType": template["ShipmentLicenseType"],
+                        "RecipientId": metrc_recipient_id,
+                        "PlannedRoute": metrc_route,
+                        "TransferTypeId": metrc_transfer_type["Id"],
+                        "EstimatedDepartureDateTime": template_deliveries[0][
+                            "EstimatedDepartureDateTime"
+                        ].split(".")[0],
+                        "EstimatedArrivalDateTime": template_deliveries[0][
+                            "EstimatedArrivalDateTime"
+                        ].split(".")[0],
+                        "GrossWeight": "",
+                        "GrossUnitOfWeightId": "",
+                        "Transporters": [
+                            {
+                                "TransporterId": "142201",
+                                "PhoneNumberForQuestions": WAREHOUSE[
+                                    "PhoneNumberForQuestions"
+                                ],
+                                "EstimatedArrivalDateTime": template_deliveries[0][
+                                    "EstimatedArrivalDateTime"
+                                ].split(".")[0],
+                                "EstimatedDepartureDateTime": template_deliveries[0][
+                                    "EstimatedDepartureDateTime"
+                                ].split(".")[0],
+                                "TransporterDetails": [
+                                    {
+                                        "DriverName": transport_details["driver"][
+                                            "name"
+                                        ],
+                                        "DriverOccupationalLicenseNumber": transport_details[
+                                            "driver"
+                                        ][
+                                            "driversLicense"
+                                        ],
+                                        "DriverLicenseNumber": transport_details[
+                                            "driver"
+                                        ]["driversLicense"],
+                                        "VehicleMake": transport_details["vehicle"][
+                                            "make"
+                                        ],
+                                        "VehicleModel": transport_details["vehicle"][
+                                            "model"
+                                        ],
+                                        "VehicleLicensePlateNumber": transport_details[
+                                            "vehicle"
+                                        ]["licensePlate"],
+                                    }
+                                ],
+                            }
+                        ],
+                        "Packages": metrc_packages,
+                    }
+                ],
+            }
+        ]
+    )
+    logger.debug("Creating manifest...")
+    manifest_creation_res = create_manifest(
+        metrc_auth["token"],
+        metrc_auth["cookie"],
+        WAREHOUSE["license"],
+        metrc_manifest_payload,
+    )
+    logger.debug(f"Manifest creation complete; Result: {manifest_creation_res}")
+    try:
+        # {'Ids': [], 'Messages': []}
+        # Not created
+        if manifest_creation_res["Ids"] == []:
+            # Empty
+            logger.error(
+                "Submitted template data was probably incorrect, template wasnt registered"
+            )
+            error_log.update(
+                {"ManifestCreateError": "Template not registered; Data incorrect"}
+            )
+            logger.error(
+                f"Manifest payload: {metrc_manifest_payload}; metrc token: {metrc_auth['token']}; metrc cookie: {metrc_auth['cookie']}; warehouse license: {WAREHOUSE['license']}; manifest creation res: {manifest_creation_res}"
+            )
+            error_log.update({"ALL_GOOD": "FALSE"})
+            return error_log
+    except KeyError:
+        pass
+    try:
+        # {'Message': 'An error has occurred.'}
+        # Not created
+        if manifest_creation_res["Message"] == "An error has occured.":
+            logger.error(
+                "Template data provied was correct but template isnt registered"
+            )
+            error_log.update({"ManifestCreateError": "Template not registered"})
+            logger.error(
+                f"Manifest payload: {metrc_manifest_payload}; metrc token: {metrc_auth['token']}; metrc cookie: {metrc_auth['cookie']}; warehouse license: {WAREHOUSE['license']}; manifest creation res: {manifest_creation_res}"
+            )
+            error_log.update({"ALL_GOOD": "FALSE"})
+            return error_log
+    except KeyError:
+        pass
+
+    # -----------------------------------------------------------
+    #                     Find the manifest pdf
+    # -----------------------------------------------------------
+
+    # {'Ids': [3460305], 'Messages': []}
+    metrc_manifest_id = manifest_creation_res["Ids"][0]
+    error_log.update({"ManifestId": metrc_manifest_id})
+
+    logger.info("Downloading manifest file...")
+    current_files = len(get_cwd_files())
+    driver.execute_script(
+        f"""
+            var link = document.createElement("a");
+                link.href = 'https://ca.metrc.com/reports/transfers/{WAREHOUSE['license']}/manifest?id={metrc_manifest_id}';
+                link.download = "name.pdf";
+                link.click();
+            """
+    )
+
+    while current_files == len(get_cwd_files()):
+        pass
+    time.sleep(0.7)
+    list_of_pdf = get_cwd_files()
+    list_of_pdf = filter(lambda pdf: ".pdf" in pdf, list_of_pdf)
+    list_of_pdf = list(list_of_pdf)
+
+    logger.info(f"[{nabis_order['id']}] File downloaded {list_of_pdf[0]}")
+
+    # o = get_order_data(nabis_order["orderNumber"])
+    transfer = view_metrc_transfer(nabis_order["orderId"])
+    transfer_id = ""
+    try:
+        transfer_id = [
+            x["id"]
+            for x in transfer["data"]["getMetrcTransfers"]
+            if template["Name"] == x["metrcTransferTemplateName"]
+        ][0]
+    except IndexError:
+        logger.error(
+            f"Couldnt get Nabis transfer ID for the order {nabis_order['orderNumber']}, manifest: {metrc_manifest_id}"
+        )
+        error_log.update(
+            {
+                "RequiresManualFinish": f"Upload the manifest ({metrc_manifest_id}) pdf to order: {nabis_order['orderNumber']}, shipment: {nabis_order['shipmentNumber']}"
+            }
+        )
+        error_log.update({"ALL_GOOD": "FALSE"})
+        return error_log
+    if transfer_id == "":
+        logger.error(
+            f"Couldnt get Nabis transfer ID for the order {nabis_order['orderNumber']}, manifest: {metrc_manifest_id}"
+        )
+        error_log.update(
+            {
+                "RequiresManualFinish": f"Upload the manifest ({metrc_manifest_id}) pdf to order: {nabis_order['orderNumber']}, shipment: {nabis_order['shipmentNumber']}"
+            }
+        )
+        error_log.update({"ALL_GOOD": "FALSE"})
+        return error_log
+
+    logger.info(f"[{nabis_order['id']}] list_of_pdfs: {list_of_pdf}")
+    logger.info(f"[{nabis_order['id']}] File to be uploaded {list_of_pdf[0]}")
+
+    order_notes = ""
+    for k, v in transport_detail_flags.items():
+        if v == "FLAG":
+            order_notes += f"TEMP {k};"
+    if order_notes != "":
+        logger.info(f"[{nabis_order['id']}] Uploading order notes: {order_notes}")
+        order_note_response = upload_order_note(transfer_id, order_notes)
+        logger.debug(f"Order note response: {order_note_response}")
+        error_log.update({"OrderNotes": order_note_response})
+    else:
+        logger.info("No order notes")
+
+    pdf_response = upload_manifest_pdf(transfer_id, paths["pdfs"] + list_of_pdf[0])
+    id_response = upload_manifest_id(transfer_id, metrc_manifest_id)
+    logger.debug(f"PDF response: {pdf_response}; ID response: {id_response}")
+
+    if (pdf_response == "errors") or (pdf_response == False):
+        logger.error(
+            f'Error while uploading manifest pdf {transfer_id}, order: {nabis_order["orderNumber"]}'
+        )
+        error_log.update(
+            {
+                "RequiresManualFinish": f"Upload the manifest: ({metrc_manifest_id}) pdf to order: {nabis_order['orderNumber']}, shipment: {nabis_order['shipmentNumber']}"
+            }
+        )
+        error_log.update({"ALL_GOOD": "FALSE"})
+    if ("errors" in id_response) or (id_response == False):
+        logger.error(
+            f'Error while uploading manifest id number {transfer_id}, order {nabis_order["orderNumber"]}'
+        )
+        error_log.update(
+            {
+                "RequiresManualFinish": f"Upload the manifest ({metrc_manifest_id}) id to order: {nabis_order['orderNumber']}, shipment: {nabis_order['shipmentNumber']}"
+            }
+        )
+        error_log.update({"ALL_GOOD": "FALSE"})
+
+    # Delete the template
+    metrc_archive_response = metrc_api_archive_template(template["Id"])
+
+    logger.debug(f"Metrc delete template action: {metrc_archive_response}")
+    counters["done"] += 1
+
+    error_log.update({"PkgNbr": len(metrc_packages)})
+
+    error_log.update({"ALL_GOOD": "TRUE"})
+    return error_log
+    # return {
+    #     "manifest_id": metrc_manifest_id,
+    #     "pdf_response": pdf_response,
+    #     "id_response": id_response,
+    #     "order_note": order_notes,
+    # }
 
 
 def find_metrc_order(
@@ -253,7 +720,7 @@ def proc_template(
         metrc_transfer_type = ""
 
     if metrc_transfer_type == "":
-        log_dict.update({"UnreadableTransferType": "TRUE"})
+        log_dict.update({"UnreadableTransferType": "TRUE"})  # ✅
 
     def update_log(dct, key, error_type, error_msg):
         dct.update(
@@ -894,6 +1361,8 @@ def main():
     global counters
     import operator
 
+    global recipient_data
+
     gc = gspread.service_account(filename="./emailsending-325211-e5456e88f282.json")
 
     import threading
@@ -954,13 +1423,12 @@ def main():
             f"https://ca.metrc.com/industry/{WAREHOUSE['license']}/transfers/licensed/templates"
         )
 
-        metrc_auth = get_cookie_and_token(driver)
-        
-        # manifest_result = create_manifest(metrc_auth["token"],
-        #         metrc_auth["cookie"],
-        #         WAREHOUSE["license"])
-        # '{"Message": "Package 1A4060300022B79000323525 cannot be added to C10-0000550-LIC (RED RHINO REMEDIES) because it is currently in another Transfer and cannot be added to this one."}'
-        
+        recipient_data = metrc_get_facilities(driver)
+        if not recipient_data:
+            logger.error(
+                f"No templates to pick from (WAREHOUSE: {WAREHOUSE}) in order to fetch Facility IDs"
+            )
+            return False
 
         # Getting date for nabis shipment query
         if dt.datetime.today().weekday() == 4:
@@ -1019,41 +1487,49 @@ def main():
                 continue
             logger.debug(f"Order {nabis_order['orderNumber']} is not a duplicate")
             start_time = time.perf_counter()
-            template_req = find_template(
-                str(nabis_order["orderNumber"]),
-                metrc_auth["token"],
-                metrc_auth["cookie"],
-                WAREHOUSE["license"],
-            )
-            try:
-                if template_req["Data"] == []:
-                    logger.info(
-                        f'Couldnt find metrc template for order: {nabis_order["orderNumber"]}, shipment: {nabis_order["shipmentNumber"]}'
-                    )
-                    counters["template_missing"] += 1
-                    continue
-                else:
-                    # We always want the first result(0th) from the template search
-                    nabis_template_name = template_req["Data"][0]["Name"]
-            except KeyError:
-                metrc_auth = get_cookie_and_token(driver)
-                template_req = find_template(
-                    str(nabis_order["orderNumber"]),
-                    metrc_auth["token"],
-                    metrc_auth["cookie"],
-                    WAREHOUSE["license"],
-                )
-                if template_req["Data"] == []:
-                    logger.info(
-                        f'Couldnt find metrc template for order: {nabis_order["orderNumber"]}, shipment: {nabis_order["shipmentNumber"]}'
-                    )
-                    continue
 
-            if str(nabis_order["shipmentNumber"]) not in nabis_template_name:
+            template = metrc_api_find_template(nabis_order["orderNumber"])
+            if template == False:
                 logger.info(
-                    f'Order template found but shipment numbers are not the same: {nabis_order["shipmentNumber"]} vs metrc {nabis_template_name}, skipping.'
+                    f'Couldnt find metrc template for order: {nabis_order["orderNumber"]}, shipment: {nabis_order["shipmentNumber"]}'
                 )
+                counters["template_missing"] += 1
                 continue
+            # template_req = find_template(
+            #     str(nabis_order["orderNumber"]),
+            #     metrc_auth["token"],
+            #     metrc_auth["cookie"],
+            #     WAREHOUSE["license"],
+            # )
+            # try:
+            #     if template_req["Data"] == []:
+            #         logger.info(
+            #             f'Couldnt find metrc template for order: {nabis_order["orderNumber"]}, shipment: {nabis_order["shipmentNumber"]}'
+            #         )
+            #         counters["template_missing"] += 1
+            #         continue
+            #     else:
+            #         # We always want the first result(0th) from the template search
+            #         nabis_template_name = template_req["Data"][0]["Name"]
+            # except KeyError:
+            #     metrc_auth = get_cookie_and_token(driver)
+            #     template_req = find_template(
+            #         str(nabis_order["orderNumber"]),
+            #         metrc_auth["token"],
+            #         metrc_auth["cookie"],
+            #         WAREHOUSE["license"],
+            #     )
+            #     if template_req["Data"] == []:
+            #         logger.info(
+            #             f'Couldnt find metrc template for order: {nabis_order["orderNumber"]}, shipment: {nabis_order["shipmentNumber"]}'
+            #         )
+            #         continue
+
+            # if str(nabis_order["shipmentNumber"]) not in nabis_template_name:
+            #     logger.info(
+            #         f'Order template found but shipment numbers are not the same: {nabis_order["shipmentNumber"]} vs metrc {nabis_template_name}, skipping.'
+            #     )
+            #     continue
 
             logger.info(
                 f'##------working with order: {nabis_order["orderNumber"]}, shipment {nabis_order["shipmentNumber"]}------##'
@@ -1078,20 +1554,29 @@ def main():
             if operator:
                 nabis_order_data.update({"driver": operator})
 
+            nabis_template_name = template["Name"]
             nabis_order_data.update({"shipment_template": nabis_template_name})
 
-            log_dict = find_metrc_order(
-                wait,
-                driver,
-                nabis_order,
-                nabis_order["orderNumber"],
-                nabis_order_data["lineItems"],
-                nabis_order_data,
+            error_log = create_metrc_manifest(
+                nabis_order, nabis_order_data, template, driver
             )
+
+            logger.debug(f"Logger dict: {error_log}")
+
+            # log_dict = find_metrc_order(
+            #     wait,
+            #     driver,
+            #     nabis_order,
+            #     nabis_order["orderNumber"],
+            #     nabis_order_data["lineItems"],
+            #     nabis_order_data,
+            # )
             end_time = time.perf_counter()
-            logger.info("Updating the ghseet logger..")
-            log_dict.update({"Duration(S)": end_time - start_time})
-            update_log_sheet(log_dict, gc)
+            logger.info(
+                f"Updating the ghseet logger.. all good: {error_LOG['ALL_GOOD']}"
+            )
+            error_log.update({"Duration(S)": end_time - start_time})
+            update_log_sheet(error_log, gc)
             logger.info(f"Order {nabis_order['orderNumber']} Gsheet updating done.")
 
             logger.info("Moving to next order!")

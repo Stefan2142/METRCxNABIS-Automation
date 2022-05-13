@@ -45,6 +45,7 @@ from routines import (
     thread_fnc,
     metrc_get_facilities,
     get_cwd_files,
+    metrc_driver_login
 )
 from creds import credentials
 from config import paths, WAREHOUSE, nabis_warehouse_licenses
@@ -86,7 +87,7 @@ def create_metrc_manifest(nabis_order, nabis_order_data, template, driver):
     )
 
     # Get Metrc creds from current webdriver session
-    metrc_auth = get_cookie_and_token(driver)
+    metrc_auth = get_cookie_and_token(driver, WAREHOUSE)
 
     template_deliveries = metrc_api_get_template_deliveries(template["Id"])
     template_packages = metrc_api_get_template_packages(template_deliveries[0]["Id"])
@@ -1388,6 +1389,7 @@ def main():
         if res > 1:
             ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, 0)
             print("Exception raise failure")
+
     session_start_time = time.perf_counter()
     try:
         logger.info("##----------SESSION STARTED----------##")
@@ -1404,25 +1406,9 @@ def main():
         driver = get_driver()
         wait = WebDriverWait(driver, 180)
 
-        ### Login directives for METRC ###
-        driver.get(
-            f"https://ca.metrc.com/industry/{WAREHOUSE['license']}/transfers/licensed/templates"
-        )
-        try:
-            driver.find_element(by=By.XPATH, value='//*[@id="username"]').send_keys(
-                credentials["metrc"]["un"]
-            )
-        except:
-            # LOG HERE
-            logger.error("Couldnt find username box")
-
-        driver.find_element(by=By.XPATH, value='//*[@id="password"]').send_keys(
-            credentials["metrc"]["pwd"]
-        )
-        driver.find_element(by=By.XPATH, value='//*[@id="login_button"]').click()
-        driver.get(
-            f"https://ca.metrc.com/industry/{WAREHOUSE['license']}/transfers/licensed/templates"
-        )
+        driver = metrc_driver_login(driver, WAREHOUSE)
+        if not driver:
+            raise Exception("Couldnt login")
 
         recipient_data = metrc_get_facilities(driver)
         if not recipient_data:
@@ -1587,7 +1573,7 @@ def main():
         )
         logger.info("##----------SESSION FINISHED----------##")
         session_end_time = time.perf_counter()
-        logger.info(f"Session duration(S): {end_time} - {start_time}")
+        logger.info(f"Session duration(S): {end_time - start_time}")
         send_slack_msg(
             f"STATS FOR CURRENT SESSION: \n\tDone: {counters['done']};\n\tDuplicates: {counters['duplicates']}; \n\tTemplate missing: {counters['template_missing']}; \n\tNot done: {counters['not_done']}; \n\tSession duration(S): {end_time} - {start_time}"
         )

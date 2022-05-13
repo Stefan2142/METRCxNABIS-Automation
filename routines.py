@@ -209,17 +209,20 @@ def get_traceback(e):
     lines = traceback.format_exception(type(e), e, e.__traceback__)
     return "".join(lines) + "\n Please check the Logs dir for the screenshot."
 
-
-def get_cookie_and_token(driver):
+@retry(wait=wait_fixed(5))
+def get_cookie_and_token(driver, WAREHOUSE):
 
     cookie_list = driver.get_cookies()
     soup = BeautifulSoup(driver.page_source, "html.parser")
-    metrc_api_verification_token = (
-        str(soup(text=re.compile(r"ApiVerificationToken")))
-        .split("X-Metrc-LicenseNumber")[0]
-        .split("ApiVerificationToken")[-1]
-        .split("'")[2]
-    )
+    try:
+        metrc_api_verification_token = (
+            str(soup(text=re.compile(r"ApiVerificationToken")))
+            .split("X-Metrc-LicenseNumber")[0]
+            .split("ApiVerificationToken")[-1]
+            .split("'")[2]
+        )
+    except:
+        driver = metrc_driver_login(driver, WAREHOUSE)
     metrc_cookie = "".join(
         [
             f"MetrcRequestToken={x['value']}"
@@ -609,7 +612,7 @@ def get_driver():
         "profile.default_content_setting_values.notifications": 2,
         "download.default_directory": f"{os.getcwd()}{paths['selenium_download_dir']}",
         "download.prompt_for_download": False,
-        'profile.default_content_setting_values.automatic_downloads': 1,
+        "profile.default_content_setting_values.automatic_downloads": 1,
         "profile.default_content_setting_values.geolocation": 2,
     }
 
@@ -623,6 +626,27 @@ def get_driver():
         executable_path=paths["chromedriver"], chrome_options=chrome_options
     )
     return driver
+
+
+def metrc_driver_login(driver, WAREHOUSE):
+    ### Login directives for METRC ###
+    driver.get(f"https://ca.metrc.com/log-in")
+    try:
+        driver.find_element(by=By.XPATH, value='//*[@id="username"]').send_keys(
+            credentials["metrc"]["un"]
+        )
+    except:
+        # LOG HERE
+        # logger.error("Couldnt find username box")
+        return False
+
+    driver.find_element(by=By.XPATH, value='//*[@id="password"]').send_keys(
+        credentials["metrc"]["pwd"]
+    )
+    driver.find_element(by=By.XPATH, value='//*[@id="login_button"]').click()
+    driver.get(
+        f"https://ca.metrc.com/industry/{WAREHOUSE['license']}/transfers/licensed/templates"
+    )
 
 
 def get_cwd_files():

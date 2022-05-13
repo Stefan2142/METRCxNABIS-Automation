@@ -184,14 +184,16 @@ def create_metrc_manifest(nabis_order, nabis_order_data, template, driver):
         metrc_route = [x for x in routes if route_search_str.lower() in x.lower()][0]
         metrc_route = f"NABIS {nabis_order['orderNumber']} " + metrc_route
     else:
-        logger.error(f"Couldnt find route for: {template_deliveries[0]['PlannedRoute']}")
+        logger.error(
+            f"Couldnt find route for: {template_deliveries[0]['PlannedRoute']}"
+        )
         error_log.update(
             {
                 "CantFindRoute": f"Cant find route in the sheet for planned route (metrc): {template_deliveries[0]['PlannedRoute']}"
             }
         )
         error_log.update({"ALL_GOOD": False})
-        
+
         return error_log
 
     if destination_license not in nabis_warehouse_licenses:
@@ -266,7 +268,7 @@ def create_metrc_manifest(nabis_order, nabis_order_data, template, driver):
                 "GrossUnitOfWeightId": "",
             }
         )
-
+    error_log.update({"PkgNbr": len(metrc_packages)})
     # -----------------------------------------------------------
     #                       Transport details
     # -----------------------------------------------------------
@@ -503,8 +505,6 @@ def create_metrc_manifest(nabis_order, nabis_order_data, template, driver):
 
     logger.debug(f"Metrc delete template action: {metrc_archive_response}")
     counters["done"] += 1
-
-    error_log.update({"PkgNbr": len(metrc_packages)})
 
     error_log.update({"ALL_GOOD": "TRUE"})
     return error_log
@@ -1388,7 +1388,7 @@ def main():
         if res > 1:
             ctypes.pythonapi.PyThreadState_SetAsyncExc(thread_id, 0)
             print("Exception raise failure")
-
+    session_start_time = time.perf_counter()
     try:
         logger.info("##----------SESSION STARTED----------##")
 
@@ -1586,9 +1586,10 @@ def main():
             f"Done: {counters['done']}; Duplicates: {counters['duplicates']}; Template missing: {counters['template_missing']}; Not done: {counters['not_done']}"
         )
         logger.info("##----------SESSION FINISHED----------##")
-
+        session_end_time = time.perf_counter()
+        logger.info(f"Session duration(S): {end_time} - {start_time}")
         send_slack_msg(
-            f"STATS FOR CURRENT SESSION: \nDone: {counters['done']}; Duplicates: {counters['duplicates']}; Template missing: {counters['template_missing']}; Not done: {counters['not_done']}"
+            f"STATS FOR CURRENT SESSION: \n\tDone: {counters['done']};\n\tDuplicates: {counters['duplicates']}; \n\tTemplate missing: {counters['template_missing']}; \n\tNot done: {counters['not_done']}; \n\tSession duration(S): {end_time} - {start_time}"
         )
         send_slack_msg("#-----⏹ {:^40s} ⏹-----#".format(f"SESSION FINISHED"))
         kill_thread(proc)

@@ -609,6 +609,7 @@ def get_driver():
         "profile.default_content_setting_values.notifications": 2,
         "download.default_directory": f"{os.getcwd()}{paths['selenium_download_dir']}",
         "download.prompt_for_download": False,
+        'profile.default_content_setting_values.automatic_downloads': 1,
         "profile.default_content_setting_values.geolocation": 2,
     }
 

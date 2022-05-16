@@ -209,8 +209,9 @@ def get_traceback(e):
     lines = traceback.format_exception(type(e), e, e.__traceback__)
     return "".join(lines) + "\n Please check the Logs dir for the screenshot."
 
+
 @retry(wait=wait_fixed(5))
-def get_cookie_and_token(driver, WAREHOUSE):
+def get_cookie_and_token(driver, WAREHOUSE, credentials):
 
     cookie_list = driver.get_cookies()
     soup = BeautifulSoup(driver.page_source, "html.parser")
@@ -222,7 +223,7 @@ def get_cookie_and_token(driver, WAREHOUSE):
             .split("'")[2]
         )
     except:
-        driver = metrc_driver_login(driver, WAREHOUSE)
+        driver = metrc_driver_login(driver, WAREHOUSE, credentials)
     metrc_cookie = "".join(
         [
             f"MetrcRequestToken={x['value']}"
@@ -288,7 +289,7 @@ def define_email_logger():
         mailhost=("smtp.gmail.com", 587),
         fromaddr="finance@headquarters.co",
         toaddrs=[
-            "stefanm2142@gmail.com",
+            "stefan@headquarters.co",
             "katarina@headquarters.co",
             "marko@headquarters.co",
             "jovanaj@headquarters.co",
@@ -333,7 +334,7 @@ def define_default_logger():
     return logger
 
 
-def duplicate_check(gc, order_id):
+def duplicate_check(order_id, shipment_id):
     """Check if a given order_id hasnt been done before.
         Check is being done in the offline copy of a log gsheet, to
         preserve the API quota.
@@ -364,8 +365,14 @@ def duplicate_check(gc, order_id):
     off_log_df["Order"].astype("Int64")
 
     if int(order_id) in off_log_df[off_log_df["ALL_GOOD"] == True]["Order"].tolist():
-        # It is duplicate
-        return True
+        if (
+            int(shipment_id)
+            in off_log_df[off_log_df["ALL_GOOD"] == True]["Shipment"].tolist()
+        ):
+            # It is duplicate
+            return True
+        else:
+            return False
     else:
         # Its not a duplicate
         return False
@@ -628,7 +635,7 @@ def get_driver():
     return driver
 
 
-def metrc_driver_login(driver, WAREHOUSE):
+def metrc_driver_login(driver, WAREHOUSE, credentials):
     ### Login directives for METRC ###
     driver.get(f"https://ca.metrc.com/log-in")
     try:
@@ -647,6 +654,7 @@ def metrc_driver_login(driver, WAREHOUSE):
     driver.get(
         f"https://ca.metrc.com/industry/{WAREHOUSE['license']}/transfers/licensed/templates"
     )
+    return driver
 
 
 def get_cwd_files():

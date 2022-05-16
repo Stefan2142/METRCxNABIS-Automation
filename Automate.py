@@ -45,7 +45,7 @@ from routines import (
     thread_fnc,
     metrc_get_facilities,
     get_cwd_files,
-    metrc_driver_login
+    metrc_driver_login,
 )
 from creds import credentials
 from config import paths, WAREHOUSE, nabis_warehouse_licenses
@@ -87,7 +87,7 @@ def create_metrc_manifest(nabis_order, nabis_order_data, template, driver):
     )
 
     # Get Metrc creds from current webdriver session
-    metrc_auth = get_cookie_and_token(driver, WAREHOUSE)
+    metrc_auth = get_cookie_and_token(driver, WAREHOUSE, credentials)
 
     template_deliveries = metrc_api_get_template_deliveries(template["Id"])
     template_packages = metrc_api_get_template_packages(template_deliveries[0]["Id"])
@@ -361,6 +361,7 @@ def create_metrc_manifest(nabis_order, nabis_order_data, template, driver):
             }
         ]
     )
+    logger.debug(f"Manifest payload: {metrc_manifest_payload}")
     logger.debug("Creating manifest...")
     manifest_creation_res = create_manifest(
         metrc_auth["token"],
@@ -490,7 +491,7 @@ def create_metrc_manifest(nabis_order, nabis_order_data, template, driver):
             }
         )
         error_log.update({"ALL_GOOD": "FALSE"})
-    if ("errors" in id_response) or (id_response == False):
+    if ("errors" == id_response) or (id_response == False):
         logger.error(
             f'Error while uploading manifest id number {transfer_id}, order {nabis_order["orderNumber"]}'
         )
@@ -1392,11 +1393,13 @@ def main():
 
     session_start_time = time.perf_counter()
     try:
-        logger.info("##----------SESSION STARTED----------##")
+        logger.info(
+            f"##----------SESSION STARTED with warehouse: {WAREHOUSE['name']}----------##"
+        )
 
         # send_slack_msg(
         #     "#-----▶ {:^40s} ▶-----#".format(
-        #         f"SESSION STARTED BY USER: {os.getenv('CLIENTNAME')}"
+        #         f"SESSION STARTED BY USER: {os.getenv('CLIENTNAME')}, for the warehouse: {WAREHOUSE['name']}"
         #     )
         # )
 
@@ -1406,7 +1409,7 @@ def main():
         driver = get_driver()
         wait = WebDriverWait(driver, 180)
 
-        driver = metrc_driver_login(driver, WAREHOUSE)
+        driver = metrc_driver_login(driver, WAREHOUSE, credentials)
         if not driver:
             raise Exception("Couldnt login")
 
@@ -1418,6 +1421,7 @@ def main():
             return False
 
         # Getting date for nabis shipment query
+        # IF today is friday, 'tomorrow' should be monday
         if dt.datetime.today().weekday() == 4:
             if dt.datetime.today().hour >= 6:
                 tomorrow = dt.datetime.strftime(
@@ -1441,6 +1445,7 @@ def main():
 
         if res == False:
             logger.info("Error while getting shipments from Nabis. Exiting...")
+            send_slack_msg(f"Error while getting shipments from Nabis. Exiting...")
             exit(1)
 
         # total number of pages
@@ -1450,6 +1455,8 @@ def main():
         total_num_items = res["total_num_items"]
         if total_num_items == 0:
             logger.info(f"No orders to work on for date {tomorrow}")
+            send_slack_msg(f"No orders to work on for date {tomorrow}")
+            exit(1)
 
         # Resulting orders
         nabis_orders = res["orders"]
@@ -1465,8 +1472,16 @@ def main():
         # nabis_orders.reverse()
 
         nabis_orders.sort(key=operator.itemgetter("orderNumber"), reverse=True)
+        logger.info(
+            f"Session start stats, nbr of orders: {len(nabis_orders)}, nbr of metrc templates: {len(metrc_api_find_template())} "
+        )
         for nabis_order in nabis_orders:
-            if duplicate_check(gc, int(nabis_order["orderNumber"])):
+            logger.info(
+                f"Working on order ({nabis_orders.index(nabis_order)} of {len(nabis_orders)}) order."
+            )
+            if duplicate_check(
+                int(nabis_order["orderNumber"]), int(nabis_order["shipmentNumber"])
+            ):
                 logger.info(
                     f'Order {nabis_order["orderNumber"]} found in previous log. Skipping.'
                 )
@@ -1475,53 +1490,27 @@ def main():
             logger.debug(f"Order {nabis_order['orderNumber']} is not a duplicate")
             start_time = time.perf_counter()
 
-            template = metrc_api_find_template(nabis_order["orderNumber"])
+            # -----------------------------------------------------------
+            #               Finding the template for order
+            # -----------------------------------------------------------
+            metrc_templates = metrc_api_find_template()
+            template = None
+            for metrc_template in metrc_templates:
+                if str(nabis_order["orderNumber"]) in metrc_template["Name"]:
+                    logger.info(
+                        f"Found template for: {nabis_order['orderNumber']}, shipment: {nabis_order['shipmentNumber']}"
+                    )
+
             if template == False:
                 logger.info(
                     f'Couldnt find metrc template for order: {nabis_order["orderNumber"]}, shipment: {nabis_order["shipmentNumber"]}'
                 )
                 counters["template_missing"] += 1
                 continue
-            # template_req = find_template(
-            #     str(nabis_order["orderNumber"]),
-            #     metrc_auth["token"],
-            #     metrc_auth["cookie"],
-            #     WAREHOUSE["license"],
-            # )
-            # try:
-            #     if template_req["Data"] == []:
-            #         logger.info(
-            #             f'Couldnt find metrc template for order: {nabis_order["orderNumber"]}, shipment: {nabis_order["shipmentNumber"]}'
-            #         )
-            #         counters["template_missing"] += 1
-            #         continue
-            #     else:
-            #         # We always want the first result(0th) from the template search
-            #         nabis_template_name = template_req["Data"][0]["Name"]
-            # except KeyError:
-            #     metrc_auth = get_cookie_and_token(driver)
-            #     template_req = find_template(
-            #         str(nabis_order["orderNumber"]),
-            #         metrc_auth["token"],
-            #         metrc_auth["cookie"],
-            #         WAREHOUSE["license"],
-            #     )
-            #     if template_req["Data"] == []:
-            #         logger.info(
-            #             f'Couldnt find metrc template for order: {nabis_order["orderNumber"]}, shipment: {nabis_order["shipmentNumber"]}'
-            #         )
-            #         continue
-
-            # if str(nabis_order["shipmentNumber"]) not in nabis_template_name:
-            #     logger.info(
-            #         f'Order template found but shipment numbers are not the same: {nabis_order["shipmentNumber"]} vs metrc {nabis_template_name}, skipping.'
-            #     )
-            #     continue
 
             logger.info(
-                f'##------working with order: {nabis_order["orderNumber"]}, shipment {nabis_order["shipmentNumber"]}------##'
+                f'##------working with order: {nabis_order["orderNumber"]}, shipment {nabis_order["shipmentNumber"]} ({nabis_orders.index(nabis_order)} of {len(nabis_orders)})  ------##'
             )
-            # logger.info(json.dumps(nabis_order, indent=2))
 
             vehicle = {}
             operator = {}
@@ -1567,15 +1556,16 @@ def main():
             logger.info(f"Order {nabis_order['orderNumber']} Gsheet updating done.")
 
             logger.info("Moving to next order!")
-            # continue
         logger.info(
             f"Done: {counters['done']}; Duplicates: {counters['duplicates']}; Template missing: {counters['template_missing']}; Not done: {counters['not_done']}"
         )
         logger.info("##----------SESSION FINISHED----------##")
         session_end_time = time.perf_counter()
-        logger.info(f"Session duration(S): {end_time - start_time}")
+        session_duration = session_end_time - session_start_time
+
+        logger.info(f"Session duration(S): {session_duration}")
         send_slack_msg(
-            f"STATS FOR CURRENT SESSION: \n\tDone: {counters['done']};\n\tDuplicates: {counters['duplicates']}; \n\tTemplate missing: {counters['template_missing']}; \n\tNot done: {counters['not_done']}; \n\tSession duration(S): {end_time} - {start_time}"
+            f"STATS FOR CURRENT SESSION: \n\tDone: {counters['done']};\n\tDuplicates: {counters['duplicates']}; \n\tTemplate missing: {counters['template_missing']}; \n\tNot done: {counters['not_done']}; \n\tSession duration(S): {session_duration}"
         )
         send_slack_msg("#-----⏹ {:^40s} ⏹-----#".format(f"SESSION FINISHED"))
         kill_thread(proc)
@@ -1603,7 +1593,6 @@ def main():
             pass
         email_logger.error(get_traceback(e))
         logger.error(get_traceback(e))
-        raise
 
 
 if __name__ == "__main__":

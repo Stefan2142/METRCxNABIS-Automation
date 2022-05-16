@@ -73,7 +73,7 @@ def metrc_api_get_template_packages(template_id):
 
 
 @retry(wait=wait_fixed(5))
-def metrc_api_find_template(order_id):
+def metrc_api_find_template():
     url = (
         metrc_api_base_url
         + f"transfers/v1/templates?licenseNumber={WAREHOUSE['license']}"
@@ -84,11 +84,7 @@ def metrc_api_find_template(order_id):
     response = requests.request("GET", url, headers=headers)
 
     templates = response.json()
-    for template in templates:
-        if str(order_id) in template["Name"]:
-            print(template)
-            return template
-    return False
+    return templates
 
 
 def metrc_api_archive_template(template_id):
@@ -254,10 +250,7 @@ def upload_order_note(transfer_id, order_note):
     response = requests.request(
         "POST", nabis_api_url, headers=nabis_headers, data=payload
     )
-    try:
-        return response.json()
-    except:
-        return False
+    return response.json()
 
 
 @retry(wait=wait_fixed(5))
@@ -295,10 +288,7 @@ def upload_manifest_id(transfer_id, manifest_id):
     response = requests.request(
         "POST", nabis_api_url, headers=nabis_headers, data=payload
     )
-    try:
-        return response.json()
-    except:
-        return False
+    return response.json()
 
 
 @retry(wait=wait_fixed(5))

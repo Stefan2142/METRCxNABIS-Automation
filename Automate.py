@@ -428,7 +428,7 @@ def create_metrc_manifest(nabis_order, nabis_order_data, template, driver):
     list_of_pdf = filter(lambda pdf: ".pdf" in pdf, list_of_pdf)
     list_of_pdf = list(list_of_pdf)
 
-    logger.info(f"[{nabis_order['id']}] File downloaded {list_of_pdf[0]}")
+    # logger.info(f"[{nabis_order['id']}] File downloaded {list_of_pdf[0]}")
 
     # o = get_order_data(nabis_order["orderNumber"])
     transfer = view_metrc_transfer(nabis_order["orderId"])
@@ -1407,6 +1407,7 @@ def main():
         routes = get_spreadsheet_routes(gc)
         logger.info("Initializing Chrome WebDriver...")
         driver = get_driver()
+        driver.implicitly_wait(0.5)
         wait = WebDriverWait(driver, 180)
 
         driver = metrc_driver_login(driver, WAREHOUSE, credentials)
@@ -1477,7 +1478,7 @@ def main():
         )
         for nabis_order in nabis_orders:
             logger.info(
-                f"Working on order ({nabis_orders.index(nabis_order)} of {len(nabis_orders)}) order."
+                f"Working on order ({nabis_orders.index(nabis_order)} of {len(nabis_orders)}) orders."
             )
             if duplicate_check(
                 int(nabis_order["orderNumber"]), int(nabis_order["shipmentNumber"])
@@ -1497,11 +1498,12 @@ def main():
             template = None
             for metrc_template in metrc_templates:
                 if str(nabis_order["orderNumber"]) in metrc_template["Name"]:
+                    template = metrc_template
                     logger.info(
                         f"Found template for: {nabis_order['orderNumber']}, shipment: {nabis_order['shipmentNumber']}"
                     )
 
-            if template == False:
+            if template == None:
                 logger.info(
                     f'Couldnt find metrc template for order: {nabis_order["orderNumber"]}, shipment: {nabis_order["shipmentNumber"]}'
                 )
@@ -1509,16 +1511,19 @@ def main():
                 continue
 
             logger.info(
-                f'##------working with order: {nabis_order["orderNumber"]}, shipment {nabis_order["shipmentNumber"]} ({nabis_orders.index(nabis_order)} of {len(nabis_orders)})  ------##'
+                f'##------working with order: {nabis_order["orderNumber"]}, shipment {nabis_order["shipmentNumber"]} (order {nabis_orders.index(nabis_order)} of {len(nabis_orders)} orders)  ------##'
             )
 
             vehicle = {}
             operator = {}
-            for v in vehicles:
-                if "allVehicles" in v["data"]["viewer"]:
-                    for n in v["data"]["viewer"]["allVehicles"]:
-                        if n["id"] == nabis_order["vehicleId"]:
-                            vehicle = n
+            for n in vehicles[0]["data"]["viewer"]["allVehicles"]:
+                if n["id"] == nabis_order["vehicleId"]:
+                    vehicle = n
+            # for v in vehicles:
+            #     if "allVehicles" in v["data"]["viewer"]:
+            #         for n in v["data"]["viewer"]["allVehicles"]:
+            #             if n["id"] == nabis_order["vehicleId"]:
+            #                 vehicle = n
             for d in drivers:
                 for n in d["data"]["viewer"]["allDrivers"]:
                     if n["id"] == nabis_order["driverId"]:
@@ -1551,7 +1556,7 @@ def main():
             logger.info(
                 f"Updating the ghseet logger.. all good: {error_log['ALL_GOOD']}"
             )
-            error_log.update({"Duration(S)": end_time - start_time})
+            error_log.update({"Duration": end_time - start_time})
             update_log_sheet(error_log, gc)
             logger.info(f"Order {nabis_order['orderNumber']} Gsheet updating done.")
 
@@ -1563,9 +1568,9 @@ def main():
         session_end_time = time.perf_counter()
         session_duration = session_end_time - session_start_time
 
-        logger.info(f"Session duration(S): {session_duration}")
+        logger.info(f"Session duration: {str(dt.timedelta(seconds=session_duration))}")
         send_slack_msg(
-            f"STATS FOR CURRENT SESSION: \n\tDone: {counters['done']};\n\tDuplicates: {counters['duplicates']}; \n\tTemplate missing: {counters['template_missing']}; \n\tNot done: {counters['not_done']}; \n\tSession duration(S): {session_duration}"
+            f"STATS FOR CURRENT SESSION: \n\tDone: {counters['done']};\n\tDuplicates: {counters['duplicates']}; \n\tTemplate missing: {counters['template_missing']}; \n\tNot done: {counters['not_done']}; \n\tSession duration: {str(dt.timedelta(seconds=session_duration))}"
         )
         send_slack_msg("#-----⏹ {:^40s} ⏹-----#".format(f"SESSION FINISHED"))
         kill_thread(proc)

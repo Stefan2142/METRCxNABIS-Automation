@@ -636,20 +636,21 @@ def get_driver():
 
 
 def metrc_driver_login(driver, WAREHOUSE, credentials):
-    ### Login directives for METRC ###
     driver.get(f"https://ca.metrc.com/log-in")
+    
+    # Input username
     try:
         driver.find_element(by=By.XPATH, value='//*[@id="username"]').send_keys(
             credentials["metrc"]["un"]
         )
     except:
-        # LOG HERE
-        # logger.error("Couldnt find username box")
+        
         return False
-
+    # Input password
     driver.find_element(by=By.XPATH, value='//*[@id="password"]').send_keys(
         credentials["metrc"]["pwd"]
     )
+    # Click login
     driver.find_element(by=By.XPATH, value='//*[@id="login_button"]').click()
     driver.get(
         f"https://ca.metrc.com/industry/{WAREHOUSE['license']}/transfers/licensed/templates"

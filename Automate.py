@@ -1531,6 +1531,7 @@ def main():
 
             nabis_order_data = get_order_data(nabis_order["orderNumber"])
             if vehicle:
+                vehicle["model"] = vehicle["model"].replace(vehicle["name"], "").strip()
                 nabis_order_data.update({"vehicle": vehicle})
             if operator:
                 nabis_order_data.update({"driver": operator})

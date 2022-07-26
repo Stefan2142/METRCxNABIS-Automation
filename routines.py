@@ -13,50 +13,16 @@ import re
 import logging
 import logging.handlers
 from pythonjsonlogger import jsonlogger
-from creds import credentials, slack_token
+from creds import slack_token
 from config import paths, urls
-from api_calls import (
-    upload_manifest_pdf,
-    upload_manifest_id,
-    view_metrc_transfer,
-    upload_order_note,
-)
 import traceback
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
-from Screenshot import Screenshot_Clipping
 from tenacity import retry, wait_fixed
-
-# def define_download_folder():
-#     # Unused
-#     downloadDir = f"{os.getcwd()}//downloads//"
-#     # Make sure path exists.
-#     Path(downloadDir).mkdir(parents=True, exist_ok=True)
-
-#     # Set Preferences.
-#     preferences = {
-#         "download.default_directory": downloadDir,
-#         "download.prompt_for_download": False,
-#         "directory_upgrade": True,
-#         "safebrowsing.enabled": True,
-#     }
-
-#     chromeOptions = webdriver.ChromeOptions()
-#     chromeOptions.add_argument("--window-size=1480x560")
-#     chromeOptions.add_experimental_option("prefs", preferences)
-
-#     preferences = {
-#         "profile.default_content_settings.popups": 0,
-#         "download.default_directory": os.getcwd() + os.path.sep,
-#         "directory_upgrade": True,
-#     }
-
-
-#     chrome_options.add_experimental_option("prefs", preferences)
 
 
 def waiting_fnc(driver, path):
-    """Fnc utilizing while loop which gives a correctly waiting function
+    """[NOT IMPLEMENTED YED] Fnc utilizing while loop which gives a correctly waiting function
     (waiting for an element to appear). Selenium's waiting methods arent reliable enough;
 
 
@@ -244,44 +210,6 @@ def get_cookie_and_token(driver, WAREHOUSE, credentials):
     return {"cookie": metrc_cookie, "token": metrc_api_verification_token}
 
 
-def empty_prices_checker(driver):
-    """Helper function to parse the price input fields from the metrc.
-    If only one field is empty this fnc will return False, since
-    having empty field will not let us register transfer.
-
-    Args:
-        source (str): webdriver html source
-
-    Returns:
-        bool: True or False
-    """
-    template_packages = len(
-        driver.find_elements(By.XPATH, value="//*[@ng-model='package.WholesalePrice']")
-    )
-    # for i in range(template_packages):
-    # el = soup.find(
-    #     "input",
-    #     {"name": f"model[0][Destinations][0][Packages][{i}][WholesalePrice]"},
-    # )
-    try:
-        ## Try to find control-group ng-hide div. If its present that means that the price fields dont exist (element hidden = no prices)
-        ss = driver.find_element(
-            by=By.XPATH,
-            value="//*[@name='model[0][Destinations][0][Packages][1][WholesalePrice]']/parent::div[@class='input-prepend']/parent::div[@class='controls']/parent::div[@class='control-group ng-hide']",
-        )
-        return False
-    except:
-        ## If element is not hidden, that means that the prices do exists (at this point they could still be empty)
-        for i in range(template_packages):
-            el = driver.find_element(
-                By.NAME,
-                value=f"model[0][Destinations][0][Packages][{i}][WholesalePrice]",
-            ).get_attribute("value")
-            if el.strip() == "":
-                return True
-    return False
-
-
 def define_email_logger():
     import datetime as dt
 
@@ -378,7 +306,7 @@ def duplicate_check(order_id, shipment_id):
         return False
 
 
-def thread_fnc(gc):
+def slack_idle_notif_thr(gc):
     # https://stackoverflow.com/questions/48745240/python-logging-in-multi-threads
     try:
         sh = gc.open_by_url(urls["gsheet_logger"])
@@ -432,172 +360,6 @@ def update_log_sheet(log_dict, gc):
     output.to_csv(f"{paths['logs']}Offline_log.csv", index=False)
 
 
-def finish_template_get_manifest(
-    driver, WAREHOUSE, nabis_order, transport_detail_flags, logger
-):
-
-    ### SUBMIT BUTTON
-    fl_name = str(dt.datetime.today()).replace(":", ".")
-    ob = Screenshot_Clipping.Screenshot()
-    img_url = ob.full_Screenshot(
-        driver,
-        save_path=r".",
-        image_name=f"{paths['template_sc']}Template_{fl_name}.jpg",
-    )
-
-    # try:
-    #     driver.save_screenshot(f"{paths['template_sc']}Template_{fl_name}.jpg")
-    # except UnboundLocalError:
-    #     pass
-
-    logger.info(f"[{nabis_order['id']}] Registering transfer...")
-    driver.find_element(
-        by=By.XPATH, value='//*[@id="addedit-transfer_form"]/div/button[1]'
-    ).click()
-
-    # Waiting for the Transfer pop-up to close itself
-    bool = True
-    while bool:
-        try:
-            time.sleep(0.5)
-
-            driver.find_element(
-                by=By.XPATH, value='//*[@id="addedit-transfer_form"]/div/button[1]'
-            )
-        except:
-            bool = False
-            pass
-    logger.info(f"[{nabis_order['id']}] Transfer registration completed.")
-    ### AFTER SUBMITTING A TEMPLATE
-    # For licensed transfer (not the same as templates for transfer), this is 2nd step
-    # Remove Template
-    logger.info("Voding transfer template...")
-    driver.find_element(by=By.XPATH, value="//*[@title='Discontinue']").click()
-    alert_obj = driver.switch_to.alert
-    alert_obj.accept()
-    time.sleep(1)
-    logger.info(f"[{nabis_order['id']}] Voiding completed.")
-
-    logger.info("Opening outgoing transfers")
-    try:
-        driver.get(f"https://ca.metrc.com/industry/{WAREHOUSE}/transfers/licensed")
-    except:
-        time.sleep(5)
-        driver.get(f"https://ca.metrc.com/industry/{WAREHOUSE}/transfers/licensed")
-
-    driver.find_element_by_id("outgoing-tab").click()
-    time.sleep(0.5)
-
-    # WebDriverWait(driver, 15).until(
-    #     EC.invisibility_of_element_located(
-    #         (By.CLASS_NAME, "tab-select-one text-center")
-    #     )
-    # )
-
-    bool = True
-    while bool:
-        try:
-            time.sleep(0.5)
-
-            driver.find_element(By.CLASS_NAME, value="k-loading-image")
-        except:
-            bool = False
-            pass
-    # WebDriverWait(driver, 20).until(
-    #     EC.visibility_of_element_located((By.CLASS_NAME, "k-loading-image"))
-    # )
-    # EC.element
-
-    logger.info(f"[{nabis_order['id']}] Outgoing transfers loaded. Getting row data")
-    rows = driver.find_elements(
-        by=By.CLASS_NAME, value="k-master-row.grid-editable-row"
-    )
-    if not rows:
-        pass
-    current_files = len(get_cwd_files())
-    manifest_id = None
-    for row in rows:
-        soup = BeautifulSoup(row.get_attribute("innerHTML"), "html.parser")
-
-        # MANIFEST ID
-        manifest_id = soup.find_all("td", {"role": "gridcell"})[0].text.strip()
-        # NAME
-        employee = soup.find_all("td", {"role": "gridcell"})[-3].text.strip()
-        # DATE
-        manifest_date_created = soup.find_all("td", {"role": "gridcell"})[
-            -2
-        ].text.strip()
-        logger.info(
-            f"[{nabis_order['id']}] ManifestID found: {manifest_id}, date created: {manifest_date_created}, {employee}"
-        )
-
-        if employee == "Aleksandar Plavljanic":
-            logger.info("Downlaoding manifest pdf...")
-            driver.execute_script(
-                """
-            var link = document.createElement("a");
-                link.href = 'https://ca.metrc.com/reports/transfers/{}/manifest?id={}';
-                link.download = "name.pdf";
-                link.click();
-            """.format(
-                    WAREHOUSE, manifest_id
-                )
-            )
-            # Here we wait when the file gets downloaed
-            while current_files == len(get_cwd_files()):
-                pass
-            time.sleep(1)
-            list_of_pdf = get_cwd_files()
-            list_of_pdf = filter(lambda pdf: ".pdf" in pdf, list_of_pdf)
-            list_of_pdf = list(list_of_pdf)
-
-            logger.info(f"[{nabis_order['id']}] File downloaded {list_of_pdf[0]}")
-
-            # o = get_order_data(nabis_order["orderNumber"])
-            transfer = view_metrc_transfer(nabis_order["id"])
-            transfer_id = [
-                x["id"]
-                for x in transfer["data"]["getMetrcTransfers"]
-                if nabis_order["shipment_template"] == x["metrcTransferTemplateName"]
-            ][0]
-            logger.info(f"[{nabis_order['id']}] list_of_pdfs: {list_of_pdf}")
-            logger.info(f"[{nabis_order['id']}] File to be uploaded {list_of_pdf[0]}")
-
-            order_notes = ""
-            for k, v in transport_detail_flags.items():
-                if v == "FLAG":
-                    order_notes += f"TEMP {k};"
-            if order_notes != "":
-                logger.info(
-                    f"[{nabis_order['id']}] Uploading order notes: {order_notes}"
-                )
-                order_response = upload_order_note(transfer_id, order_notes)
-            else:
-                logger.info("No order notes")
-
-            pdf_response = upload_manifest_pdf(
-                transfer_id, paths["pdfs"] + list_of_pdf[0]
-            )
-            id_response = upload_manifest_id(transfer_id, manifest_id)
-            if (pdf_response == "errors") or (pdf_response == False):
-                logger.error(
-                    f'Error while uploading manifest pdf {transfer_id}, order: {nabis_order["id"]}'
-                )
-            if ("errors" in id_response) or (id_response == False):
-                logger.error(
-                    f'Error while uploading manifest id number {transfer_id}, order {nabis_order["id"]}'
-                )
-
-            return {
-                "manifest_id": manifest_id,
-                "pdf_response": pdf_response,
-                "id_response": id_response,
-                "order_note": order_notes,
-            }
-
-    return False
-
-
 def get_spreadsheet_routes(gc):
 
     sh = gc.open_by_url(urls["gsheet_routes"])
@@ -628,7 +390,6 @@ def get_driver():
     chrome_options.add_argument("--no-sandbox")
     # chrome_options.add_argument("--headless")
     # chrome_options.add_argument("--window-size=1536,865")
-
     driver = webdriver.Chrome(
         executable_path=paths["chromedriver"], chrome_options=chrome_options
     )
@@ -637,14 +398,14 @@ def get_driver():
 
 def metrc_driver_login(driver, WAREHOUSE, credentials):
     driver.get(f"https://ca.metrc.com/log-in")
-    
+
     # Input username
     try:
         driver.find_element(by=By.XPATH, value='//*[@id="username"]').send_keys(
             credentials["metrc"]["un"]
         )
     except:
-        
+
         return False
     # Input password
     driver.find_element(by=By.XPATH, value='//*[@id="password"]').send_keys(

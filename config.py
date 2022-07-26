@@ -40,11 +40,31 @@ front_commerce = {
     "name": "4Front",
     "license": "C11-0000825-LIC",
     "id": "QWxsTGljZW5zZWRMb2NhdGlvblNpbXBsaWZpZWQ6YzQ4YTZkYmEtOTU2Yy00MDFhLTg0MGUtYTk4OWQ1YWI1MWM3",
+    "PhoneNumberForQuestions": "(628) 219-4329",
 }
 
 # Here pick the desired warehouse
 WAREHOUSE = GARDEN_OF_WEEDEN
-
+WAREHOUSES = {
+    "Garden of Weeden": {
+        "name": "Garden of Weeden",
+        "license": "C11-0000340-LIC",
+        "id": "QWxsTGljZW5zZWRMb2NhdGlvblNpbXBsaWZpZWQ6NDFkYjA5NDctZDFmMy00OTU1LWFmMjAtZDg5MmYxODYwMTA5",
+        "PhoneNumberForQuestions": "(628) 219-4329",
+    },
+    "Nabitwo": {
+        "name": "Nabitwo",
+        "license": "C11-0001274-LIC",
+        "id": "QWxsTGljZW5zZWRMb2NhdGlvblNpbXBsaWZpZWQ6MGNlZGNmNmQtODc4NC00Yjc2LWJlOWMtMGUxMDJlNTI0NWY5",
+        "PhoneNumberForQuestions": "(628) 219-4330",
+    },
+    "Front Commerce": {
+        "name": "4Front",
+        "license": "C11-0000825-LIC",
+        "id": "QWxsTGljZW5zZWRMb2NhdGlvblNpbXBsaWZpZWQ6YzQ4YTZkYmEtOTU2Yy00MDFhLTg0MGUtYTk4OWQ1YWI1MWM3",
+        "PhoneNumberForQuestions": "(628) 219-4329",
+    },
+}
 
 """C11-0001274-LIC - Nabitwo
         C11-0000340-LIC - Garden of Weeden
